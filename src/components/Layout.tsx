@@ -66,6 +66,9 @@ export default function Layout() {
       <NavLink to="/courses" className={className}>
         Courses
       </NavLink>
+      <NavLink to="/store" className={className}>
+        Store
+      </NavLink>
       <NavLink to="/search" className={className}>
         Search
       </NavLink>

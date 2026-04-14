@@ -446,6 +446,144 @@ values (
 on conflict (slug) do nothing;
 
 -- ==========================================================================
+-- Store: curated affiliate / print-on-demand items
+-- ==========================================================================
+--
+-- The Heritage Kitchen store is not a typical e-commerce catalog. It's a
+-- hand-curated list of things we think belong in a kitchen like this one,
+-- with a paragraph of honest prose for each. Most items link out to the
+-- maker (affiliate). A few can later be fulfilled via print-on-demand
+-- (Printful or Lulu merch). No cart, no inventory, no ads.
+
+create table if not exists store_items (
+  slug text primary key,
+  title text not null,
+  subtitle text,
+  curator_note text,
+  maker_name text,
+  maker_url text,
+  category text not null,
+  kind text not null default 'affiliate'
+    check (kind in ('affiliate','print_on_demand')),
+  affiliate_url text,
+  image_url text,
+  price_display text,
+  published boolean not null default true,
+  featured boolean not null default false,
+  sort_order integer default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists idx_store_items_published
+  on store_items (published, category, sort_order);
+
+alter table store_items enable row level security;
+
+drop policy if exists "store_items_public_read" on store_items;
+create policy "store_items_public_read" on store_items
+  for select using (published = true);
+
+drop policy if exists "store_items_admin_write" on store_items;
+create policy "store_items_admin_write" on store_items
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- Seed a starter list so the /store page has real content on day one.
+-- Replace the URLs with your actual affiliate links once they're in hand.
+insert into store_items (slug, title, subtitle, curator_note, maker_name, maker_url, category, affiliate_url, price_display, featured, sort_order)
+values
+  ('anson-mills-antebellum-fine-yellow-cornmeal',
+   'Antebellum Fine Yellow Cornmeal',
+   'Anson Mills, South Carolina',
+   'Glenn Roberts at Anson Mills revived a handful of nearly-extinct Southern corn varieties and built a mill around them. The Antebellum Fine Yellow is what the 1890s cookbooks in our library meant when they said "corn meal" â€” sweet, grassy, alive in a way supermarket meal isn''t. Use it in any spoon bread, johnnycake, or muffin recipe and the difference is embarrassing.',
+   'Anson Mills',
+   'https://ansonmills.com',
+   'flour-and-grain',
+   'https://ansonmills.com',
+   '$7 / lb',
+   true,
+   1),
+  ('lodge-10-inch-cast-iron-skillet',
+   'Lodge 10-inch Cast Iron Skillet',
+   'Made in South Pittsburg, Tennessee',
+   'Lodge has been pouring iron in the same Tennessee foundry since 1896 â€” which is, incidentally, the same year Fannie Farmer published The Boston Cooking-School Cook Book. The 10-inch is the workhorse: big enough for cornbread or a whole chicken, small enough to lift with one hand. One of these will outlast you and go to your grandchildren.',
+   'Lodge Cast Iron',
+   'https://www.lodgecastiron.com',
+   'cookware',
+   'https://www.lodgecastiron.com',
+   '$25',
+   true,
+   2),
+  ('king-arthur-unbleached-bread-flour',
+   'Unbleached Bread Flour',
+   'King Arthur Baking Company',
+   'King Arthur is employee-owned, B-Corp certified, and sells the most consistent bread flour you can buy in an American grocery store. It''s the flour our 1890s recipes quietly assume you have â€” enough protein to build a real crumb, unbleached so it doesn''t fight the yeast.',
+   'King Arthur Baking',
+   'https://www.kingarthurbaking.com',
+   'flour-and-grain',
+   'https://www.kingarthurbaking.com/shop/items/king-arthur-unbleached-bread-flour-5-lb',
+   '$7 / 5 lb',
+   false,
+   3),
+  ('gethsemani-farms-kentucky-bourbon-fruitcake',
+   'Kentucky Bourbon Fruitcake',
+   'Abbey of Our Lady of Gethsemani',
+   'The Trappist monks at Gethsemani in Kentucky (Thomas Merton''s monastery) have been making fruitcake and fudge since the 1950s to support the abbey. The fruitcake is aged with bourbon and candied fruit; it keeps forever; it tastes like Christmas actually does. Buying one underwrites a real contemplative community.',
+   'Gethsemani Farms',
+   'https://www.gethsemanifarms.org',
+   'monastery',
+   'https://www.gethsemanifarms.org',
+   '$28',
+   true,
+   4),
+  ('ball-quart-mason-jars-dozen',
+   'Wide-Mouth Quart Mason Jars',
+   'Twelve, for preserving',
+   'Every preserves and pickles recipe in our library wants jars. These are the classic Ball wide-mouth quarts â€” the ones that fit a ladle without a funnel, that seal cleanly, that you can buy anywhere. Order a dozen in July, use them all by October. Keep the rings; replace the lids.',
+   'Ball Corporation',
+   'https://www.freshpreserving.com',
+   'preserving',
+   'https://www.freshpreserving.com',
+   '$16 / dozen',
+   false,
+   5),
+  ('diaspora-co-aranya-cinnamon',
+   'Aranya Cinnamon',
+   'Diaspora Co., India',
+   'Diaspora Co. pays Indian spice farmers six times the commodity rate and ships spices within months of harvest instead of years. The Aranya is wild-harvested Sri Lankan true cinnamon â€” the kind where you can actually smell the difference. A jar lasts a long time and changes every baked thing it touches.',
+   'Diaspora Co.',
+   'https://www.diasporaco.com',
+   'spices',
+   'https://www.diasporaco.com/products/aranya-cinnamon',
+   '$14',
+   false,
+   6),
+  ('new-camaldoli-hermitage-fruitcake',
+   'Holiday Fruitcake',
+   'New Camaldoli Hermitage, Big Sur',
+   'The Camaldolese hermits on the Big Sur coast make a small quantity of dense, date-and-brandy-heavy fruitcake each winter. Different character from Gethsemani''s â€” Mediterranean instead of Appalachian â€” and it sells out every year. Orders open around All Saints.',
+   'New Camaldoli Hermitage',
+   'https://www.contemplation.com',
+   'monastery',
+   'https://www.contemplation.com/store',
+   '$35',
+   false,
+   7),
+  ('bookshop-heritage-kitchen-list',
+   'The Heritage Kitchen Reading List',
+   'On Bookshop.org, not Amazon',
+   'A growing shelf of the books we return to: cookbook histories, food theology, farming almanacs, and a handful of modern cookbooks whose authors clearly did their homework. Bookshop.org splits revenue with independent bookstores instead of feeding Amazon.',
+   'Bookshop.org',
+   'https://bookshop.org',
+   'books',
+   'https://bookshop.org',
+   'Various',
+   false,
+   8)
+on conflict (slug) do nothing;
+
+-- ==========================================================================
 -- Email courses: one-time-purchase, multi-day email delivered product
 -- ==========================================================================
 
