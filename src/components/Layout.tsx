@@ -165,6 +165,19 @@ export default function Layout() {
 
       <footer className="border-t border-rule bg-surface">
         <div className="mx-auto max-w-6xl space-y-4 px-4 py-8 text-xs text-muted">
+          <div className="space-y-1">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-terracotta">
+              The Heritage project
+            </p>
+            <p className="max-w-xl leading-relaxed">
+              Heritage Kitchen is one of three sites about restoring
+              heritage to the next generation. <em>Heritage Skills</em>{' '}
+              (coming soon) is for the hands. <em>Heritage Stories</em>{' '}
+              (coming soon) is for the voice. This one is for the table.
+              All three are free, on the conviction that a generation
+              handed nothing but debt needs at least this much back.
+            </p>
+          </div>
           <p className="font-serif italic">
             &ldquo;Late have I loved you, Beauty so ancient and so new.&rdquo;
             <span className="ml-2 not-italic">

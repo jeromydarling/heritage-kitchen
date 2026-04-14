@@ -53,23 +53,26 @@ export default function HomePage() {
     <div className="space-y-12">
       <section className="relative overflow-hidden rounded-3xl border border-rule bg-surface px-6 py-12 shadow-card sm:px-12 sm:py-16">
         <div className="max-w-2xl">
-          <p className="mb-3 font-serif text-sm italic text-terracotta">
-            &ldquo;Beauty ever ancient, ever new.&rdquo;
-            <span className="ml-2 not-italic text-muted">â€” St. Augustine</span>
+          <p className="mb-3 text-[10px] uppercase tracking-[0.25em] text-terracotta">
+            Part of the Heritage project
           </p>
           <h1 className="font-serif text-4xl leading-tight sm:text-5xl">
-            Cook the old food,
+            Your inheritance,
             <br />
-            together.
+            on the table.
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-ink/90">
-            The modern conceit is that everything new is good and everything
-            old is bad. The kitchen knows better. Heritage Kitchen is a
-            growing library of {total ? total.toLocaleString() : '3,427'}{' '}
-            American recipes from 1869â€“1917, each paired with a modern
-            adaptation and tuned to the rhythms of the Christian year â€”
-            because some of the best things to eat have been waiting for you
-            since before your grandmother was born.
+            A generation was handed nothing but debt &mdash; no skills, no
+            stories, no traditions, no heritage. Heritage Kitchen is a
+            small act against that. {total ? total.toLocaleString() : '3,427'}{' '}
+            American recipes from 1869&ndash;1917, paired with modern
+            adaptations; 158 lessons on how to actually cook; a liturgical
+            year to cook them by. Free, because the food was free to the
+            people who wrote it down.
+          </p>
+          <p className="mt-3 font-serif text-sm italic text-muted">
+            &ldquo;Beauty ever ancient, ever new.&rdquo; &nbsp;&mdash;&nbsp;
+            St. Augustine
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             {calendarOn ? (
