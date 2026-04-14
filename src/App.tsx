@@ -5,6 +5,7 @@ import CategoryPage from './pages/CategoryPage';
 import RecipePage from './pages/RecipePage';
 import EssayPage from './pages/EssayPage';
 import SearchPage from './pages/SearchPage';
+import CalendarPage from './pages/CalendarPage';
 import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="category/:slug" element={<CategoryPage />} />
         <Route path="recipe/:id" element={<RecipePage />} />
         <Route path="essay/:id" element={<EssayPage />} />
+        <Route path="calendar" element={<CalendarPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="admin" element={<AdminPage />} />

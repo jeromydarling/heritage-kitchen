@@ -16,23 +16,39 @@ export default function AboutPage() {
     <div className="mx-auto max-w-2xl space-y-10">
       <header>
         <h1 className="font-serif text-4xl">About Heritage Kitchen</h1>
-        <p className="mt-3 text-lg text-muted">
-          A small recipe blog for families who want to cook the old food, together.
+        <p className="mt-3 font-serif text-lg italic text-muted">
+          &ldquo;Late have I loved you, Beauty so ancient and so new.&rdquo;
+          <span className="ml-2 not-italic">— Augustine, <em>Confessions</em> X.27</span>
         </p>
       </header>
 
       <section className="space-y-4 text-base leading-relaxed">
         <p>
-          Heritage Kitchen draws from five classic American cookbooks published between 1869 and
-          1917 — every one of them in the public domain. For each recipe we show two things side
-          by side: the cook's original words, preserved as written, and a modern adaptation you
-          can actually follow in a present-day kitchen.
+          Modernity carries a quiet assumption into every room of the house: that
+          whatever is new is an improvement, and whatever is old is, at best,
+          charmingly outdated. In most rooms this is just a nuisance. In the
+          kitchen it has cost us something real &mdash; a whole inheritance of
+          technique, patience, and unfussy confidence with food, handed down for
+          centuries and largely dropped in a single generation.
         </p>
         <p>
-          The original text is there so you can hear the voice of the person who wrote it — Fannie
-          Farmer, Miss Parloa, Mrs. Lincoln — and see how much (and how little) has changed about
-          home cooking in a hundred and thirty years. The modern version is there so dinner
-          actually happens.
+          Heritage Kitchen is a small protest against that amnesia. We take
+          American cookbooks from 1869&ndash;1917 &mdash; plain, working books written
+          by women who were feeding houses full of people without microwaves,
+          air fryers, or Google &mdash; and present them the way they were
+          written, with a modern adaptation beside each one so you can
+          actually cook from them. The project sides with Augustine: the old
+          is not stale, because real beauty is <em>ever ancient and ever
+          new</em>. Every generation meets it again for the first time.
+        </p>
+        <p>
+          The site is also a liturgical kitchen. The Christian year has always
+          shaped how Catholic and Orthodox families cook &mdash; fasting in Lent,
+          feasting at Easter, quiet Advent suppers before the Christmas table
+          bursts open. We surface recipes from the library that match the
+          mood of the day, so you can cook with the Church year the way your
+          great-grandmother did, without having to know the whole calendar
+          by heart.
         </p>
       </section>
 

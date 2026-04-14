@@ -20,8 +20,8 @@ export default function Layout() {
             <span className="font-serif text-2xl font-bold tracking-tight group-hover:text-terracotta">
               Heritage Kitchen
             </span>
-            <span className="hidden text-xs uppercase tracking-widest text-muted sm:inline">
-              Old recipes, new kitchens
+            <span className="hidden font-serif text-xs italic text-muted sm:inline">
+              Ever ancient, ever new.
             </span>
           </Link>
           <nav className="flex items-center gap-1 text-sm">
@@ -35,6 +35,16 @@ export default function Layout() {
               }
             >
               Browse
+            </NavLink>
+            <NavLink
+              to="/calendar"
+              className={({ isActive }) =>
+                `rounded-full px-3 py-1.5 !no-underline ${
+                  isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
+                }`
+              }
+            >
+              Calendar
             </NavLink>
             <NavLink
               to="/search"
@@ -64,7 +74,7 @@ export default function Layout() {
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search 3,485 recipes — e.g. gingerbread, tomatoes, Fannie Farmer…"
+              placeholder="Search the library — e.g. gingerbread, tomatoes, Fannie Farmer…"
               className="w-full rounded-full border border-rule bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:border-terracotta focus:outline-none"
               aria-label="Search recipes"
             />
@@ -80,10 +90,10 @@ export default function Layout() {
       </main>
 
       <footer className="border-t border-rule bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-6 text-xs text-muted sm:flex sm:items-center sm:justify-between">
-          <p>
-            Heritage Kitchen · 3,485 public-domain recipes from the 1880s–1920s, adapted for
-            today's families.
+        <div className="mx-auto max-w-6xl space-y-2 px-4 py-8 text-xs text-muted sm:flex sm:items-center sm:justify-between sm:space-y-0">
+          <p className="font-serif italic">
+            &ldquo;Late have I loved you, Beauty so ancient and so new.&rdquo;
+            <span className="ml-2 not-italic">— Augustine, <em>Confessions</em> X.27</span>
           </p>
           <p>
             Source texts via{' '}

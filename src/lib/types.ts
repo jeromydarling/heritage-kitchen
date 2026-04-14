@@ -42,6 +42,12 @@ export interface Recipe {
   // Computed client-side by the classifier. "essay" entries are historical
   // articles rather than cookable recipes (e.g. "Coffee", "Baking of Bread").
   content_type?: 'recipe' | 'essay';
+  // Computed client-side for liturgical-calendar surfacing.
+  meal_tags?: {
+    meatless: boolean;
+    hasFish: boolean;
+    celebratory: boolean;
+  };
 }
 
 export interface CategoryMeta {

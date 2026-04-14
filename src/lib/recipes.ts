@@ -2,6 +2,8 @@ import type { Recipe } from './types';
 import { sampleRecipes } from './sampleRecipes';
 import { supabase, isSupabaseConfigured } from './supabase';
 import { classifyAll, findRelatedEssays } from './classify';
+import { tagRecipes } from './mealtype';
+import { getLiturgicalDay, type LiturgicalDay, type SuggestionMode } from './liturgical';
 
 // Path to the JSON dataset in /public. The full 3,485-recipe file lives at
 // public/heritage_kitchen_recipes.json and is fetched on first load â€” no
@@ -15,6 +17,10 @@ const PUBLIC_DATASET_URL = `${import.meta.env.BASE_URL}heritage_kitchen_recipes.
 let cache: Recipe[] | null = null;
 let inflight: Promise<Recipe[]> | null = null;
 
+function annotate(recipes: Recipe[]): Recipe[] {
+  return tagRecipes(classifyAll(recipes));
+}
+
 async function loadAll(): Promise<Recipe[]> {
   if (cache) return cache;
   if (inflight) return inflight;
@@ -23,7 +29,7 @@ async function loadAll(): Promise<Recipe[]> {
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.from('recipes').select('*').order('title');
       if (!error && data && data.length > 0) {
-        cache = classifyAll(data as Recipe[]);
+        cache = annotate(data as Recipe[]);
         return cache;
       }
     }
@@ -34,7 +40,7 @@ async function loadAll(): Promise<Recipe[]> {
         const text = await res.text();
         const data = JSON.parse(text);
         if (Array.isArray(data) && data.length > 0) {
-          cache = classifyAll(data as Recipe[]);
+          cache = annotate(data as Recipe[]);
           return cache;
         }
       }
@@ -42,7 +48,7 @@ async function loadAll(): Promise<Recipe[]> {
       // ignore â€” fall through to sample
     }
 
-    cache = classifyAll(sampleRecipes);
+    cache = annotate(sampleRecipes);
     return cache;
   })();
 
@@ -125,6 +131,80 @@ export async function getRelatedEssays(recipe: Recipe, limit = 3): Promise<Recip
   const essays = await loadEssays();
   return findRelatedEssays(recipe, essays, limit);
 }
+
+/**
+ * Pick `limit` recipes appropriate for the given liturgical day. The
+ * scoring combines (1) feast-specific title token matches, (2) the
+ * suggestion mode (fasting / feasting / ordinary), and (3) meal tags.
+ */
+export async function getSeasonalSuggestions(
+  liturgicalDay: LiturgicalDay,
+  limit = 6,
+): Promise<Recipe[]> {
+  const recipes = await loadRecipes();
+  const mode: SuggestionMode = liturgicalDay.suggestionMode;
+  const feastTokens = (liturgicalDay.feast?.titleTokens ?? []).map((t) => t.toLowerCase());
+
+  const wantsMeatless =
+    mode === 'fasting' || mode === 'friday-abstinence';
+  const wantsCelebratory =
+    mode === 'christmas-feast' ||
+    mode === 'easter-feast' ||
+    mode === 'feast-day';
+  const wantsSimple = mode === 'advent-simple';
+
+  const scored = recipes.map((r) => {
+    const title = r.title.toLowerCase();
+    const tags = r.meal_tags;
+    let score = 0;
+
+    // Feast-day specific title tokens are a strong signal.
+    for (const token of feastTokens) {
+      if (title.includes(token)) score += 20;
+    }
+
+    if (wantsMeatless) {
+      if (tags?.meatless) score += 5;
+      if (tags?.hasFish) score += 3;
+      if (r.difficulty === 'easy') score += 1;
+    }
+
+    if (wantsCelebratory) {
+      if (tags?.celebratory) score += 5;
+      if (r.difficulty === 'involved') score += 2;
+    }
+
+    if (wantsSimple) {
+      if (r.difficulty === 'easy') score += 2;
+      if (tags?.meatless) score += 1;
+    }
+
+    if (mode === 'ordinary') {
+      // A gentle bias toward easier everyday cooking.
+      if (r.difficulty === 'easy') score += 1;
+    }
+
+    return { recipe: r, score };
+  });
+
+  // Filter out score-zero entries, then shuffle the top tier so visitors
+  // see a slightly different selection on each load.
+  const topTier = scored
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score);
+  if (topTier.length === 0) return [];
+
+  const topScore = topTier[0].score;
+  const cutoff = Math.max(topScore - 2, 1);
+  const pool = topTier.filter((x) => x.score >= cutoff);
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, limit).map((x) => x.recipe);
+}
+
+export { getLiturgicalDay };
 
 export async function getRelatedRecipes(essay: Recipe, limit = 6): Promise<Recipe[]> {
   const recipes = await loadRecipes();
