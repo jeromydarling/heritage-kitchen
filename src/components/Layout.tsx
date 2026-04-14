@@ -42,6 +42,9 @@ export default function Layout() {
       <NavLink to="/" end className={className}>
         Browse
       </NavLink>
+      <NavLink to="/how-to-cook" className={className}>
+        How to Cook
+      </NavLink>
       {calendarOn && (
         <NavLink to="/calendar" className={className}>
           Calendar

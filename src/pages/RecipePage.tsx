@@ -7,6 +7,7 @@ import {
   getEntry,
 } from '../lib/recipes';
 import { CATEGORIES, type Recipe } from '../lib/types';
+import { getRelatedLessons, type Lesson } from '../lib/lessons';
 import TabSwitcher from '../components/TabSwitcher';
 import RecipeImage from '../components/RecipeImage';
 import DifficultyBadge from '../components/DifficultyBadge';
@@ -20,6 +21,7 @@ export default function RecipePage() {
   const navigate = useNavigate();
   const [recipe, setRecipe] = useState<Recipe | undefined>();
   const [relatedEssays, setRelatedEssays] = useState<Recipe[]>([]);
+  const [relatedLessons, setRelatedLessons] = useState<Lesson[]>([]);
   const [tab, setTab] = useState<Tab>('modern');
   const [checked, setChecked] = useState<Record<number, boolean>>({});
 
@@ -27,11 +29,16 @@ export default function RecipePage() {
     setChecked({});
     setTab('modern');
     setRelatedEssays([]);
+    setRelatedLessons([]);
     (async () => {
       const r = await getRecipe(id);
       if (r) {
         setRecipe(r);
         setRelatedEssays(await getRelatedEssays(r));
+        // Lessons are indexed by the tag list on each recipe plus its
+        // category. A bread recipe picks up the bread-and-dough lessons.
+        const tags = [r.category, ...(r.tags ?? [])];
+        setRelatedLessons(await getRelatedLessons(tags));
         return;
       }
       // If the id resolves to an essay entry, bounce the user over to the
@@ -170,6 +177,28 @@ export default function RecipePage() {
             </a>
           </div>
           <RecipeActions recipe={recipe} />
+
+          {relatedLessons.length > 0 && (
+            <div className="card p-5">
+              <h3 className="font-serif text-lg">Learn the technique</h3>
+              <p className="mt-1 text-xs text-muted">
+                Lessons from the kitchen school that explain what you&rsquo;re
+                doing.
+              </p>
+              <ul className="mt-3 space-y-2">
+                {relatedLessons.map((l) => (
+                  <li key={l.id}>
+                    <Link to={`/how-to-cook/${l.id}`} className="text-sm leading-tight">
+                      {l.title}
+                    </Link>
+                    <span className="ml-2 text-xs text-muted">
+                      {l.source_year}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {relatedEssays.length > 0 && (
             <div className="card p-5">

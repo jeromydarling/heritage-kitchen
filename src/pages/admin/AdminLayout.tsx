@@ -56,6 +56,7 @@ export default function AdminLayout() {
           <AdminLink to="/admin" end label="Overview" />
           <AdminLink to="/admin/editions" label="Editions" />
           <AdminLink to="/admin/courses" label="Courses" />
+          <AdminLink to="/admin/lessons" label="How to Cook" />
           <AdminLink to="/admin/store" label="Store" />
           <AdminLink to="/admin/monasteries" label="Monasteries" />
           <AdminLink to="/admin/sponsors" label="Sponsors" />

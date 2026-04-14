@@ -326,6 +326,57 @@ create policy "cookbook_projects_self" on cookbook_projects
   with check (auth.uid() = user_id);
 
 -- ==========================================================================
+-- Lessons ("How to Cook"): technique articles from historical cookbooks
+-- ==========================================================================
+--
+-- A new content type that is neither a recipe nor a short essay. Each
+-- lesson is a long-form article drawn from a 1890s-1920s cooking textbook
+-- -- yeast biology, oven chemistry, knife work, invalid cookery, meal
+-- planning, nutrition. Every lesson carries an explicit "still true" and
+-- "outdated" split so readers can trust which parts of the historical
+-- knowledge to keep and which to discard.
+
+create table if not exists lessons (
+  id text primary key,
+  title text not null,
+  source_book text,
+  source_author text,
+  source_year text,
+  source_url text,
+  topic text,
+  original_text text,
+  modern_explanation text,
+  key_takeaways jsonb default '[]'::jsonb,
+  still_true text,
+  outdated text,
+  related_recipe_tags jsonb default '[]'::jsonb,
+  difficulty text check (difficulty is null or difficulty in ('beginner','intermediate','advanced')),
+  fun_for_kids boolean default false,
+  image_prompt text,
+  image_url text,
+  published boolean not null default true,
+  featured boolean not null default false,
+  sort_order integer default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists idx_lessons_topic on lessons (topic);
+create index if not exists idx_lessons_kids on lessons (published, fun_for_kids);
+create index if not exists idx_lessons_difficulty on lessons (published, difficulty);
+
+alter table lessons enable row level security;
+
+drop policy if exists "lessons_public_read" on lessons;
+create policy "lessons_public_read" on lessons
+  for select using (published = true);
+
+drop policy if exists "lessons_admin_write" on lessons;
+create policy "lessons_admin_write" on lessons
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- ==========================================================================
 -- Editions: Heritage Kitchen editorial cookbooks for sale
 -- ==========================================================================
 --

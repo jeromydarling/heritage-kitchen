@@ -4,6 +4,9 @@ import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import RecipePage from './pages/RecipePage';
 import EssayPage from './pages/EssayPage';
+import HowToCookPage from './pages/HowToCookPage';
+import HowToCookKidsPage from './pages/HowToCookKidsPage';
+import LessonDetailPage from './pages/LessonDetailPage';
 import SearchPage from './pages/SearchPage';
 import CalendarPage from './pages/CalendarPage';
 import CookbookPage from './pages/CookbookPage';
@@ -35,6 +38,7 @@ import SponsorsAdminPage from './pages/admin/SponsorsAdminPage';
 import AdoptionsAdminPage from './pages/admin/AdoptionsAdminPage';
 import EnquiriesAdminPage from './pages/admin/EnquiriesAdminPage';
 import OrdersAdminPage from './pages/admin/OrdersAdminPage';
+import LessonsAdminPage from './pages/admin/LessonsAdminPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
@@ -45,6 +49,9 @@ export default function App() {
         <Route path="category/:slug" element={<CategoryPage />} />
         <Route path="recipe/:id" element={<RecipePage />} />
         <Route path="essay/:id" element={<EssayPage />} />
+        <Route path="how-to-cook" element={<HowToCookPage />} />
+        <Route path="how-to-cook/kids" element={<HowToCookKidsPage />} />
+        <Route path="how-to-cook/:id" element={<LessonDetailPage />} />
         <Route path="calendar" element={<CalendarPage />} />
         <Route path="cookbook" element={<CookbookPage />} />
         <Route path="cookbook/build" element={<CookbookBuilderPage />} />
@@ -75,6 +82,7 @@ export default function App() {
           <Route path="adoptions" element={<AdoptionsAdminPage />} />
           <Route path="enquiries" element={<EnquiriesAdminPage />} />
           <Route path="orders" element={<OrdersAdminPage />} />
+          <Route path="lessons" element={<LessonsAdminPage />} />
           <Route path="images" element={<AdminPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
