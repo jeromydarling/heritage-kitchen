@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+    font-feature-settings: 'kern', 'liga', 'calt';
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-ink;
+    font-feature-settings: 'lnum', 'pnum';
+  }
+  a {
+    @apply text-terracotta hover:text-terracotta-dark;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-full border border-rule bg-surface px-4 py-2 text-sm font-medium text-ink transition hover:border-terracotta hover:text-terracotta;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm font-semibold text-cream shadow-card transition hover:bg-terracotta-dark;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full border border-rule bg-surface px-3 py-1 text-xs font-medium text-muted;
+  }
+  .card {
+    @apply rounded-2xl border border-rule bg-surface shadow-card;
+  }
+  .paper {
+    background-color: #f5eedf;
+    background-image:
+      radial-gradient(ellipse at top, rgba(168, 75, 47, 0.05), transparent 60%),
+      repeating-linear-gradient(
+        0deg,
+        rgba(59, 35, 20, 0.03) 0px,
+        rgba(59, 35, 20, 0.03) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+  }
+}
