@@ -18,6 +18,10 @@ export interface CookbookProject {
   title: string;
   subtitle: string | null;
   dedication: string | null;
+  /** Optional editorial foreword page, one paragraph of prose from the author. */
+  foreword?: string | null;
+  /** When true, recipes are grouped by category with a divider page between groups. */
+  groupByCategory?: boolean;
   recipes: Recipe[];
 }
 
@@ -336,6 +340,224 @@ function approximatePageCountFromBlob(_blob: Blob): number {
   return 0;
 }
 
+// ====================================================================
+// FRONT AND BACK MATTER
+// ====================================================================
+
+/** Short category metadata for dividers. Keep in sync with lib/types. */
+const CATEGORY_BLURBS: Record<string, { label: string; blurb: string }> = {
+  'breakfast-and-bakes': { label: 'Breakfast & Bakes', blurb: 'Griddle cakes, muffins, and morning comforts.' },
+  'soups-and-stews': { label: 'Soups & Stews', blurb: 'Long-simmered pots from chilly kitchens.' },
+  'main-dishes': { label: 'Main Dishes', blurb: 'The centerpiece of the family table.' },
+  'sides-and-vegetables': { label: 'Sides & Vegetables', blurb: 'Garden-fresh accompaniments.' },
+  'salads': { label: 'Salads', blurb: 'Bright, simple, and often surprising.' },
+  'sauces-and-condiments': { label: 'Sauces & Condiments', blurb: 'The little jars that changed a meal.' },
+  'desserts': { label: 'Desserts', blurb: 'Puddings, pies, and Sunday sweets.' },
+  'candy-and-confections': { label: 'Candy & Confections', blurb: 'Pull-taffy and penuche from the parlour.' },
+  'beverages': { label: 'Beverages', blurb: 'Cocoa, cordials, and cooling drinks.' },
+  'breads': { label: 'Breads', blurb: 'Loaves, biscuits, and rolls worth the wait.' },
+  'preserves-and-pickles': { label: 'Preserves & Pickles', blurb: 'Putting the harvest away for winter.' },
+  'kids-in-the-kitchen': { label: 'Kids in the Kitchen', blurb: 'Simple recipes to cook together.' },
+};
+
+function drawCopyrightPage(doc: jsPDF) {
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(120, 90, 60);
+  centeredText(doc, 'HERITAGE KITCHEN', PAGE_H / 2 - 60);
+
+  doc.setFont('times', 'italic');
+  doc.setFontSize(10);
+  doc.setTextColor(100, 80, 60);
+  const year = new Date().getFullYear();
+  centeredText(doc, `Typeset ${year} by Heritage Kitchen.`, PAGE_H / 2 - 30);
+  centeredText(doc, 'heritagekitchen.app', PAGE_H / 2 - 14);
+
+  doc.setFont('times', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(90, 75, 60);
+  const disclaimer = doc.splitTextToSize(
+    'All source recipes are in the public domain, drawn from American cookbooks published between 1869 and 1917 and digitized by Project Gutenberg. The modernized adaptations, category pairings, and editorial notes are the work of Heritage Kitchen.',
+    CONTENT_W - 40,
+  ) as string[];
+  let y = PAGE_H / 2 + 14;
+  for (const line of disclaimer) {
+    centeredText(doc, line, y);
+    y += 13;
+  }
+}
+
+function drawForeword(doc: jsPDF, project: CookbookProject) {
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(120, 90, 60);
+  doc.text('A NOTE ON THE RECIPES', MARGIN_X, MARGIN_TOP);
+
+  doc.setDrawColor(168, 75, 47);
+  doc.setLineWidth(0.5);
+  doc.line(MARGIN_X, MARGIN_TOP + 10, MARGIN_X + 40, MARGIN_TOP + 10);
+
+  const text =
+    project.foreword ??
+    'These recipes were written for kitchens very different from yours. The stoves were wood. The butter was unsalted and came from a neighbor. The flour was bought in barrels. What follows is our attempt to carry them across the hundred years between then and now without losing what made them good in the first place. Cook slowly. Taste often. Leave the phone in another room.';
+
+  doc.setFont('times', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(59, 35, 20);
+  const lines = doc.splitTextToSize(text, CONTENT_W) as string[];
+  let y = MARGIN_TOP + 40;
+  for (const line of lines) {
+    doc.text(line, MARGIN_X, y);
+    y += 16;
+  }
+}
+
+function drawCategoryDivider(doc: jsPDF, categorySlug: string) {
+  const meta = CATEGORY_BLURBS[categorySlug] ?? {
+    label: categorySlug,
+    blurb: '',
+  };
+
+  // Hairline rules framing a central band at the page's vertical midline
+  doc.setDrawColor(168, 75, 47);
+  doc.setLineWidth(0.4);
+  const topY = PAGE_H * 0.38;
+  const botY = PAGE_H * 0.62;
+  doc.line(MARGIN_X + 20, topY, PAGE_W - MARGIN_X - 20, topY);
+  doc.line(MARGIN_X + 20, botY, PAGE_W - MARGIN_X - 20, botY);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(168, 75, 47);
+  centeredText(doc, 'HERITAGE KITCHEN', topY + 18);
+
+  doc.setFont('times', 'bold');
+  doc.setFontSize(28);
+  doc.setTextColor(59, 35, 20);
+  centeredText(doc, meta.label, PAGE_H / 2 + 6);
+
+  if (meta.blurb) {
+    doc.setFont('times', 'italic');
+    doc.setFontSize(11);
+    doc.setTextColor(120, 110, 90);
+    const blurbLines = doc.splitTextToSize(meta.blurb, CONTENT_W - 60) as string[];
+    let y = PAGE_H / 2 + 34;
+    for (const line of blurbLines) {
+      centeredText(doc, line, y);
+      y += 14;
+    }
+  }
+}
+
+function drawRecipeIndex(doc: jsPDF, recipes: Recipe[]) {
+  doc.setFont('times', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(59, 35, 20);
+  doc.text('Index', MARGIN_X, MARGIN_TOP);
+
+  const sorted = [...recipes].sort((a, b) => a.title.localeCompare(b.title));
+  doc.setFont('times', 'normal');
+  doc.setFontSize(10);
+
+  let y = MARGIN_TOP + 32;
+  let col = 0;
+  const colW = (CONTENT_W - 20) / 2;
+  for (const r of sorted) {
+    if (y > PAGE_H - MARGIN_BOTTOM - 14) {
+      if (col === 0) {
+        col = 1;
+        y = MARGIN_TOP + 32;
+      } else {
+        doc.addPage();
+        doc.setFont('times', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(59, 35, 20);
+        col = 0;
+        y = MARGIN_TOP;
+      }
+    }
+    const x = MARGIN_X + (col * (colW + 20));
+    doc.text(r.title, x, y);
+    const yearStr = String(r.source_year);
+    const yearW = doc.getTextWidth(yearStr);
+    doc.setTextColor(120, 110, 90);
+    doc.text(yearStr, x + colW - yearW, y);
+    doc.setTextColor(59, 35, 20);
+    y += 13;
+  }
+}
+
+function drawBibliography(doc: jsPDF, recipes: Recipe[]) {
+  doc.setFont('times', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(59, 35, 20);
+  doc.text('Source books', MARGIN_X, MARGIN_TOP);
+
+  // Unique by source_book, keeping first occurrence's author/year
+  const seen = new Set<string>();
+  const books: { title: string; author: string; year: string }[] = [];
+  for (const r of recipes) {
+    if (!seen.has(r.source_book)) {
+      seen.add(r.source_book);
+      books.push({
+        title: r.source_book,
+        author: r.source_author,
+        year: r.source_year,
+      });
+    }
+  }
+  books.sort((a, b) => Number(a.year) - Number(b.year));
+
+  doc.setFont('times', 'normal');
+  doc.setFontSize(11);
+  let y = MARGIN_TOP + 36;
+  for (const b of books) {
+    if (y > PAGE_H - MARGIN_BOTTOM - 40) {
+      doc.addPage();
+      y = MARGIN_TOP;
+    }
+    doc.setFont('times', 'bold');
+    doc.setTextColor(59, 35, 20);
+    doc.text(b.title, MARGIN_X, y);
+    y += 14;
+    doc.setFont('times', 'italic');
+    doc.setTextColor(120, 110, 90);
+    doc.text(`${b.author}  \u00B7  ${b.year}`, MARGIN_X, y);
+    y += 22;
+  }
+}
+
+function drawAboutHeritageKitchen(doc: jsPDF) {
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(120, 90, 60);
+  centeredText(doc, 'ABOUT HERITAGE KITCHEN', PAGE_H / 2 - 90);
+
+  doc.setFont('times', 'italic');
+  doc.setFontSize(11);
+  doc.setTextColor(100, 80, 60);
+  const lines = [
+    'Heritage Kitchen is a small library of American recipes from',
+    '1869\u20131917, each shown beside a modern adaptation and tuned to',
+    'the rhythms of the Christian year. Cook the old food, together.',
+  ];
+  let y = PAGE_H / 2 - 60;
+  for (const line of lines) {
+    centeredText(doc, line, y);
+    y += 16;
+  }
+
+  doc.setFont('times', 'normal');
+  doc.setFontSize(13);
+  doc.setTextColor(168, 75, 47);
+  centeredText(doc, 'heritagekitchen.app', PAGE_H / 2 + 20);
+
+  doc.setFont('times', 'italic');
+  doc.setFontSize(9);
+  doc.setTextColor(120, 110, 90);
+  centeredText(doc, '\u201cEver ancient, ever new.\u201d', PAGE_H / 2 + 50);
+}
+
 /** Generates the PDF and returns both the blob and its page count. */
 export async function generateCookbookPdfWithMeta(
   project: CookbookProject,
@@ -346,17 +568,57 @@ export async function generateCookbookPdfWithMeta(
     compress: true,
   });
 
+  // -------- Front matter --------
   drawTitlePage(doc, project);
+
+  doc.addPage();
+  drawCopyrightPage(doc);
+
+  doc.addPage();
+  drawForeword(doc, project);
 
   doc.addPage();
   const tocCursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
   drawTableOfContents(doc, project.recipes, tocCursor);
 
-  for (const recipe of project.recipes) {
-    doc.addPage();
-    const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
-    drawRecipe(doc, recipe, cursor);
+  // -------- Recipes (optionally grouped by category) --------
+  if (project.groupByCategory && project.recipes.length >= 12) {
+    // Stable group order: use the first occurrence of each category
+    const order: string[] = [];
+    const buckets = new Map<string, Recipe[]>();
+    for (const r of project.recipes) {
+      if (!buckets.has(r.category)) {
+        buckets.set(r.category, []);
+        order.push(r.category);
+      }
+      buckets.get(r.category)!.push(r);
+    }
+    for (const cat of order) {
+      doc.addPage();
+      drawCategoryDivider(doc, cat);
+      for (const recipe of buckets.get(cat)!) {
+        doc.addPage();
+        const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+        drawRecipe(doc, recipe, cursor);
+      }
+    }
+  } else {
+    for (const recipe of project.recipes) {
+      doc.addPage();
+      const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+      drawRecipe(doc, recipe, cursor);
+    }
   }
+
+  // -------- Back matter --------
+  doc.addPage();
+  drawRecipeIndex(doc, project.recipes);
+
+  doc.addPage();
+  drawBibliography(doc, project.recipes);
+
+  doc.addPage();
+  drawAboutHeritageKitchen(doc);
 
   doc.addPage();
   drawColophon(doc);
