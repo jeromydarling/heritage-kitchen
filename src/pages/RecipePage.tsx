@@ -11,9 +11,12 @@ import { CATEGORIES, type Recipe } from '../lib/types';
 import { getRelatedLessons, type Lesson } from '../lib/lessons';
 import {
   buildRecipeIndex,
+  buildLessonIndex,
   formatHistoricalText,
   type RecipeIndex,
+  type LessonIndex,
 } from '../lib/recipeLinker';
+import { loadLessons } from '../lib/lessons';
 import { normalizeFractions } from '../lib/fractions';
 import TabSwitcher from '../components/TabSwitcher';
 import RecipeImage from '../components/RecipeImage';
@@ -30,6 +33,7 @@ export default function RecipePage() {
   const [relatedEssays, setRelatedEssays] = useState<Recipe[]>([]);
   const [relatedLessons, setRelatedLessons] = useState<Lesson[]>([]);
   const [linkIndex, setLinkIndex] = useState<RecipeIndex>(() => new Map());
+  const [lessonIndex, setLessonIndex] = useState<LessonIndex>(() => new Map());
   const [tab, setTab] = useState<Tab>('modern');
   const [checked, setChecked] = useState<Record<number, boolean>>({});
 
@@ -50,8 +54,9 @@ export default function RecipePage() {
         // Build the cross-reference index once the library is loaded.
         // Recipes is already cached after the first call so this is
         // cheap on subsequent visits.
-        const all = await loadRecipes();
+        const [all, allLessons] = await Promise.all([loadRecipes(), loadLessons()]);
         setLinkIndex(buildRecipeIndex(all));
+        setLessonIndex(buildLessonIndex(allLessons));
         return;
       }
       // If the id resolves to an essay entry, bounce the user over to the
@@ -160,13 +165,14 @@ export default function RecipePage() {
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           {tab === 'original' ? (
-            <OriginalView recipe={recipe} linkIndex={linkIndex} />
+            <OriginalView recipe={recipe} linkIndex={linkIndex} lessonIndex={lessonIndex} />
           ) : (
             <ModernView
               recipe={recipe}
               checked={checked}
               setChecked={setChecked}
               linkIndex={linkIndex}
+              lessonIndex={lessonIndex}
             />
           )}
         </div>
@@ -248,7 +254,15 @@ export default function RecipePage() {
   );
 }
 
-function OriginalView({ recipe, linkIndex }: { recipe: Recipe; linkIndex: RecipeIndex }) {
+function OriginalView({
+  recipe,
+  linkIndex,
+  lessonIndex,
+}: {
+  recipe: Recipe;
+  linkIndex: RecipeIndex;
+  lessonIndex: LessonIndex;
+}) {
   return (
     <section
       role="tabpanel"
@@ -264,7 +278,13 @@ function OriginalView({ recipe, linkIndex }: { recipe: Recipe; linkIndex: Recipe
       </p>
       <hr className="my-5 border-rule" />
       <pre className="whitespace-pre-wrap font-mono text-[0.95rem] leading-relaxed text-ink">
-        {formatHistoricalText(recipe.original_recipe, recipe.id, linkIndex, recipe.source_book)}
+        {formatHistoricalText(
+          recipe.original_recipe,
+          recipe.id,
+          linkIndex,
+          recipe.source_book,
+          lessonIndex,
+        )}
       </pre>
     </section>
   );
@@ -275,11 +295,13 @@ function ModernView({
   checked,
   setChecked,
   linkIndex,
+  lessonIndex,
 }: {
   recipe: Recipe;
   checked: Record<number, boolean>;
   setChecked: (v: Record<number, boolean>) => void;
   linkIndex: RecipeIndex;
+  lessonIndex: LessonIndex;
 }) {
   const { modern_recipe: m } = recipe;
   const rawIngredients = Array.isArray(m.ingredients)
@@ -319,7 +341,13 @@ function ModernView({
           </p>
         ) : asProse ? (
           <p className="mt-3 leading-relaxed">
-            {formatHistoricalText(ingredients[0], recipe.id, linkIndex, recipe.source_book)}
+            {formatHistoricalText(
+              ingredients[0],
+              recipe.id,
+              linkIndex,
+              recipe.source_book,
+              lessonIndex,
+            )}
           </p>
         ) : (
           <ul className="mt-3 space-y-2">
@@ -336,7 +364,7 @@ function ModernView({
                   htmlFor={`ing-${i}`}
                   className={checked[i] ? 'text-muted line-through' : ''}
                 >
-                  {formatHistoricalText(ing, recipe.id, linkIndex, recipe.source_book)}
+                  {formatHistoricalText(ing, recipe.id, linkIndex, recipe.source_book, lessonIndex)}
                 </label>
               </li>
             ))}
@@ -356,7 +384,7 @@ function ModernView({
                   {i + 1}
                 </span>
                 <p className="leading-relaxed">
-                  {formatHistoricalText(step, recipe.id, linkIndex, recipe.source_book)}
+                  {formatHistoricalText(step, recipe.id, linkIndex, recipe.source_book, lessonIndex)}
                 </p>
               </li>
             ))}

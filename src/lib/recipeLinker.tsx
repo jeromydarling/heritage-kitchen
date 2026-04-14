@@ -4,6 +4,7 @@ import type { Recipe } from './types';
 import { CATEGORIES } from './types';
 import { normalizeFractions } from './fractions';
 import { GLOSSARY_RE, glossaryLookup, type GlossaryEntry } from './glossary';
+import type { Lesson } from './lessons';
 
 // Wrap glossary terms inside a plain-text segment with a <span> that
 // shows the modern equivalent on hover. Returns an array of React
@@ -55,6 +56,65 @@ function decorateGlossary(segment: string, keyBase: string): ReactNode[] {
  */
 
 export type RecipeIndex = Map<string, Recipe[]>;
+export type LessonIndex = Map<string, Lesson>;
+
+// Phrases the old books use to reference technique sections, mapped
+// to the lesson topic that covers them. The linker picks the first
+// lesson in that topic when it finds the phrase after a "see" trigger.
+const LESSON_PHRASE_TO_TOPIC: Record<string, string> = {
+  'rules for testing fat': 'frying',
+  'rule for testing fat': 'frying',
+  'testing fat': 'frying',
+  'time table for cooking': 'fire-and-heat',
+  'time table for baking': 'baking',
+  'time-table for cooking': 'fire-and-heat',
+  'time-table for baking': 'baking',
+  'caramelization of sugar': 'candy-and-sugar-work',
+  'directions for freezing': 'food-science',
+  'method of freezing': 'food-science',
+  'baking of bread': 'bread-and-dough',
+  'care of milk': 'dairy',
+  'care of fish': 'fish-and-seafood',
+};
+
+/**
+ * Builds a phrase → lesson index for cross-referencing technique
+ * mentions like "see rule for testing fat" to a lesson in the
+ * how-to-cook library.
+ */
+export function buildLessonIndex(lessons: Lesson[]): LessonIndex {
+  const byTopic = new Map<string, Lesson>();
+  for (const l of lessons) {
+    if (!byTopic.has(l.topic)) byTopic.set(l.topic, l);
+  }
+  const index: LessonIndex = new Map();
+  for (const [phrase, topic] of Object.entries(LESSON_PHRASE_TO_TOPIC)) {
+    const lesson = byTopic.get(topic);
+    if (lesson) index.set(phrase, lesson);
+  }
+  return index;
+}
+
+function findLessonMatch(
+  candidate: string,
+  lessonIndex: LessonIndex,
+): { lesson: Lesson; matchedLen: number; matchedText: string } | null {
+  if (lessonIndex.size === 0) return null;
+  const lower = candidate.toLowerCase();
+  for (const phrase of [...lessonIndex.keys()].sort((a, b) => b.length - a.length)) {
+    if (lower.startsWith(phrase)) {
+      const after = candidate.charAt(phrase.length);
+      if (after === '' || /[^\p{L}\p{N}]/u.test(after)) {
+        return {
+          lesson: lessonIndex.get(phrase)!,
+          matchedLen: phrase.length,
+          matchedText: candidate.slice(0, phrase.length),
+        };
+      }
+    }
+  }
+  return null;
+}
 
 // The main trigger regex. "see" is handled specially because it has
 // three flavors in the old cookbooks: real cross-references ("see
@@ -115,6 +175,14 @@ const CATEGORY_ALIASES: Record<string, string> = (() => {
 function normalize(s: string): string {
   return s
     .toLowerCase()
+    // Decompose then strip combining marks so "à" / "é" / "ô" match
+    // their ASCII counterparts. "Bœuf à la Mode" ↔ "Boeuf a la Mode".
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    // Expand a few latin ligatures the old books use for French dish
+    // names but that don't decompose cleanly.
+    .replace(/œ/g, 'oe')
+    .replace(/æ/g, 'ae')
     .replace(/[^\p{L}\p{N} ]/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -229,6 +297,7 @@ export function linkRecipeReferences(
   currentId: string,
   index: RecipeIndex,
   sourceBook?: string,
+  lessonIndex: LessonIndex = new Map(),
 ): ReactNode {
   if (!text) return text;
 
@@ -303,6 +372,29 @@ export function linkRecipeReferences(
       cursor = triggerEnd + recipeHit.matchedLen;
       TRIGGER_RE.lastIndex = cursor;
       continue;
+    }
+
+    // Third resolver: technique-section phrases map to lessons in
+    // the how-to-cook library. "See rule for testing fat" → frying
+    // lesson, "Caramelization of Sugar" → sugar lesson, etc.
+    if (trigger === 'see') {
+      const lessonHit = findLessonMatch(candidate, lessonIndex);
+      if (lessonHit) {
+        if (cursor < triggerStart) pushPlain(text.slice(cursor, triggerStart));
+        pushPlain(m[0]);
+        out.push(
+          <Link
+            key={`xref-${key++}-${triggerStart}`}
+            to={`/how-to-cook/${lessonHit.lesson.id}`}
+            className="text-terracotta underline decoration-terracotta/40 underline-offset-2 hover:decoration-terracotta"
+          >
+            {lessonHit.matchedText}
+          </Link>,
+        );
+        cursor = triggerEnd + lessonHit.matchedLen;
+        TRIGGER_RE.lastIndex = cursor;
+        continue;
+      }
     }
 
     // Fall back to category aliases. Only active after "see" — the
@@ -382,6 +474,7 @@ export function formatHistoricalText(
   currentId: string,
   index: RecipeIndex,
   sourceBook?: string,
+  lessonIndex: LessonIndex = new Map(),
 ): ReactNode {
   if (!rawText) return rawText;
   // Normalize word-form fractions so "one-fourth cup" renders the
@@ -398,7 +491,13 @@ export function formatHistoricalText(
     if (m.index > cursor) {
       nodes.push(
         <Fragment key={`t-${key++}`}>
-          {linkRecipeReferences(text.slice(cursor, m.index), currentId, index, sourceBook)}
+          {linkRecipeReferences(
+            text.slice(cursor, m.index),
+            currentId,
+            index,
+            sourceBook,
+            lessonIndex,
+          )}
         </Fragment>,
       );
     }
@@ -427,7 +526,7 @@ export function formatHistoricalText(
   if (cursor < text.length) {
     nodes.push(
       <Fragment key={`t-${key++}`}>
-        {linkRecipeReferences(text.slice(cursor), currentId, index, sourceBook)}
+        {linkRecipeReferences(text.slice(cursor), currentId, index, sourceBook, lessonIndex)}
       </Fragment>,
     );
   }
