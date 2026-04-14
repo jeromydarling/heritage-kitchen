@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
 
+import type { EditionSelector } from './editionSelector';
+
 export type EditionFormat = 'print' | 'pdf' | 'both';
 
 export interface Edition {
@@ -12,6 +14,7 @@ export interface Edition {
   intro_text: string | null;
   recipe_ids: string[];
   lesson_ids: string[];
+  selector: EditionSelector | null;
   price_usd: number;
   price_pdf_usd: number | null;
   format: EditionFormat;

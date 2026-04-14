@@ -408,6 +408,10 @@ alter table editions add column if not exists cover_pdf_url text;
 -- Lesson-based or mixed editions. recipe_ids is already jsonb[];
 -- lesson_ids holds the ordered list of lesson ids included in the book.
 alter table editions add column if not exists lesson_ids jsonb default '[]'::jsonb;
+-- Auto-assembly selector. When set, the admin "Rebuild from selector"
+-- button regenerates recipe_ids and lesson_ids from the filters in this
+-- jsonb config. See src/lib/editionSelector.ts for the schema.
+alter table editions add column if not exists selector jsonb;
 -- Almanac year for editions in the annual "Heritage Kitchen Almanac" series.
 -- NULL for non-almanac editions.
 alter table editions add column if not exists almanac_year integer;

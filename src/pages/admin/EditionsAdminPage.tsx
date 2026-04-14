@@ -3,8 +3,9 @@ import { useAdminCrud, slugify } from '../../lib/adminCrud';
 import { ResourceList, ResourceForm, AdminFieldDef, StatusPill } from './_shared';
 import { MarkdownField, ImageUploadField, RecipePickerField, LessonPickerField } from './_fields';
 import { supabase } from '../../lib/supabase';
-import { loadAllForIds } from '../../lib/recipes';
+import { loadAllForIds, loadRecipes } from '../../lib/recipes';
 import { loadLessons } from '../../lib/lessons';
+import { autoSelectEdition, type EditionSelector } from '../../lib/editionSelector';
 
 interface Edition {
   slug: string;
@@ -17,6 +18,7 @@ interface Edition {
   pdf_storage_path: string | null;
   recipe_ids: string[];
   lesson_ids: string[];
+  selector: EditionSelector | null;
   price_usd: number;
   price_pdf_usd: number | null;
   format: 'print' | 'pdf' | 'both';
@@ -75,6 +77,7 @@ export default function EditionsAdminPage() {
               pdf_storage_path: null,
               recipe_ids: [],
               lesson_ids: [],
+              selector: null,
               price_usd: 34,
               price_pdf_usd: 9,
               format: 'both',
@@ -130,6 +133,10 @@ export default function EditionsAdminPage() {
                 value={editing.lesson_ids ?? []}
                 onChange={(ids) => setEditing({ ...editing, lesson_ids: ids })}
                 help="Leave empty for a recipe-only book. Lesson-only and mixed anthology editions both work."
+              />
+              <SelectorPanel
+                edition={editing}
+                onUpdate={(updates) => setEditing({ ...editing, ...updates })}
               />
               <BuildInteriorPdfPanel
                 edition={editing}
@@ -328,6 +335,102 @@ function BuildInteriorPdfPanel({
             Failed: {err}
           </p>
         )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Selector panel: shows the current auto-assembly selector as an
+ * editable JSON blob, plus a "Rebuild from selector" button that runs
+ * autoSelectEdition() against the full library and overwrites the
+ * edition's recipe_ids and lesson_ids in-memory. The admin can then
+ * hand-tune before saving, and finally click "Build PDF" to produce
+ * the printable interior.
+ */
+function SelectorPanel({
+  edition,
+  onUpdate,
+}: {
+  edition: Edition;
+  onUpdate: (updates: Partial<Edition>) => void;
+}) {
+  const [draft, setDraft] = useState<string>(
+    JSON.stringify(edition.selector ?? {}, null, 2),
+  );
+  const [err, setErr] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function rebuild() {
+    setBusy(true);
+    setErr(null);
+    setStatus(null);
+    try {
+      let parsed: EditionSelector;
+      try {
+        parsed = JSON.parse(draft || '{}') as EditionSelector;
+      } catch (e) {
+        setErr('Selector JSON is invalid: ' + (e as Error).message);
+        setBusy(false);
+        return;
+      }
+      const [recipes, lessons] = await Promise.all([
+        loadRecipes(),
+        loadLessons(),
+      ]);
+      const result = autoSelectEdition(parsed, recipes, lessons);
+      onUpdate({
+        selector: parsed,
+        recipe_ids: result.recipe_ids,
+        lesson_ids: result.lesson_ids,
+      });
+      setStatus(
+        `Selected ${result.recipeCount} recipes and ${result.lessonCount} lessons. Remember to Save.`,
+      );
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="sm:col-span-2">
+      <div className="rounded-2xl border border-dashed border-rule bg-surface p-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <div>
+            <p className="font-serif text-base text-ink">
+              Auto-assembly selector
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              A declarative filter over the recipe and lesson libraries.
+              Click Rebuild to regenerate <code>recipe_ids</code> and{' '}
+              <code>lesson_ids</code> from the current filter. You can
+              hand-tune with the pickers above afterward. See
+              src/lib/editionSelector.ts for the schema and available
+              keys.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void rebuild()}
+            disabled={busy}
+            className="btn whitespace-nowrap"
+          >
+            {busy ? 'Rebuilding\u2026' : 'Rebuild from selector'}
+          </button>
+        </div>
+        <textarea
+          rows={10}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          className="mt-3 w-full rounded-xl border border-rule bg-cream p-3 font-mono text-xs leading-relaxed"
+        />
+        {status && !err && (
+          <p className="mt-2 text-xs italic text-muted">{status}</p>
+        )}
+        {err && <p className="mt-2 text-xs text-rose-700">{err}</p>}
       </div>
     </div>
   );
