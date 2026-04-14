@@ -54,6 +54,13 @@ insert into storage.buckets (id, name, public)
 values ('recipe-images', 'recipe-images', true)
 on conflict (id) do nothing;
 
+-- Storage bucket for user-generated cookbook PDFs. Public-read so Lulu can
+-- fetch them by URL; path pattern: {user_id}/{project_id}-interior.pdf.
+-- Write access is restricted by storage policies (below).
+insert into storage.buckets (id, name, public)
+values ('cookbook-pdfs', 'cookbook-pdfs', true)
+on conflict (id) do nothing;
+
 -- ==========================================================================
 -- User data: cookbook, notes, cook log
 -- ==========================================================================
@@ -282,10 +289,31 @@ create table if not exists cookbook_projects (
   subtitle text,
   dedication text,
   recipe_ids jsonb not null default '[]'::jsonb,
-  status text not null default 'draft' check (status in ('draft','ready','ordered')),
+  status text not null default 'draft' check (status in ('draft','ready','ordered','in_production','shipped','delivered','cancelled','failed')),
+  -- Lulu Print API linkage for direct ordering
+  lulu_order_id text,
+  lulu_status text,
+  lulu_total_cost numeric(10,2),
+  lulu_currency text,
+  lulu_tracking_url text,
+  pdf_interior_path text,
+  pdf_cover_path text,
+  shipping_address jsonb,
+  page_count integer,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
+
+-- Add columns idempotently for existing databases.
+alter table cookbook_projects add column if not exists lulu_order_id text;
+alter table cookbook_projects add column if not exists lulu_status text;
+alter table cookbook_projects add column if not exists lulu_total_cost numeric(10,2);
+alter table cookbook_projects add column if not exists lulu_currency text;
+alter table cookbook_projects add column if not exists lulu_tracking_url text;
+alter table cookbook_projects add column if not exists pdf_interior_path text;
+alter table cookbook_projects add column if not exists pdf_cover_path text;
+alter table cookbook_projects add column if not exists shipping_address jsonb;
+alter table cookbook_projects add column if not exists page_count integer;
 
 create index if not exists idx_cookbook_projects_user
   on cookbook_projects (user_id, created_at desc);

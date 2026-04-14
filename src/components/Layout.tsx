@@ -1,17 +1,30 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useLiturgicalKitchen } from '../lib/preferences';
 import { useUser } from '../lib/auth';
 import AuthButton from './AuthButton';
+import OnboardingTour from './OnboardingTour';
 
 export default function Layout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [q, setQ] = useState('');
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [calendarOn] = useLiturgicalKitchen();
   const user = useUser();
+
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   const navClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-full px-3 py-1.5 !no-underline ${
       isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
+    }`;
+  const mobileNavClass = ({ isActive }: { isActive: boolean }) =>
+    `block rounded-xl px-4 py-3 text-base font-serif !no-underline ${
+      isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:bg-paper'
     }`;
 
   function onSearch(e: React.FormEvent) {
@@ -19,90 +32,122 @@ export default function Layout() {
     const trimmed = q.trim();
     if (!trimmed) return;
     navigate(`/search?q=${encodeURIComponent(trimmed)}`);
+    setMobileOpen(false);
   }
+
+  const navLinks = (
+    className: ({ isActive }: { isActive: boolean }) => string,
+  ) => (
+    <>
+      <NavLink to="/" end className={className}>
+        Browse
+      </NavLink>
+      {calendarOn && (
+        <NavLink to="/calendar" className={className}>
+          Calendar
+        </NavLink>
+      )}
+      {user && (
+        <>
+          <NavLink to="/plan" className={className}>
+            Plan
+          </NavLink>
+          <NavLink to="/shopping" className={className}>
+            List
+          </NavLink>
+          <NavLink to="/cookbook" className={className}>
+            Cookbook
+          </NavLink>
+        </>
+      )}
+      <NavLink to="/search" className={className}>
+        Search
+      </NavLink>
+      <NavLink to="/about" className={className}>
+        About
+      </NavLink>
+    </>
+  );
 
   return (
     <div className="flex min-h-full flex-col">
-      <header className="border-b border-rule bg-cream/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <header className="sticky top-0 z-30 border-b border-rule bg-cream/90 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4">
           <Link to="/" className="group flex items-baseline gap-3 !text-ink no-underline">
-            <span className="font-serif text-2xl font-bold tracking-tight group-hover:text-terracotta">
+            <span className="font-serif text-xl font-bold tracking-tight group-hover:text-terracotta sm:text-2xl">
               Heritage Kitchen
             </span>
-            <span className="hidden font-serif text-xs italic text-muted sm:inline">
+            <span className="hidden font-serif text-xs italic text-muted md:inline">
               Ever ancient, ever new.
             </span>
           </Link>
-          <nav className="flex items-center gap-1 text-sm">
-            <NavLink
-              to="/"
-              end
-              className={({ isActive }) =>
-                `rounded-full px-3 py-1.5 !no-underline ${
-                  isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
-                }`
-              }
-            >
-              Browse
-            </NavLink>
-            {calendarOn && (
-              <NavLink to="/calendar" className={navClass}>
-                Calendar
-              </NavLink>
-            )}
-            {user && (
-              <>
-                <NavLink to="/plan" className={navClass}>
-                  Plan
-                </NavLink>
-                <NavLink to="/shopping" className={navClass}>
-                  List
-                </NavLink>
-              </>
-            )}
-            <NavLink
-              to="/search"
-              className={({ isActive }) =>
-                `rounded-full px-3 py-1.5 !no-underline ${
-                  isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
-                }`
-              }
-            >
-              Search
-            </NavLink>
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                `rounded-full px-3 py-1.5 !no-underline ${
-                  isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
-                }`
-              }
-            >
-              About
-            </NavLink>
+
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-1 text-sm lg:flex">
+            {navLinks(navClass)}
             <div className="ml-2">
               <AuthButton />
             </div>
           </nav>
+
+          {/* Mobile auth + hamburger */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <div className="hidden sm:block">
+              <AuthButton />
+            </div>
+            <button
+              type="button"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-label="Open menu"
+              aria-expanded={mobileOpen}
+              className="rounded-full border border-rule bg-surface p-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-ink"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+              >
+                {mobileOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
-        <div className="mx-auto max-w-6xl px-4 pb-4 sm:pb-5">
+
+        <div className="mx-auto max-w-6xl px-4 pb-4">
           <form onSubmit={onSearch} className="flex items-center gap-2">
             <input
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search the library — e.g. gingerbread, tomatoes, Fannie Farmer…"
+              placeholder="Search the library…"
               className="w-full rounded-full border border-rule bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:border-terracotta focus:outline-none"
               aria-label="Search recipes"
             />
-            <button type="submit" className="btn-primary">
+            <button type="submit" className="btn-primary shrink-0">
               Search
             </button>
           </form>
         </div>
+
+        {/* Mobile drawer */}
+        {mobileOpen && (
+          <nav className="border-t border-rule bg-surface px-4 py-4 lg:hidden">
+            <div className="space-y-1">{navLinks(mobileNavClass)}</div>
+            <div className="mt-4 border-t border-rule pt-4 sm:hidden">
+              <AuthButton />
+            </div>
+          </nav>
+        )}
       </header>
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:py-10">
         <Outlet />
       </main>
 
@@ -110,7 +155,9 @@ export default function Layout() {
         <div className="mx-auto max-w-6xl space-y-2 px-4 py-8 text-xs text-muted sm:flex sm:items-center sm:justify-between sm:space-y-0">
           <p className="font-serif italic">
             &ldquo;Late have I loved you, Beauty so ancient and so new.&rdquo;
-            <span className="ml-2 not-italic">— Augustine, <em>Confessions</em> X.27</span>
+            <span className="ml-2 not-italic">
+              — Augustine, <em>Confessions</em> X.27
+            </span>
           </p>
           <p>
             Source texts via{' '}
@@ -121,6 +168,8 @@ export default function Layout() {
           </p>
         </div>
       </footer>
+
+      <OnboardingTour />
     </div>
   );
 }
