@@ -354,6 +354,9 @@ create table if not exists editions (
 
 alter table editions add column if not exists interior_pdf_url text;
 alter table editions add column if not exists cover_pdf_url text;
+-- Almanac year for editions in the annual "Heritage Kitchen Almanac" series.
+-- NULL for non-almanac editions.
+alter table editions add column if not exists almanac_year integer;
 
 -- Format and digital-only support
 alter table editions add column if not exists format text default 'print'
@@ -456,7 +459,7 @@ on conflict (slug) do nothing;
 
 create table if not exists service_enquiries (
   id uuid primary key default gen_random_uuid(),
-  kind text not null check (kind in ('custom_cookbook','parish_cookbook','research','other')),
+  kind text not null check (kind in ('custom_cookbook','parish_cookbook','research','licensing','other')),
   name text not null,
   email text not null,
   subject text,
@@ -468,6 +471,12 @@ create table if not exists service_enquiries (
 
 create index if not exists idx_service_enquiries_status
   on service_enquiries (status, created_at desc);
+
+-- Backfill the kind check for existing databases that were created with
+-- the v1 enum before 'licensing' was added.
+alter table service_enquiries drop constraint if exists service_enquiries_kind_check;
+alter table service_enquiries add constraint service_enquiries_kind_check
+  check (kind in ('custom_cookbook','parish_cookbook','research','licensing','other'));
 
 alter table service_enquiries enable row level security;
 
@@ -902,6 +911,24 @@ values (
   false,
   false,
   1
+)
+on conflict (slug) do nothing;
+
+insert into editions (slug, title, subtitle, description, intro_text, recipe_ids, price_usd, price_pdf_usd, format, almanac_year, published, featured, sort_order)
+values (
+  'almanac-2026',
+  'The Heritage Kitchen Almanac, 2026',
+  'A year in the kitchen, by the old calendar',
+  'The first of what we hope will be an annual tradition. A printed almanac laid out month by month with the full liturgical year, recipes for every feast and season, historical notes on the foods we grew up on, and a running cooking journal from readers who sent us what they made. Printed in time for Advent.',
+  'There used to be a paper almanac on every kitchen shelf in America. Ours is an attempt to bring that habit back, with a liturgical year instead of a farming one (or really, the same year seen from two sides). Each issue is its own complete thing: you can start with any year, you don''t have to buy the next one, and the whole series will eventually live on a shelf next to the salt.',
+  '[]'::jsonb,
+  48.00,
+  14.00,
+  'both',
+  2026,
+  false,
+  true,
+  0
 )
 on conflict (slug) do nothing;
 

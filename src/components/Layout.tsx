@@ -184,6 +184,12 @@ export default function Layout() {
             <NavLink to="/store" className="!no-underline hover:text-terracotta">
               Store
             </NavLink>
+            <NavLink to="/almanac" className="!no-underline hover:text-terracotta">
+              Almanac
+            </NavLink>
+            <NavLink to="/licensing" className="!no-underline hover:text-terracotta">
+              Licensing
+            </NavLink>
             <a href="https://www.gutenberg.org" target="_blank" rel="noreferrer">
               Source texts via Project Gutenberg
             </a>
