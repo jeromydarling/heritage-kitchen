@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useStoreItems, CATEGORY_LABELS, type StoreItem } from '../lib/store';
 
 /**
@@ -39,6 +40,11 @@ export default function StorePage() {
           you click through, you buy directly from the maker, on their
           site. If we earn a small affiliate cut for the referral, it
           keeps the lights on here.
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          For monastic communities specifically, we keep a separate{' '}
+          <Link to="/monasteries">directory of houses</Link> whose food
+          supports real contemplative life. Some of them appear here too.
         </p>
       </header>
 

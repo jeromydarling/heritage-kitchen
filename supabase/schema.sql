@@ -446,6 +446,103 @@ values (
 on conflict (slug) do nothing;
 
 -- ==========================================================================
+-- Monasteries: a directory of contemplative communities whose food sales
+-- support their houses. This is a mission-aligned editorial product, not
+-- a store category.
+-- ==========================================================================
+
+create table if not exists monasteries (
+  slug text primary key,
+  name text not null,
+  tradition text,            -- e.g. Trappist, Benedictine, Camaldolese, Carmelite
+  location text,             -- city, state/country
+  founded text,              -- e.g. "1848"
+  description text,          -- long-form prose
+  products_summary text,     -- e.g. "Fruitcake, fudge, bourbon-aged cheese"
+  image_url text,
+  website_url text,
+  shop_url text,
+  published boolean not null default true,
+  featured boolean not null default false,
+  sort_order integer default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists idx_monasteries_published
+  on monasteries (published, sort_order);
+
+alter table monasteries enable row level security;
+
+drop policy if exists "monasteries_public_read" on monasteries;
+create policy "monasteries_public_read" on monasteries
+  for select using (published = true);
+
+drop policy if exists "monasteries_admin_write" on monasteries;
+create policy "monasteries_admin_write" on monasteries
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+insert into monasteries (slug, name, tradition, location, founded, description, products_summary, website_url, shop_url, featured, sort_order)
+values
+  ('gethsemani',
+   'Abbey of Our Lady of Gethsemani',
+   'Trappist (OCSO)',
+   'Trappist, Kentucky',
+   '1848',
+   'The oldest Trappist monastery in the United States, and the house where Thomas Merton lived and wrote from 1941 until his death. The monks at Gethsemani pray the liturgy of the hours seven times a day and support themselves in large part by selling bourbon-aged fruitcake, fudge, and cheese. If you have never had a real Trappist fruitcake, the Gethsemani one is a good place to begin \u2014 dense, bourbon-rich, aged four months, and a direct line back to a kind of monastic baking that has almost vanished outside these walls.',
+   'Fruitcake, fudge, Trappist cheese',
+   'https://www.monks.org',
+   'https://www.gethsemanifarms.org',
+   true,
+   1),
+  ('new-camaldoli-hermitage',
+   'New Camaldoli Hermitage',
+   'Camaldolese Benedictine',
+   'Big Sur, California',
+   '1958',
+   'The Camaldolese Benedictines are an 11th-century reform of the Benedictine rule that leans toward hermitic life \u2014 more silence, more solitude, more of the day alone with God. Their American house sits on a narrow shelf above the Big Sur coast where the Pacific comes in hard from the west. The hermits make and sell small batches of Mediterranean-style fruitcake and date nut cake, along with seasonal jams. The quantities are small and sell out every year; orders for the Christmas fruitcake open around All Saints.',
+   'Fruitcake, date nut cake, jam',
+   'https://www.contemplation.com',
+   'https://www.contemplation.com/store',
+   true,
+   2),
+  ('mepkin-abbey',
+   'Mepkin Abbey',
+   'Trappist (OCSO)',
+   'Moncks Corner, South Carolina',
+   '1949',
+   'Mepkin is a Trappist community on the Cooper River in South Carolina, on land that was once a rice plantation owned by Henry Laurens and later gifted to the monks by Claire Booth Luce. Until recently Mepkin supported itself by egg production; now the monks grow and sell oyster mushrooms, along with a small selection of books and devotional goods. A visit to their guesthouse is a quiet thing. The mushrooms are excellent and arrive by mail in a matter of days.',
+   'Oyster mushrooms, books',
+   'https://mepkinabbey.org',
+   'https://mepkinabbey.org/store',
+   false,
+   3),
+  ('assumption-abbey',
+   'Assumption Abbey',
+   'Trappist (OCSO)',
+   'Ava, Missouri',
+   '1950',
+   'A small Trappist house in the Ozarks, founded as a daughter of Gethsemani. Assumption Abbey has been making fruitcake to support itself for over fifty years \u2014 it is said to have been refined to its current form with help from Jean-Pierre Auge, an old Parisian pastry chef who wandered into the monastery one Advent. The result is a dense, brandy-soaked cake that keeps essentially forever and is, in the considered opinion of several food magazines, the best fruitcake in America.',
+   'Fruitcake',
+   'https://assumptionabbey.org',
+   'https://assumptionabbey.org/fruitcake',
+   false,
+   4),
+  ('christ-in-the-desert',
+   'Monastery of Christ in the Desert',
+   'Benedictine',
+   'Abiquiu, New Mexico',
+   '1964',
+   'A Benedictine community in a remote canyon in northern New Mexico, accessible only by a thirteen-mile dirt road. The monks are famous for their liturgy, which is sung in a hybrid of Latin and English according to the old Gregorian tones, and for their small brewery, Monastery Abbey Ales, which produces Trappist-style beers under license \u2014 revenue that goes back into supporting the house. They also sell incense and icons. A profound place to visit if you can.',
+   'Abbey Ales, incense, icons',
+   'https://christdesert.org',
+   'https://abbeybeverage.com',
+   false,
+   5)
+on conflict (slug) do nothing;
+
+-- ==========================================================================
 -- Store: curated affiliate / print-on-demand items
 -- ==========================================================================
 --
