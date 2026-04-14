@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { Recipe } from './types';
 import { CATEGORIES } from './types';
+import { normalizeFractions } from './fractions';
 
 /**
  * Auto-linker for historical cross-references.
@@ -295,4 +296,99 @@ export function linkRecipeReferences(
       ))}
     </>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Bold markup + sub-recipe callouts
+// ---------------------------------------------------------------------------
+//
+// Project Gutenberg etexts use =Word= for emphasis/bold. The old
+// cookbooks use it for two things in particular: inline bold ("Serve
+// with =Lemon Sauce=") and sub-recipe titles inside a parent recipe
+// ("=Mocha Sauce.= Mix yolks..."). The renderer picks up both:
+//   - Short all-caps or title-case bold runs ending in a period are
+//     treated as sub-recipe headings (block-level).
+//   - Everything else is rendered inline with <strong>.
+
+const BOLD_RE = /=([^=\n]{1,120}?)=/g;
+
+function isSubRecipeHeading(inner: string): boolean {
+  const trimmed = inner.trim().replace(/\.$/, '').trim();
+  if (!trimmed) return false;
+  const words = trimmed.split(/\s+/);
+  if (words.length < 1 || words.length > 6) return false;
+  // All-caps section header (e.g. "SAUCES") — definitely a heading.
+  if (/^[A-Z][A-Z\s]+$/.test(trimmed) && trimmed.length >= 4) return true;
+  // Title-case phrase ending with a period in the source. Accept words
+  // that start with an uppercase letter or are short articles ("la",
+  // "de", "aux", "à") that appear inside French dish names.
+  const articles = new Set(['à', 'a', 'la', 'le', 'de', 'du', 'des', 'aux', 'en', 'à la', 'of']);
+  const titleCased = words.every(
+    (w) => /^[A-Z]/.test(w) || articles.has(w.toLowerCase()),
+  );
+  return titleCased && inner.trim().endsWith('.');
+}
+
+/**
+ * Full text formatter for recipe instructions and original text.
+ * Applies bold/sub-recipe parsing first, then runs the link matcher
+ * over the remaining plain segments. This is the function recipe
+ * pages should use; `linkRecipeReferences` is exported only for its
+ * type and testing.
+ */
+export function formatHistoricalText(
+  rawText: string,
+  currentId: string,
+  index: RecipeIndex,
+  sourceBook?: string,
+): ReactNode {
+  if (!rawText) return rawText;
+  // Normalize word-form fractions so "one-fourth cup" renders the
+  // same as "¼ cup". Safe to run on the raw source because it only
+  // rewrites matched word-form phrases.
+  const text = normalizeFractions(rawText);
+
+  const nodes: ReactNode[] = [];
+  let cursor = 0;
+  let key = 0;
+  BOLD_RE.lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = BOLD_RE.exec(text)) !== null) {
+    if (m.index > cursor) {
+      nodes.push(
+        <Fragment key={`t-${key++}`}>
+          {linkRecipeReferences(text.slice(cursor, m.index), currentId, index, sourceBook)}
+        </Fragment>,
+      );
+    }
+    const inner = m[1];
+    if (isSubRecipeHeading(inner)) {
+      // Block-level sub-recipe heading. Wrapping in a span with a
+      // leading break keeps it flowing inside a <p> parent while
+      // giving it visual prominence.
+      nodes.push(
+        <span
+          key={`sub-${key++}`}
+          className="mt-3 block font-serif text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-terracotta"
+        >
+          {inner.trim().replace(/\.$/, '')}
+        </span>,
+      );
+    } else {
+      nodes.push(
+        <strong key={`b-${key++}`} className="font-semibold">
+          {inner}
+        </strong>,
+      );
+    }
+    cursor = m.index + m[0].length;
+  }
+  if (cursor < text.length) {
+    nodes.push(
+      <Fragment key={`t-${key++}`}>
+        {linkRecipeReferences(text.slice(cursor), currentId, index, sourceBook)}
+      </Fragment>,
+    );
+  }
+  return <>{nodes}</>;
 }

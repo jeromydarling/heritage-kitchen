@@ -11,9 +11,10 @@ import { CATEGORIES, type Recipe } from '../lib/types';
 import { getRelatedLessons, type Lesson } from '../lib/lessons';
 import {
   buildRecipeIndex,
-  linkRecipeReferences,
+  formatHistoricalText,
   type RecipeIndex,
 } from '../lib/recipeLinker';
+import { normalizeFractions } from '../lib/fractions';
 import TabSwitcher from '../components/TabSwitcher';
 import RecipeImage from '../components/RecipeImage';
 import DifficultyBadge from '../components/DifficultyBadge';
@@ -263,7 +264,7 @@ function OriginalView({ recipe, linkIndex }: { recipe: Recipe; linkIndex: Recipe
       </p>
       <hr className="my-5 border-rule" />
       <pre className="whitespace-pre-wrap font-mono text-[0.95rem] leading-relaxed text-ink">
-        {linkRecipeReferences(recipe.original_recipe, recipe.id, linkIndex, recipe.source_book)}
+        {formatHistoricalText(recipe.original_recipe, recipe.id, linkIndex, recipe.source_book)}
       </pre>
     </section>
   );
@@ -281,7 +282,12 @@ function ModernView({
   linkIndex: RecipeIndex;
 }) {
   const { modern_recipe: m } = recipe;
-  const ingredients = Array.isArray(m.ingredients) ? m.ingredients : m.ingredients ? [m.ingredients] : [];
+  const rawIngredients = Array.isArray(m.ingredients)
+    ? m.ingredients
+    : m.ingredients
+      ? [m.ingredients]
+      : [];
+  const ingredients = rawIngredients.map(normalizeFractions);
   const instructions = Array.isArray(m.instructions)
     ? m.instructions
     : m.instructions
@@ -348,7 +354,7 @@ function ModernView({
                   {i + 1}
                 </span>
                 <p className="leading-relaxed">
-                  {linkRecipeReferences(step, recipe.id, linkIndex, recipe.source_book)}
+                  {formatHistoricalText(step, recipe.id, linkIndex, recipe.source_book)}
                 </p>
               </li>
             ))}
