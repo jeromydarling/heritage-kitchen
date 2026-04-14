@@ -9,6 +9,7 @@ import {
   type Feast,
 } from '../lib/liturgical';
 import { getSeasonalSuggestions } from '../lib/recipes';
+import { getSeasonalLessons, type Lesson } from '../lib/lessons';
 import { useLiturgicalKitchen } from '../lib/preferences';
 import type { Recipe } from '../lib/types';
 import RecipeCard from '../components/RecipeCard';
@@ -22,6 +23,7 @@ import RecipeCard from '../components/RecipeCard';
 export default function CalendarPage() {
   const [day, setDay] = useState<LiturgicalDay | null>(null);
   const [suggestions, setSuggestions] = useState<Recipe[]>([]);
+  const [seasonalLessons, setSeasonalLessons] = useState<Lesson[]>([]);
   const [upcoming, setUpcoming] = useState<Array<{ date: Date; feast: Feast }>>([]);
   const [calendarOn, setCalendarOn] = useLiturgicalKitchen();
 
@@ -30,6 +32,7 @@ export default function CalendarPage() {
     setDay(today);
     setUpcoming(upcomingFeasts(new Date(), 10));
     getSeasonalSuggestions(today, 9).then(setSuggestions);
+    getSeasonalLessons(today.suggestionMode, 3).then(setSeasonalLessons);
   }, []);
 
   if (!day) return <p className="text-muted">Loading the calendarâ€¦</p>;
@@ -122,6 +125,41 @@ export default function CalendarPage() {
               </div>
             )}
           </section>
+
+          {seasonalLessons.length > 0 && (
+            <section>
+              <h2 className="font-serif text-2xl">Learn something this season</h2>
+              <p className="mt-1 text-sm text-muted">
+                Lessons from the kitchen school that fit the mood of the
+                day. Read one over coffee before you start cooking.
+              </p>
+              <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {seasonalLessons.map((l) => (
+                  <li key={l.id}>
+                    <Link
+                      to={`/how-to-cook/${l.id}`}
+                      className="card group block h-full p-5 !no-underline !text-ink transition hover:-translate-y-0.5 hover:border-terracotta"
+                    >
+                      <p className="text-xs uppercase tracking-widest text-terracotta">
+                        {l.topic.replace(/-/g, ' ')}
+                      </p>
+                      <h3 className="mt-1 font-serif text-lg leading-tight">
+                        {l.title}
+                      </h3>
+                      <p className="mt-2 text-xs text-muted">
+                        {l.source_book} Â· {l.source_year}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-right">
+                <Link to="/how-to-cook" className="text-xs text-terracotta hover:underline">
+                  All lessons &rarr;
+                </Link>
+              </p>
+            </section>
+          )}
 
           <section>
             <h2 className="font-serif text-2xl">Coming up</h2>

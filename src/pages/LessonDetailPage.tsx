@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useLesson, loadLessons, TOPIC_META, type Lesson } from '../lib/lessons';
 import { loadRecipes } from '../lib/recipes';
 import type { Recipe } from '../lib/types';
@@ -21,6 +21,8 @@ import type { Recipe } from '../lib/types';
 export default function LessonDetailPage() {
   const { id = '' } = useParams();
   const { lesson, loading } = useLesson(id);
+  const [params] = useSearchParams();
+  const isPreview = params.get('preview') === '1';
   const [related, setRelated] = useState<Recipe[]>([]);
   const [neighbors, setNeighbors] = useState<{ prev: Lesson | null; next: Lesson | null }>({
     prev: null,
@@ -94,6 +96,13 @@ export default function LessonDetailPage() {
 
   return (
     <article className="mx-auto max-w-3xl space-y-10">
+      {isPreview && !lesson.published && (
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <strong>Draft preview.</strong> This lesson is not published yet.
+          You are seeing it because the <code>?preview=1</code> query param
+          is set.
+        </div>
+      )}
       <nav className="text-xs uppercase tracking-widest text-muted">
         <Link to="/">Home</Link> <span className="mx-1 text-rule">/</span>
         <Link to="/how-to-cook">How to Cook</Link>{' '}

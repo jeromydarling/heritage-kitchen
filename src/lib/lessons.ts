@@ -223,6 +223,57 @@ export function useLesson(id: string) {
 }
 
 /**
+ * Liturgical-day to lesson-topic affinity map. Used by
+ * getSeasonalLessons() to surface appropriate lessons on the Calendar
+ * page based on the mood of the day. Key is the SuggestionMode from
+ * lib/liturgical.ts; value is an ordered list of lesson topics that
+ * feel right for that mode.
+ */
+const SEASONAL_TOPIC_AFFINITY: Record<string, string[]> = {
+  fasting: ['fish-and-seafood', 'vegetables', 'invalid-cookery', 'economy-and-budgeting', 'boiling'],
+  'friday-abstinence': ['fish-and-seafood', 'vegetables', 'eggs', 'sauces'],
+  'advent-simple': ['bread-and-dough', 'preserving-and-canning', 'meal-planning', 'stocks-and-broths', 'economy-and-budgeting'],
+  'christmas-feast': ['candy-and-sugar-work', 'pastry', 'meat-and-poultry', 'baking', 'roasting'],
+  'easter-feast': ['eggs', 'meat-and-poultry', 'dairy', 'pastry', 'baking'],
+  'feast-day': ['roasting', 'pastry', 'candy-and-sugar-work', 'sauces'],
+  ordinary: ['food-science', 'bread-and-dough', 'vegetables', 'meat-and-poultry', 'nutrition'],
+};
+
+/**
+ * Returns lessons appropriate for the current liturgical day. Uses the
+ * suggestionMode to pick the affinity list, then prefers lessons whose
+ * topic appears earlier in the list. Falls back to a mixed sample when
+ * nothing matches.
+ */
+export async function getSeasonalLessons(
+  suggestionMode: string,
+  limit = 3,
+): Promise<Lesson[]> {
+  const all = await loadLessons();
+  if (all.length === 0) return [];
+  const topics = SEASONAL_TOPIC_AFFINITY[suggestionMode] ?? SEASONAL_TOPIC_AFFINITY.ordinary;
+  const scored = all
+    .map((l) => {
+      const idx = topics.indexOf(l.topic);
+      return { lesson: l, score: idx === -1 ? 0 : topics.length - idx };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score);
+  if (scored.length === 0) {
+    // No topic match â€” return a random sample so the section isn't empty.
+    const shuffled = [...all].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, limit);
+  }
+  // Light shuffle within the top tier so returning visitors see variety.
+  const topTier = scored.slice(0, Math.max(limit * 3, 10));
+  for (let i = topTier.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [topTier[i], topTier[j]] = [topTier[j], topTier[i]];
+  }
+  return topTier.slice(0, limit).map((x) => x.lesson);
+}
+
+/**
  * Returns the lessons most relevant to a recipe, by matching any of the
  * recipe's category/tags against a lesson's related_recipe_tags array.
  * Used in the RecipePage sidebar to offer "Learn the technique" links.
