@@ -76,6 +76,14 @@ export async function getEntry(id: string): Promise<Recipe | undefined> {
   return all.find((r) => r.id === id);
 }
 
+/** Batch lookup by ids, for the cookbook page and similar. Order not guaranteed. */
+export async function loadAllForIds(ids: string[]): Promise<Recipe[]> {
+  if (ids.length === 0) return [];
+  const all = await loadAll();
+  const set = new Set(ids);
+  return all.filter((r) => set.has(r.id));
+}
+
 export async function getRecipe(id: string): Promise<Recipe | undefined> {
   const recipes = await loadRecipes();
   return recipes.find((r) => r.id === id);

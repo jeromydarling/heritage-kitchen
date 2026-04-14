@@ -49,12 +49,37 @@ Two options:
 
 | Route | What it is |
 | --- | --- |
-| `/` | Hero, category grid, random featured recipe, library filters |
+| `/` | Hero, "Today in the kitchen" callout, category grid, featured recipe, library filters |
 | `/category/:slug` | Paginated, sortable recipe grid for one of the 12 categories |
-| `/recipe/:id` | **The core UX.** Original / Modern tab switcher, AI illustration, history note |
+| `/recipe/:id` | **The core UX.** Original / Modern tab switcher, AI illustration, history note, personal actions (save / notes / cook log / year-over-year memory) when signed in |
+| `/essay/:id` | Historical essays from the cookbooks, surfaced as their own content type |
+| `/calendar` | The liturgical kitchen: today's season, feast, and suggested recipes, plus the case for cooking by the oldest calendar in the world |
+| `/cookbook` | The signed-in user's saved recipes and recent cook log |
 | `/search?q=…` | Full-text search across titles, ingredients, tags, and original text |
 | `/about` | Project description and source-book bibliography |
 | `/admin` | Supabase-auth-gated image management (regenerate AI illustrations) |
+
+## User accounts (Google sign-in)
+
+Sign-in is optional — the site is fully browsable without an account.
+When Supabase is configured, signed-in users can save recipes to a
+private cookbook, keep private notes, and log every time they cook
+something. The cook log records the liturgical day so that next year
+the site can surface "you made this last Good Friday" prompts.
+
+### One-time Supabase setup
+
+1. Run `supabase/schema.sql` in the SQL editor. It creates `profiles`,
+   `cookbook_entries`, and `cook_log` with strict row-level security.
+2. In the Supabase dashboard → Authentication → Providers → Google,
+   enable Google OAuth. Create a Google Cloud OAuth client (Web
+   application) and add `https://<project-ref>.supabase.co/auth/v1/callback`
+   to its authorized redirect URIs.
+3. In Authentication → URL Configuration, add your site URL
+   (e.g. `https://heritagekitchen.app`) to the list of **Redirect URLs**
+   so Supabase accepts it as a valid `redirectTo` when OAuth comes back.
+4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as repo secrets
+   so the GitHub Pages build picks them up.
 
 ## Image generation
 

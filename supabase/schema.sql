@@ -53,3 +53,69 @@ create policy "Admin write" on recipes
 insert into storage.buckets (id, name, public)
 values ('recipe-images', 'recipe-images', true)
 on conflict (id) do nothing;
+
+-- ==========================================================================
+-- User data: cookbook, notes, cook log
+-- ==========================================================================
+
+-- Lightweight profile row per auth user. Populated lazily on first write.
+create table if not exists profiles (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  display_name text,
+  created_at timestamptz default now()
+);
+
+-- A saved-recipe entry in a user's cookbook. Notes live here for v1 because
+-- they are always 1:1 with a saved recipe; we can break them out later if
+-- we want per-recipe notes without saving.
+create table if not exists cookbook_entries (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  recipe_id text not null,
+  saved_at timestamptz default now(),
+  notes text,
+  primary key (user_id, recipe_id)
+);
+
+create index if not exists idx_cookbook_user_saved
+  on cookbook_entries (user_id, saved_at desc);
+
+-- A journal of every time a user has cooked a recipe. The liturgical_day
+-- string is snapshotted at cook time so a future "last Good Friday" callout
+-- still knows what the day was, even if the current year falls on a different
+-- date.
+create table if not exists cook_log (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  recipe_id text not null,
+  cooked_on date not null default current_date,
+  rating smallint check (rating is null or (rating >= 1 and rating <= 5)),
+  notes text,
+  liturgical_day text,
+  liturgical_season text,
+  created_at timestamptz default now()
+);
+
+create index if not exists idx_cook_log_user_date
+  on cook_log (user_id, cooked_on desc);
+create index if not exists idx_cook_log_user_recipe
+  on cook_log (user_id, recipe_id);
+
+-- Row-level security: strict self-only.
+alter table profiles enable row level security;
+alter table cookbook_entries enable row level security;
+alter table cook_log enable row level security;
+
+drop policy if exists "profile_self" on profiles;
+create policy "profile_self" on profiles
+  for all using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists "cookbook_self" on cookbook_entries;
+create policy "cookbook_self" on cookbook_entries
+  for all using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists "cooklog_self" on cook_log;
+create policy "cooklog_self" on cook_log
+  for all using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);

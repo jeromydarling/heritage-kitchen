@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useLiturgicalKitchen } from '../lib/preferences';
+import AuthButton from './AuthButton';
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -70,6 +71,9 @@ export default function Layout() {
             >
               About
             </NavLink>
+            <div className="ml-2">
+              <AuthButton />
+            </div>
           </nav>
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-4 sm:pb-5">

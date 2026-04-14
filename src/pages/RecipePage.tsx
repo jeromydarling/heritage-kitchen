@@ -10,6 +10,7 @@ import { CATEGORIES, type Recipe } from '../lib/types';
 import TabSwitcher from '../components/TabSwitcher';
 import RecipeImage from '../components/RecipeImage';
 import DifficultyBadge from '../components/DifficultyBadge';
+import RecipeActions from '../components/RecipeActions';
 
 type Tab = 'original' | 'modern';
 
@@ -167,6 +168,8 @@ export default function RecipePage() {
               View on Project Gutenberg ↗
             </a>
           </div>
+          <RecipeActions recipeId={recipe.id} />
+
           {relatedEssays.length > 0 && (
             <div className="card p-5">
               <h3 className="font-serif text-lg">Read more</h3>
