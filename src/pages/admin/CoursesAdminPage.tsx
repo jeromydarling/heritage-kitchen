@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAdminCrud, slugify } from '../../lib/adminCrud';
 import { ResourceList, ResourceForm, AdminFieldDef, StatusPill } from './_shared';
+import { MarkdownField } from './_fields';
 
 interface Course {
   slug: string;
@@ -218,16 +219,15 @@ function CourseLessonsEditor({ course, onClose }: { course: Course; onClose: () 
             className="mt-1 w-full rounded-xl border border-rule bg-cream px-3 py-2 text-sm"
           />
         </label>
-        <label className="block text-sm">
-          <span className="text-muted">Body (markdown)</span>
-          <textarea
-            rows={10}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <MarkdownField
+            label="Body (markdown)"
             value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="Write in markdown. Blank lines become paragraphs. Lines starting with '# ' become h2 headings."
-            className="mt-1 w-full rounded-xl border border-rule bg-cream px-3 py-2 font-mono text-xs leading-relaxed"
+            onChange={setBody}
+            rows={14}
+            help="Supports markdown with live preview. Blank lines become paragraphs. # Heading. **bold**. *italic*. > blockquote. - list."
           />
-        </label>
+        </div>
         <label className="block text-sm">
           <span className="text-muted">Linked recipe id (optional)</span>
           <input

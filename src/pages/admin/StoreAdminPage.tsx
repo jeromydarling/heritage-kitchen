@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAdminCrud, slugify } from '../../lib/adminCrud';
 import { ResourceList, ResourceForm, AdminFieldDef, StatusPill } from './_shared';
+import { MarkdownField } from './_fields';
 
 interface StoreItem {
   slug: string;
@@ -53,7 +54,6 @@ const FIELDS: AdminFieldDef<StoreItem>[] = [
   { key: 'affiliate_network', label: 'Affiliate network', type: 'text' },
   { key: 'commission_rate', label: 'Commission rate', type: 'text', help: 'Free-form, e.g. "10%" or "5% new / 2% loyalty"' },
   { key: 'price_display', label: 'Price display', type: 'text', help: 'Shown next to the title, never transacted.' },
-  { key: 'curator_note', label: 'Curator note', type: 'textarea', help: 'Prose paragraph about the maker. This is the whole pitch.' },
   { key: 'partner_status', label: 'Partner status', type: 'select', options: [
     { value: 'prospect', label: 'Prospect (not yet contacted)' },
     { value: 'contacted', label: 'Contacted' },
@@ -118,6 +118,16 @@ export default function StoreAdminPage() {
           value={editing}
           onChange={setEditing}
           onCancel={() => setEditing(null)}
+          previewUrl={editing.slug ? '#/store' : undefined}
+          extra={
+            <MarkdownField
+              label="Curator note"
+              value={editing.curator_note ?? ''}
+              onChange={(v) => setEditing({ ...editing, curator_note: v || null })}
+              rows={8}
+              help="Prose paragraph about the maker. This is the whole pitch."
+            />
+          }
           onSave={async (row) => {
             const next = { ...row };
             if (!next.slug) next.slug = slugify(next.title);

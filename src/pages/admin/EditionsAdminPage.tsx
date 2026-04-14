@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAdminCrud, slugify } from '../../lib/adminCrud';
 import { ResourceList, ResourceForm, AdminFieldDef, StatusPill } from './_shared';
+import { MarkdownField, ImageUploadField, RecipePickerField } from './_fields';
 
 interface Edition {
   slug: string;
@@ -27,8 +28,6 @@ const FIELDS: AdminFieldDef<Edition>[] = [
   { key: 'title', label: 'Title', type: 'text', required: true },
   { key: 'subtitle', label: 'Subtitle', type: 'text' },
   { key: 'description', label: 'Short description', type: 'textarea', help: 'Shown on the /editions listing and above the buy buttons.' },
-  { key: 'intro_text', label: "A note from the editors", type: 'textarea', help: 'Long-form editor letter shown on the edition detail page. Blank lines become paragraphs.' },
-  { key: 'cover_image_url', label: 'Cover image URL', type: 'text', help: 'Optional. Leave blank for the typeset placeholder.' },
   { key: 'interior_pdf_url', label: 'Interior PDF URL', type: 'text', help: 'Public URL of the pre-rendered interior PDF in storage.' },
   { key: 'pdf_storage_path', label: 'PDF storage path', type: 'text', help: 'Path within cookbook-pdfs bucket for signed downloads, e.g. "editions/lenten-table.pdf".' },
   { key: 'price_usd', label: 'Print price (USD)', type: 'number', step: '0.01' },
@@ -94,6 +93,35 @@ export default function EditionsAdminPage() {
           value={editing}
           onChange={setEditing}
           onCancel={() => setEditing(null)}
+          previewUrl={
+            editing.slug
+              ? `#/editions/${editing.slug}${editing.published ? '' : '?preview=1'}`
+              : undefined
+          }
+          extra={
+            <>
+              <ImageUploadField
+                label="Cover image"
+                value={editing.cover_image_url}
+                onChange={(url) => setEditing({ ...editing, cover_image_url: url })}
+                pathPrefix="editions/"
+                help="Leave blank for the typeset placeholder cover."
+              />
+              <MarkdownField
+                label="A note from the editors (intro_text)"
+                value={editing.intro_text ?? ''}
+                onChange={(v) => setEditing({ ...editing, intro_text: v || null })}
+                rows={10}
+                help="Long-form editor letter shown on the edition detail page. Supports markdown."
+              />
+              <RecipePickerField
+                label="Recipes in this edition"
+                value={editing.recipe_ids ?? []}
+                onChange={(ids) => setEditing({ ...editing, recipe_ids: ids })}
+                help="Drag with the arrow buttons to reorder. Order matters when the book is generated."
+              />
+            </>
+          }
           onSave={async (row) => {
             const next = { ...row };
             if (!next.slug) next.slug = slugify(next.title);

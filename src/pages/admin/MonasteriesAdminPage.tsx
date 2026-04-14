@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAdminCrud, slugify } from '../../lib/adminCrud';
 import { ResourceList, ResourceForm, AdminFieldDef, StatusPill } from './_shared';
+import { ImageUploadField, MarkdownField } from './_fields';
 
 interface Monastery {
   slug: string;
@@ -29,9 +30,7 @@ const FIELDS: AdminFieldDef<Monastery>[] = [
   { key: 'tradition', label: 'Tradition', type: 'text', help: 'e.g. Trappist (OCSO), Benedictine (OSB), Camaldolese' },
   { key: 'location', label: 'Location', type: 'text', help: 'City, state/country' },
   { key: 'founded', label: 'Founded', type: 'text', help: 'Year as text' },
-  { key: 'description', label: 'Description', type: 'textarea' },
   { key: 'products_summary', label: 'What they sell', type: 'text' },
-  { key: 'image_url', label: 'Image URL', type: 'text' },
   { key: 'website_url', label: 'Website URL', type: 'text' },
   { key: 'shop_url', label: 'Shop URL', type: 'text' },
   { key: 'ships_internationally', label: 'Ships internationally', type: 'boolean' },
@@ -98,6 +97,27 @@ export default function MonasteriesAdminPage() {
           value={editing}
           onChange={setEditing}
           onCancel={() => setEditing(null)}
+          previewUrl={
+            editing.slug
+              ? `#/monasteries/${editing.slug}${editing.published ? '' : '?preview=1'}`
+              : undefined
+          }
+          extra={
+            <>
+              <ImageUploadField
+                label="Photograph of the community"
+                value={editing.image_url}
+                onChange={(url) => setEditing({ ...editing, image_url: url })}
+                pathPrefix="monasteries/"
+              />
+              <MarkdownField
+                label="Description (long-form prose about the community)"
+                value={editing.description ?? ''}
+                onChange={(v) => setEditing({ ...editing, description: v || null })}
+                rows={10}
+              />
+            </>
+          }
           onSave={async (row) => {
             const next = { ...row };
             if (!next.slug) next.slug = slugify(next.name);

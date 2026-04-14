@@ -1,9 +1,11 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useMonastery } from '../lib/monasteries';
 
 export default function MonasteryDetailPage() {
   const { slug = '' } = useParams();
   const { monastery, loading } = useMonastery(slug);
+  const [params] = useSearchParams();
+  const isPreview = params.get('preview') === '1';
 
   if (loading) return <p className="text-muted">Loadingâ€¦</p>;
   if (!monastery) {
@@ -19,6 +21,11 @@ export default function MonasteryDetailPage() {
 
   return (
     <article className="mx-auto max-w-2xl space-y-8">
+      {isPreview && !monastery.published && (
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <strong>Draft preview.</strong> This monastery is not published yet.
+        </div>
+      )}
       <nav className="text-xs uppercase tracking-widest text-muted">
         <Link to="/">Home</Link> <span className="mx-1 text-rule">/</span>
         <Link to="/monasteries">Monasteries</Link>{' '}

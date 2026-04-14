@@ -103,6 +103,8 @@ export function ResourceForm<T extends Record<string, any>>({
   onSave,
   onCancel,
   onDelete,
+  previewUrl,
+  extra,
 }: {
   title: string;
   fields: AdminFieldDef<T>[];
@@ -111,6 +113,8 @@ export function ResourceForm<T extends Record<string, any>>({
   onSave: (v: T) => Promise<void>;
   onCancel: () => void;
   onDelete?: () => Promise<void>;
+  previewUrl?: string;
+  extra?: React.ReactNode;
 }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -144,6 +148,7 @@ export function ResourceForm<T extends Record<string, any>>({
         {fields.map((f) => (
           <FieldInput<T> key={String(f.key)} field={f} value={value} setField={setField} />
         ))}
+        {extra}
       </div>
       {err && <p className="mt-3 text-sm text-terracotta">{err}</p>}
       <div className="mt-6 flex items-center justify-between gap-3">
@@ -160,6 +165,16 @@ export function ResourceForm<T extends Record<string, any>>({
           <button type="button" onClick={onCancel} className="btn">
             Cancel
           </button>
+          {previewUrl && (
+            <a
+              href={previewUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="btn"
+            >
+              Preview &rarr;
+            </a>
+          )}
           <button type="submit" disabled={busy} className="btn-primary">
             {busy ? 'Savingâ€¦' : 'Save'}
           </button>

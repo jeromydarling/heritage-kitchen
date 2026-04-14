@@ -13,6 +13,7 @@ export default function EditionDetailPage() {
   const { edition, loading } = useEdition(slug);
   const [params] = useSearchParams();
   const justPaid = params.get('paid') === '1';
+  const isPreview = params.get('preview') === '1';
   const paidFormat = params.get('format');
   const sessionId = params.get('session_id');
 
@@ -86,6 +87,14 @@ export default function EditionDetailPage() {
         <Link to="/editions">Editions</Link> <span className="mx-1 text-rule">/</span>
         <span>{edition.title}</span>
       </nav>
+
+      {isPreview && !edition.published && (
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <strong>Draft preview.</strong> This edition is not published. You
+          are seeing it because the <code>?preview=1</code> query param is
+          set. Close this tab and click Publish in the admin when ready.
+        </div>
+      )}
 
       {justPaid && paidFormat === 'pdf' && (
         <DownloadCard download={download} polling={downloadPolling} />
