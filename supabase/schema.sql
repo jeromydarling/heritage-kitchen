@@ -445,6 +445,128 @@ values (
 )
 on conflict (slug) do nothing;
 
+-- ==========================================================================
+-- Email courses: one-time-purchase, multi-day email delivered product
+-- ==========================================================================
+
+create table if not exists courses (
+  slug text primary key,
+  title text not null,
+  subtitle text,
+  description text,
+  intro_text text,
+  cover_image_url text,
+  price_usd numeric(10,2) not null,
+  total_days integer not null check (total_days > 0),
+  start_trigger text not null default 'on_purchase'
+    check (start_trigger in ('on_purchase','fixed_date','ash_wednesday','first_sunday_advent')),
+  start_date date,
+  published boolean not null default false,
+  featured boolean not null default false,
+  sort_order integer default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists idx_courses_published on courses (published, sort_order);
+
+alter table courses enable row level security;
+
+drop policy if exists "courses_public_read" on courses;
+create policy "courses_public_read" on courses
+  for select using (published = true);
+
+drop policy if exists "courses_admin_write" on courses;
+create policy "courses_admin_write" on courses
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- The individual day-by-day lessons. Authored in markdown, rendered to
+-- HTML by the mailer edge function at send time.
+create table if not exists course_lessons (
+  course_slug text not null references courses (slug) on delete cascade,
+  day_number integer not null check (day_number > 0),
+  title text not null,
+  body_markdown text not null,
+  recipe_id text,
+  primary key (course_slug, day_number)
+);
+
+alter table course_lessons enable row level security;
+
+drop policy if exists "course_lessons_read_if_enrolled" on course_lessons;
+create policy "course_lessons_read_if_enrolled" on course_lessons
+  for select using (
+    exists (
+      select 1 from course_enrollments ce
+      where ce.course_slug = course_lessons.course_slug
+        and (ce.user_id = auth.uid() or ce.email = (auth.jwt() ->> 'email'))
+    )
+    or auth.uid() = '<ADMIN_USER_ID>'::uuid
+  );
+
+drop policy if exists "course_lessons_admin_write" on course_lessons;
+create policy "course_lessons_admin_write" on course_lessons
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- Enrollments: one row per (customer, course) pair. The mailer walks
+-- active enrollments every day and sends the next lesson.
+create table if not exists course_enrollments (
+  id uuid primary key default gen_random_uuid(),
+  course_slug text not null references courses (slug) on delete restrict,
+  user_id uuid references auth.users (id) on delete set null,
+  email text not null,
+  customer_name text,
+  started_on date,
+  last_sent_day integer not null default 0,
+  status text not null default 'active'
+    check (status in ('active','scheduled','completed','cancelled','failed')),
+  stripe_session_id text,
+  amount_paid_cents integer,
+  currency text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists idx_course_enrollments_active
+  on course_enrollments (status, started_on);
+create index if not exists idx_course_enrollments_email
+  on course_enrollments (email);
+
+alter table course_enrollments enable row level security;
+
+drop policy if exists "course_enrollments_self_read" on course_enrollments;
+create policy "course_enrollments_self_read" on course_enrollments
+  for select using (
+    auth.uid() = user_id
+    or (auth.jwt() ->> 'email') = email
+    or auth.uid() = '<ADMIN_USER_ID>'::uuid
+  );
+
+drop policy if exists "course_enrollments_admin_write" on course_enrollments;
+create policy "course_enrollments_admin_write" on course_enrollments
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- Seed: the Lenten course. Lessons are placeholders waiting for
+-- the author; published stays false until the body is written.
+insert into courses (slug, title, subtitle, description, intro_text, price_usd, total_days, start_trigger, published, featured, sort_order)
+values (
+  'lenten-table-course',
+  'The Lenten Table',
+  'Forty days in the kitchen, one email a day',
+  'A forty-day email course that walks you through Lent in the kitchen, one day at a time. Each morning you''ll get a recipe, a short reflection on the day, a historical note from one of our cookbooks, and a gentle prompt for tonight''s supper. Purchase once; the course begins on Ash Wednesday and ends at Easter. No subscription.',
+  'Lent is a long season to cook through without help. This course exists so that you don''t have to plan it every year. Forty mornings, forty emails, forty small meals that were good enough to carry someone through the hungry gap a hundred and thirty years ago. That is an uncommonly good inheritance to eat from.',
+  39.00,
+  40,
+  'ash_wednesday',
+  false,
+  false,
+  1
+)
+on conflict (slug) do nothing;
+
 insert into editions (slug, title, subtitle, description, intro_text, recipe_ids, price_usd, price_pdf_usd, format, published, featured, sort_order)
 values (
   'advent-pantry',

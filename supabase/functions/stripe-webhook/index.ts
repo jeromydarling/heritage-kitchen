@@ -53,10 +53,13 @@ serve(async (req) => {
   const session = event.data.object;
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-  // Branch: edition orders vs user-built cookbook orders
+  // Branch by kind: edition orders, course enrollments, user-built cookbooks
   const kind = session.metadata?.kind as string | undefined;
   if (kind === 'edition') {
     return await handleEditionOrder(session, supabase);
+  }
+  if (kind === 'course') {
+    return await handleCourseEnrollment(session, supabase);
   }
 
   const project_id = session.metadata?.project_id as string | undefined;
@@ -150,6 +153,104 @@ serve(async (req) => {
 
   return new Response('ok', { status: 200 });
 });
+
+async function handleCourseEnrollment(
+  session: Record<string, unknown>,
+  supabase: ReturnType<typeof createClient>,
+) {
+  const meta = (session.metadata ?? {}) as Record<string, string>;
+  const course_slug = meta.course_slug;
+  if (!course_slug) {
+    return new Response('missing course_slug metadata', { status: 400 });
+  }
+
+  const { data: course } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('slug', course_slug)
+    .single();
+  if (!course) return new Response('course not found', { status: 404 });
+
+  const customer =
+    (session.customer_details as Record<string, string> | undefined) ?? {};
+  const email = customer.email ?? '';
+  const name = customer.name ?? '';
+
+  // Decide when to start based on the course's start_trigger.
+  let started_on: string | null = null;
+  let status: 'active' | 'scheduled' = 'active';
+  const today = new Date();
+  if (course.start_trigger === 'on_purchase') {
+    // First lesson ships tomorrow; store today's date so day 1 is t+1.
+    started_on = today.toISOString().slice(0, 10);
+    status = 'active';
+  } else if (course.start_trigger === 'fixed_date' && course.start_date) {
+    started_on = course.start_date;
+    status = new Date(course.start_date) <= today ? 'active' : 'scheduled';
+  } else if (course.start_trigger === 'ash_wednesday') {
+    started_on = nextAshWednesday(today).toISOString().slice(0, 10);
+    status = 'scheduled';
+  } else if (course.start_trigger === 'first_sunday_advent') {
+    started_on = nextFirstSundayAdvent(today).toISOString().slice(0, 10);
+    status = 'scheduled';
+  }
+
+  await supabase.from('course_enrollments').insert({
+    course_slug,
+    email,
+    customer_name: name,
+    started_on,
+    last_sent_day: 0,
+    status,
+    stripe_session_id: session.id,
+    amount_paid_cents: session.amount_total,
+    currency: String(session.currency ?? 'USD').toUpperCase(),
+  });
+
+  return new Response('ok (enrolled)', { status: 200 });
+}
+
+// Butcher's algorithm â€” Gregorian Easter, ash wednesday = easter - 46
+function easterSunday(year: number): Date {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const L = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * L) / 451);
+  const month = Math.floor((h + L - 7 * m + 114) / 31);
+  const day = ((h + L - 7 * m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+function nextAshWednesday(after: Date): Date {
+  let y = after.getFullYear();
+  let candidate = new Date(easterSunday(y).getTime() - 46 * 86400_000);
+  if (candidate <= after) {
+    candidate = new Date(easterSunday(y + 1).getTime() - 46 * 86400_000);
+  }
+  return candidate;
+}
+
+function nextFirstSundayAdvent(after: Date): Date {
+  const pickYear = (year: number) => {
+    const dec24 = new Date(year, 11, 24);
+    const back = dec24.getDay();
+    const fourth = new Date(year, 11, 24 - back);
+    const first = new Date(fourth);
+    first.setDate(first.getDate() - 21);
+    return first;
+  };
+  let cand = pickYear(after.getFullYear());
+  if (cand <= after) cand = pickYear(after.getFullYear() + 1);
+  return cand;
+}
 
 async function handleEditionOrder(
   session: Record<string, unknown>,
