@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { loadRecipes } from '../../lib/recipes';
+import { loadLessons, type Lesson } from '../../lib/lessons';
 import type { Recipe } from '../../lib/types';
 
 /**
@@ -340,6 +341,142 @@ export function RecipePickerField({
               onClick={() => remove(r.id)}
               className="px-1 text-rose-700"
               aria-label="Remove"
+            >
+              Ã—
+            </button>
+          </li>
+        ))}
+      </ol>
+      {help && <span className="mt-2 block text-xs text-muted">{help}</span>}
+    </div>
+  );
+}
+
+// ---------- Lesson picker ----------
+
+export function LessonPickerField({
+  label,
+  value,
+  onChange,
+  help,
+}: {
+  label: string;
+  value: string[];
+  onChange: (v: string[]) => void;
+  help?: string;
+}) {
+  const [all, setAll] = useState<Lesson[]>([]);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    void loadLessons().then(setAll);
+  }, []);
+
+  const byId = useMemo(() => {
+    const m = new Map<string, Lesson>();
+    for (const l of all) m.set(l.id, l);
+    return m;
+  }, [all]);
+
+  const selected = value ?? [];
+  const selectedLessons = selected
+    .map((id) => byId.get(id))
+    .filter(Boolean) as Lesson[];
+
+  const q = query.trim().toLowerCase();
+  const results = q
+    ? all
+        .filter((l) => !selected.includes(l.id))
+        .filter(
+          (l) =>
+            l.title.toLowerCase().includes(q) || l.topic.toLowerCase().includes(q),
+        )
+        .slice(0, 12)
+    : [];
+
+  function add(id: string) {
+    if (selected.includes(id)) return;
+    onChange([...selected, id]);
+    setQuery('');
+  }
+  function remove(id: string) {
+    onChange(selected.filter((x) => x !== id));
+  }
+  function move(index: number, dir: -1 | 1) {
+    const j = index + dir;
+    if (j < 0 || j >= selected.length) return;
+    const next = [...selected];
+    [next[index], next[j]] = [next[j], next[index]];
+    onChange(next);
+  }
+
+  return (
+    <div className="sm:col-span-2">
+      <div className="flex items-baseline justify-between">
+        <span className="text-sm text-muted">{label}</span>
+        <span className="text-xs text-muted">{selected.length} selected</span>
+      </div>
+      <div className="relative mt-1">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search lessons by title or topic..."
+          className="w-full rounded-full border border-rule bg-cream px-4 py-2 text-sm"
+        />
+        {results.length > 0 && (
+          <ul className="absolute left-0 right-0 top-full z-10 mt-1 max-h-60 overflow-y-auto rounded-xl border border-rule bg-surface shadow-card">
+            {results.map((l) => (
+              <li key={l.id}>
+                <button
+                  type="button"
+                  onClick={() => add(l.id)}
+                  className="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-xs hover:bg-paper"
+                >
+                  <span className="font-serif">{l.title}</span>
+                  <span className="text-muted">
+                    {l.topic} Â· {l.source_year}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <ol className="mt-3 space-y-1">
+        {selectedLessons.length === 0 && (
+          <li className="rounded-xl border border-dashed border-rule px-3 py-4 text-center text-xs text-muted">
+            No lessons selected yet. Search above.
+          </li>
+        )}
+        {selectedLessons.map((l, i) => (
+          <li
+            key={l.id}
+            className="flex items-center gap-2 rounded-xl border border-rule bg-surface px-3 py-1.5 text-xs"
+          >
+            <span className="w-6 text-muted">{i + 1}.</span>
+            <span className="flex-1 truncate font-serif">{l.title}</span>
+            <span className="hidden text-muted sm:inline">{l.topic}</span>
+            <button
+              type="button"
+              onClick={() => move(i, -1)}
+              disabled={i === 0}
+              className="px-1 text-muted disabled:opacity-30 hover:text-terracotta"
+            >
+              â†‘
+            </button>
+            <button
+              type="button"
+              onClick={() => move(i, 1)}
+              disabled={i === selectedLessons.length - 1}
+              className="px-1 text-muted disabled:opacity-30 hover:text-terracotta"
+            >
+              â†“
+            </button>
+            <button
+              type="button"
+              onClick={() => remove(l.id)}
+              className="px-1 text-rose-700"
             >
               Ã—
             </button>

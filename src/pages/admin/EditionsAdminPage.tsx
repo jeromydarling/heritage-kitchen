@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useAdminCrud, slugify } from '../../lib/adminCrud';
 import { ResourceList, ResourceForm, AdminFieldDef, StatusPill } from './_shared';
-import { MarkdownField, ImageUploadField, RecipePickerField } from './_fields';
+import { MarkdownField, ImageUploadField, RecipePickerField, LessonPickerField } from './_fields';
+import { supabase } from '../../lib/supabase';
+import { loadAllForIds } from '../../lib/recipes';
+import { loadLessons } from '../../lib/lessons';
 
 interface Edition {
   slug: string;
@@ -13,6 +16,7 @@ interface Edition {
   interior_pdf_url: string | null;
   pdf_storage_path: string | null;
   recipe_ids: string[];
+  lesson_ids: string[];
   price_usd: number;
   price_pdf_usd: number | null;
   format: 'print' | 'pdf' | 'both';
@@ -70,6 +74,7 @@ export default function EditionsAdminPage() {
               interior_pdf_url: null,
               pdf_storage_path: null,
               recipe_ids: [],
+              lesson_ids: [],
               price_usd: 34,
               price_pdf_usd: 9,
               format: 'both',
@@ -120,6 +125,16 @@ export default function EditionsAdminPage() {
                 onChange={(ids) => setEditing({ ...editing, recipe_ids: ids })}
                 help="Drag with the arrow buttons to reorder. Order matters when the book is generated."
               />
+              <LessonPickerField
+                label="Lessons in this edition"
+                value={editing.lesson_ids ?? []}
+                onChange={(ids) => setEditing({ ...editing, lesson_ids: ids })}
+                help="Leave empty for a recipe-only book. Lesson-only and mixed anthology editions both work."
+              />
+              <BuildInteriorPdfPanel
+                edition={editing}
+                onUpdate={(updates) => setEditing({ ...editing, ...updates })}
+              />
             </>
           }
           onSave={async (row) => {
@@ -166,6 +181,154 @@ export default function EditionsAdminPage() {
         ]}
         onEdit={(r) => setEditing(r)}
       />
+    </div>
+  );
+}
+
+/**
+ * Build-interior-PDF panel. Renders inside the edition edit form as part
+ * of the `extra` slot. Client-side generates a PDF from the edition's
+ * selected recipes + lessons using pdfGen.ts (lazy-imported), uploads it
+ * to the cookbook-pdfs Supabase Storage bucket, and writes the resulting
+ * path + public URL + page count back onto the edition row.
+ *
+ * This is how editorial editions go from "title and recipe ids picked"
+ * to "ready to sell as a printed book." No developer involvement once
+ * the content is chosen in the admin.
+ */
+function BuildInteriorPdfPanel({
+  edition,
+  onUpdate,
+}: {
+  edition: Edition;
+  onUpdate: (updates: Partial<Edition>) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  const canBuild =
+    !!edition.slug &&
+    ((edition.recipe_ids?.length ?? 0) > 0 || (edition.lesson_ids?.length ?? 0) > 0);
+
+  async function build() {
+    if (!supabase || !canBuild) return;
+    setBusy(true);
+    setErr(null);
+    setStatus('Loading content\u2026');
+    try {
+      const [{ generateCookbookPdfWithMeta }, recipes, lessons] = await Promise.all([
+        import('../../lib/pdfGen'),
+        loadAllForIds(edition.recipe_ids ?? []),
+        loadLessons().then((all) =>
+          (edition.lesson_ids ?? [])
+            .map((id) => all.find((l) => l.id === id))
+            .filter((l): l is NonNullable<typeof l> => !!l),
+        ),
+      ]);
+
+      setStatus('Generating PDF\u2026');
+      const { blob, pageCount } = await generateCookbookPdfWithMeta({
+        title: edition.title,
+        subtitle: edition.subtitle,
+        dedication: null,
+        recipes,
+        lessons,
+      });
+
+      setStatus(`Uploading ${pageCount}-page PDF\u2026`);
+      const path = `editions/${edition.slug}-interior.pdf`;
+      const { error: upErr } = await supabase.storage
+        .from('cookbook-pdfs')
+        .upload(path, blob, {
+          contentType: 'application/pdf',
+          upsert: true,
+        });
+      if (upErr) throw upErr;
+      const { data } = supabase.storage.from('cookbook-pdfs').getPublicUrl(path);
+
+      setStatus('Saving to edition\u2026');
+      await supabase
+        .from('editions')
+        .update({
+          pdf_storage_path: path,
+          interior_pdf_url: data.publicUrl,
+          page_count: pageCount,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('slug', edition.slug);
+
+      onUpdate({
+        pdf_storage_path: path,
+        interior_pdf_url: data.publicUrl,
+        page_count: pageCount,
+      });
+      setStatus(`Done. Uploaded ${pageCount} pages.`);
+    } catch (e) {
+      setErr((e as Error).message);
+      setStatus(null);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="sm:col-span-2">
+      <div className="rounded-2xl border border-dashed border-terracotta/40 bg-terracotta/5 p-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <div>
+            <p className="font-serif text-base text-ink">
+              Build the interior PDF
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              Generates a print-ready PDF from the selected recipes and
+              lessons using the same pipeline that powers custom user
+              cookbooks. Writes the result into the <code>cookbook-pdfs</code>{' '}
+              storage bucket and updates this edition's{' '}
+              <code>interior_pdf_url</code>, <code>pdf_storage_path</code>,
+              and <code>page_count</code>. Run this whenever you change
+              the recipe or lesson selection.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void build()}
+            disabled={busy || !canBuild}
+            className="btn-primary whitespace-nowrap"
+          >
+            {busy ? 'Building\u2026' : 'Build PDF'}
+          </button>
+        </div>
+        <dl className="mt-4 grid gap-2 text-xs text-muted sm:grid-cols-3">
+          <div>
+            <dt className="text-[10px] uppercase tracking-widest">Recipes</dt>
+            <dd>{edition.recipe_ids?.length ?? 0}</dd>
+          </div>
+          <div>
+            <dt className="text-[10px] uppercase tracking-widest">Lessons</dt>
+            <dd>{edition.lesson_ids?.length ?? 0}</dd>
+          </div>
+          <div>
+            <dt className="text-[10px] uppercase tracking-widest">Page count</dt>
+            <dd>{edition.page_count ?? '\u2014'}</dd>
+          </div>
+        </dl>
+        {edition.interior_pdf_url && (
+          <p className="mt-3 text-xs">
+            <a href={edition.interior_pdf_url} target="_blank" rel="noreferrer">
+              Current interior PDF &rarr;
+            </a>
+          </p>
+        )}
+        {status && !err && (
+          <p className="mt-3 text-xs italic text-muted">{status}</p>
+        )}
+        {err && (
+          <p className="mt-3 text-xs text-rose-700">
+            Failed: {err}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
