@@ -3,6 +3,42 @@ import { Link } from 'react-router-dom';
 import type { Recipe } from './types';
 import { CATEGORIES } from './types';
 import { normalizeFractions } from './fractions';
+import { GLOSSARY_RE, glossaryLookup, type GlossaryEntry } from './glossary';
+
+// Wrap glossary terms inside a plain-text segment with a <span> that
+// shows the modern equivalent on hover. Returns an array of React
+// nodes that the caller can splice directly into its output.
+function decorateGlossary(segment: string, keyBase: string): ReactNode[] {
+  if (!segment) return [];
+  const nodes: ReactNode[] = [];
+  let cursor = 0;
+  let k = 0;
+  GLOSSARY_RE.lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = GLOSSARY_RE.exec(segment)) !== null) {
+    const entry: GlossaryEntry | undefined = glossaryLookup(m[0]);
+    if (!entry) continue;
+    if (m.index > cursor) nodes.push(segment.slice(cursor, m.index));
+    const style =
+      entry.kind === 'temperature'
+        ? 'border-b border-dotted border-terracotta/60 text-ink/90 decoration-dotted'
+        : entry.kind === 'unit'
+          ? 'border-b border-dotted border-ink/30 text-ink/90'
+          : 'border-b border-dotted border-ink/30 text-ink/90';
+    nodes.push(
+      <span
+        key={`${keyBase}-g${k++}`}
+        className={`cursor-help ${style}`}
+        title={entry.modern}
+      >
+        {m[0]}
+      </span>,
+    );
+    cursor = m.index + m[0].length;
+  }
+  if (cursor < segment.length) nodes.push(segment.slice(cursor));
+  return nodes.length > 0 ? nodes : [segment];
+}
 
 /**
  * Auto-linker for historical cross-references.
@@ -194,13 +230,17 @@ export function linkRecipeReferences(
   index: RecipeIndex,
   sourceBook?: string,
 ): ReactNode {
-  if (!text || index.size === 0) return text;
+  if (!text) return text;
 
   const out: ReactNode[] = [];
   let cursor = 0;
   TRIGGER_RE.lastIndex = 0;
   let m: RegExpExecArray | null;
   let key = 0;
+  const pushPlain = (slice: string) => {
+    if (!slice) return;
+    out.push(...decorateGlossary(slice, `p${key++}`));
+  };
   while ((m = TRIGGER_RE.exec(text)) !== null) {
     const trigger = m[1].toLowerCase();
     const triggerStart = m.index;
@@ -220,11 +260,11 @@ export function linkRecipeReferences(
       if (PAGE_REF_RE.test(tail)) {
         const pageTail = tail.match(PAGE_TAIL_RE);
         const muteLen = pageTail ? pageTail[0].length : (tail.match(/^\S+/)?.[0].length ?? 0);
-        if (cursor < triggerStart) out.push(text.slice(cursor, triggerStart));
+        if (cursor < triggerStart) pushPlain(text.slice(cursor, triggerStart));
         out.push(
           <span
             key={`xref-${key++}-${triggerStart}`}
-            className="text-muted/70 italic"
+            className="italic text-muted"
             title="Page reference from the original print edition"
           >
             {text.slice(triggerStart, triggerEnd + muteLen)}
@@ -237,6 +277,7 @@ export function linkRecipeReferences(
     }
 
     // ---- Look for a link target in the span after the trigger ----
+    if (index.size === 0) continue;
     const breakIdx = tail.search(
       /[.;)\n]|,\s*(?:Serve|Cook|Add|Stir|Bake|Pour|Set|Drain|Season|Put|Place|Remove|Let|Allow|When|Until)/,
     );
@@ -248,8 +289,8 @@ export function linkRecipeReferences(
     // resolve to the recipe instead of the (wrong) "canned" fallback.
     const recipeHit = findBestMatch(candidate, index, currentId, sourceBook);
     if (recipeHit) {
-      if (cursor < triggerStart) out.push(text.slice(cursor, triggerStart));
-      out.push(m[0]);
+      if (cursor < triggerStart) pushPlain(text.slice(cursor, triggerStart));
+      pushPlain(m[0]);
       out.push(
         <Link
           key={`xref-${key++}-${triggerStart}`}
@@ -270,8 +311,8 @@ export function linkRecipeReferences(
     if (trigger === 'see') {
       const catHit = findCategoryMatch(candidate);
       if (catHit) {
-        if (cursor < triggerStart) out.push(text.slice(cursor, triggerStart));
-        out.push(m[0]);
+        if (cursor < triggerStart) pushPlain(text.slice(cursor, triggerStart));
+        pushPlain(m[0]);
         out.push(
           <Link
             key={`xref-${key++}-${triggerStart}`}
@@ -287,7 +328,7 @@ export function linkRecipeReferences(
       }
     }
   }
-  if (cursor < text.length) out.push(text.slice(cursor));
+  if (cursor < text.length) pushPlain(text.slice(cursor));
   if (out.length === 0) return text;
   return (
     <>

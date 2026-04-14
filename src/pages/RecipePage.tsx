@@ -318,7 +318,9 @@ function ModernView({
             No modern ingredient list available for this recipe yet.
           </p>
         ) : asProse ? (
-          <p className="mt-3 leading-relaxed">{ingredients[0]}</p>
+          <p className="mt-3 leading-relaxed">
+            {formatHistoricalText(ingredients[0], recipe.id, linkIndex, recipe.source_book)}
+          </p>
         ) : (
           <ul className="mt-3 space-y-2">
             {ingredients.map((ing, i) => (
@@ -334,7 +336,7 @@ function ModernView({
                   htmlFor={`ing-${i}`}
                   className={checked[i] ? 'text-muted line-through' : ''}
                 >
-                  {ing}
+                  {formatHistoricalText(ing, recipe.id, linkIndex, recipe.source_book)}
                 </label>
               </li>
             ))}
