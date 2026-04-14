@@ -29,9 +29,9 @@ handful of curated sample recipes.
 
 Two options:
 
-1. **Static:** Drop the full `heritage_kitchen_recipes.json` file into
-   `public/recipes.json`. The recipe loader will fetch it on first page load.
-   This is the simplest path for GitHub Pages hosting.
+1. **Static:** Drop the full dataset at `public/heritage_kitchen_recipes.json`.
+   The recipe loader fetches it on first page load. This is the simplest path
+   for GitHub Pages hosting.
 
 2. **Supabase:** Run `supabase/schema.sql` in the Supabase SQL editor, then
    seed the data:

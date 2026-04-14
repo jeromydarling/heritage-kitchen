@@ -2,10 +2,10 @@ import type { Recipe } from './types';
 import { sampleRecipes } from './sampleRecipes';
 import { supabase, isSupabaseConfigured } from './supabase';
 
-// Path to the optional JSON dataset in /public. When the full 3,485-recipe
-// heritage_kitchen_recipes.json file is dropped into public/, the app will
-// load from it automatically â€” no Supabase required for read-only browsing.
-const PUBLIC_DATASET_URL = `${import.meta.env.BASE_URL}recipes.json`;
+// Path to the JSON dataset in /public. The full 3,485-recipe file lives at
+// public/heritage_kitchen_recipes.json and is fetched on first load â€” no
+// Supabase required for read-only browsing.
+const PUBLIC_DATASET_URL = `${import.meta.env.BASE_URL}heritage_kitchen_recipes.json`;
 
 let cache: Recipe[] | null = null;
 let inflight: Promise<Recipe[]> | null = null;
