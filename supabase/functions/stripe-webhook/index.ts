@@ -93,13 +93,15 @@ serve(async (req) => {
         external_id: `${project.id}-interior`,
         printable_normalization: {
           cover: {
-            // We pass the same interior PDF as a stub cover; in practice
-            // Lulu will auto-generate a plain cover or reject without one,
-            // depending on the POD package. For the first version we use
-            // a shared template cover URL set via env var.
-            source_url:
-              Deno.env.get('LULU_COVER_URL') ??
-              interior_url,
+            // Prefer a cover PDF the client generated and uploaded. Fall
+            // back to the configured LULU_COVER_URL env var, or, as a
+            // last resort, the interior PDF so Lulu has *something* to
+            // work with.
+            source_url: project.pdf_cover_path
+              ? supabase.storage
+                  .from('cookbook-pdfs')
+                  .getPublicUrl(project.pdf_cover_path).data.publicUrl
+              : Deno.env.get('LULU_COVER_URL') ?? interior_url,
           },
           interior: {
             source_url: interior_url,

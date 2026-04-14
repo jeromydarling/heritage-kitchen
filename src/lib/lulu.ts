@@ -51,36 +51,95 @@ export async function uploadInteriorPdf(
     title: string;
     subtitle: string | null;
     dedication: string | null;
+    foreword?: string | null;
+    groupByCategory?: boolean;
     recipes: Recipe[];
   },
 ): Promise<{ url: string; pageCount: number }> {
   if (!supabase) throw new Error('Supabase not configured');
 
-  const { generateCookbookPdfWithMeta } = await import('./pdfGen');
+  const { generateCookbookPdfWithMeta, generateCoverPdf } = await import('./pdfGen');
   const { blob, pageCount } = await generateCookbookPdfWithMeta(project);
-  const path = `${userId}/${projectId}-interior.pdf`;
+  const interiorPath = `${userId}/${projectId}-interior.pdf`;
 
   const { error: uploadErr } = await supabase.storage
     .from('cookbook-pdfs')
-    .upload(path, blob, {
+    .upload(interiorPath, blob, {
       contentType: 'application/pdf',
       upsert: true,
     });
   if (uploadErr) throw uploadErr;
 
-  const { data } = supabase.storage.from('cookbook-pdfs').getPublicUrl(path);
-  const url = data.publicUrl;
+  const { data: pub } = supabase.storage
+    .from('cookbook-pdfs')
+    .getPublicUrl(interiorPath);
+  const url = pub.publicUrl;
+
+  // Generate the matching cover. We ask lulu-cover-dimensions for the exact
+  // geometry (spine width, wrap, safe zone) and pass it into the cover
+  // generator so the cover fits the Lulu template exactly.
+  let coverPath: string | null = null;
+  try {
+    const dims = await fetchCoverDimensions(pageCount);
+    if (dims) {
+      const coverBlob = await generateCoverPdf(project, dims);
+      coverPath = `${userId}/${projectId}-cover.pdf`;
+      await supabase.storage
+        .from('cookbook-pdfs')
+        .upload(coverPath, coverBlob, {
+          contentType: 'application/pdf',
+          upsert: true,
+        });
+    }
+  } catch (err) {
+    // Cover generation is best-effort in v1 -- if it fails (e.g. Lulu
+    // sandbox is down) we still upload the interior and let the webhook
+    // fall back to the stub cover. The order is not blocked.
+    console.warn('Cover generation failed, continuing with interior only:', err);
+  }
 
   await supabase
     .from('cookbook_projects')
     .update({
-      pdf_interior_path: path,
+      pdf_interior_path: interiorPath,
+      pdf_cover_path: coverPath,
       page_count: pageCount,
       updated_at: new Date().toISOString(),
     })
     .eq('id', projectId);
 
   return { url, pageCount };
+}
+
+/**
+ * Asks the lulu-cover-dimensions edge function for the exact cover
+ * geometry for a given page count. Returns null on failure so callers
+ * can degrade gracefully.
+ */
+async function fetchCoverDimensions(pageCount: number): Promise<{
+  width_in: number;
+  height_in: number;
+  spine_in: number;
+  wrap_in: number;
+  safe_zone_in: number;
+} | null> {
+  if (!supabase) return null;
+  // POD package id is configurable server-side via env. We send a placeholder
+  // string that the edge function swaps for its configured default.
+  const { data, error } = await supabase.functions.invoke('lulu-cover-dimensions', {
+    body: {
+      pod_package_id: (import.meta.env.VITE_LULU_POD_PACKAGE_ID as string) ?? '0600X0900BWSTDPB060UW444MXX',
+      page_count: pageCount,
+    },
+  });
+  if (error) return null;
+  return data as {
+    width_in: number;
+    height_in: number;
+    spine_in: number;
+    wrap_in: number;
+    safe_zone_in: number;
+  };
 }
 
 export async function requestLuluQuote(
