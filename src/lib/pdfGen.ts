@@ -1,6 +1,74 @@
 import { jsPDF } from 'jspdf';
 import type { Recipe } from './types';
 
+// ====================================================================
+// FONT LOADING
+// ====================================================================
+//
+// Playfair Display, Lora, and Courier Prime are bundled as static TTF
+// assets in /public/fonts/. On first PDF generation we fetch them, base64
+// them once, cache the result, and register them with each jsPDF instance
+// via addFileToVFS + addFont. Named families: "Playfair" (display serif),
+// "Lora" (body serif with italic), "CourierPrime" (typewriter).
+// The web-safe "helvetica" and "times" families remain available as
+// fallbacks if callers ever need them.
+
+interface FontAssets {
+  playfairRegular: string;
+  loraRegular: string;
+  loraItalic: string;
+  courier: string;
+}
+
+let cachedFonts: FontAssets | null = null;
+
+async function loadFonts(): Promise<FontAssets> {
+  if (cachedFonts) return cachedFonts;
+  const base = (import.meta.env.BASE_URL as string) ?? '/';
+  const fetchBase64 = async (file: string): Promise<string> => {
+    const res = await fetch(`${base}fonts/${file}`);
+    if (!res.ok) throw new Error(`font fetch failed: ${file}`);
+    const buf = await res.arrayBuffer();
+    return arrayBufferToBase64(buf);
+  };
+  cachedFonts = {
+    playfairRegular: await fetchBase64('PlayfairDisplay-Regular.ttf'),
+    loraRegular: await fetchBase64('Lora-Regular.ttf'),
+    loraItalic: await fetchBase64('Lora-Italic.ttf'),
+    courier: await fetchBase64('CourierPrime-Regular.ttf'),
+  };
+  return cachedFonts;
+}
+
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(
+      null,
+      Array.from(bytes.subarray(i, i + chunkSize)),
+    );
+  }
+  return btoa(binary);
+}
+
+function applyFonts(doc: jsPDF, assets: FontAssets) {
+  doc.addFileToVFS('PlayfairDisplay-Regular.ttf', assets.playfairRegular);
+  doc.addFont('PlayfairDisplay-Regular.ttf', 'Playfair', 'normal');
+  doc.addFont('PlayfairDisplay-Regular.ttf', 'Playfair', 'bold');
+
+  doc.addFileToVFS('Lora-Regular.ttf', assets.loraRegular);
+  doc.addFont('Lora-Regular.ttf', 'Lora', 'normal');
+  doc.addFont('Lora-Regular.ttf', 'Lora', 'bold');
+
+  doc.addFileToVFS('Lora-Italic.ttf', assets.loraItalic);
+  doc.addFont('Lora-Italic.ttf', 'Lora', 'italic');
+
+  doc.addFileToVFS('CourierPrime-Regular.ttf', assets.courier);
+  doc.addFont('CourierPrime-Regular.ttf', 'CourierPrime', 'normal');
+}
+
 /**
  * Client-side PDF generator for the Heritage Kitchen cookbook builder.
  *
@@ -73,13 +141,13 @@ function drawTitlePage(doc: jsPDF, project: CookbookProject) {
   doc.setTextColor(120, 90, 60);
   centeredText(doc, 'HERITAGE KITCHEN', PAGE_H / 2 - 180);
 
-  doc.setFont('times', 'italic');
+  doc.setFont('Lora', 'italic');
   doc.setFontSize(11);
   doc.setTextColor(120, 110, 90);
   centeredText(doc, '"Beauty ever ancient, ever new."', PAGE_H / 2 - 150);
   centeredText(doc, '\u2014 St. Augustine', PAGE_H / 2 - 133);
 
-  doc.setFont('times', 'bold');
+  doc.setFont('Playfair', 'normal');
   doc.setFontSize(32);
   doc.setTextColor(59, 35, 20);
   const titleLines = doc.splitTextToSize(project.title, CONTENT_W);
@@ -90,7 +158,7 @@ function drawTitlePage(doc: jsPDF, project: CookbookProject) {
   }
 
   if (project.subtitle) {
-    doc.setFont('times', 'italic');
+    doc.setFont('Lora', 'italic');
     doc.setFontSize(14);
     doc.setTextColor(120, 110, 90);
     const subLines = doc.splitTextToSize(project.subtitle, CONTENT_W);
@@ -102,7 +170,7 @@ function drawTitlePage(doc: jsPDF, project: CookbookProject) {
   }
 
   if (project.dedication) {
-    doc.setFont('times', 'italic');
+    doc.setFont('Lora', 'italic');
     doc.setFontSize(11);
     doc.setTextColor(120, 110, 90);
     const dedLines = doc.splitTextToSize(project.dedication, CONTENT_W - 80);
@@ -121,13 +189,13 @@ function drawTitlePage(doc: jsPDF, project: CookbookProject) {
 }
 
 function drawTableOfContents(doc: jsPDF, recipes: Recipe[], c: Cursor) {
-  doc.setFont('times', 'bold');
+  doc.setFont('Playfair', 'normal');
   doc.setFontSize(24);
   doc.setTextColor(59, 35, 20);
   doc.text('Contents', MARGIN_X, c.y);
   c.y += 36;
 
-  doc.setFont('times', 'normal');
+  doc.setFont('Lora', 'normal');
   doc.setFontSize(11);
   doc.setTextColor(59, 35, 20);
 
@@ -162,7 +230,7 @@ function drawRecipe(doc: jsPDF, recipe: Recipe, c: Cursor) {
   c.y += 14;
 
   // Title
-  doc.setFont('times', 'bold');
+  doc.setFont('Playfair', 'normal');
   doc.setFontSize(22);
   doc.setTextColor(59, 35, 20);
   const titleLines = doc.splitTextToSize(recipe.title, CONTENT_W);
@@ -176,7 +244,7 @@ function drawRecipe(doc: jsPDF, recipe: Recipe, c: Cursor) {
   const m = recipe.modern_recipe;
   if (m.description) {
     c.y += 4;
-    doc.setFont('times', 'italic');
+    doc.setFont('Lora', 'italic');
     doc.setFontSize(11);
     doc.setTextColor(90, 70, 50);
     const lines = doc.splitTextToSize(m.description, CONTENT_W);
@@ -210,12 +278,12 @@ function drawRecipe(doc: jsPDF, recipe: Recipe, c: Cursor) {
       : [];
   if (ingredients.length > 0) {
     needRoom(doc, c, 32);
-    doc.setFont('times', 'bold');
+    doc.setFont('Playfair', 'normal');
     doc.setFontSize(14);
     doc.setTextColor(59, 35, 20);
     doc.text('Ingredients', MARGIN_X, c.y);
     c.y += 18;
-    doc.setFont('times', 'normal');
+    doc.setFont('Lora', 'normal');
     doc.setFontSize(10);
     for (const ing of ingredients) {
       const lines = doc.splitTextToSize(`\u00B7  ${ing}`, CONTENT_W - 10);
@@ -236,12 +304,12 @@ function drawRecipe(doc: jsPDF, recipe: Recipe, c: Cursor) {
       : [];
   if (instructions.length > 0) {
     needRoom(doc, c, 32);
-    doc.setFont('times', 'bold');
+    doc.setFont('Playfair', 'normal');
     doc.setFontSize(14);
     doc.setTextColor(59, 35, 20);
     doc.text('Instructions', MARGIN_X, c.y);
     c.y += 18;
-    doc.setFont('times', 'normal');
+    doc.setFont('Lora', 'normal');
     doc.setFontSize(10);
     instructions.forEach((step, i) => {
       const prefix = `${i + 1}.  `;
@@ -259,7 +327,7 @@ function drawRecipe(doc: jsPDF, recipe: Recipe, c: Cursor) {
   if (m.tips) {
     c.y += 4;
     needRoom(doc, c, 28);
-    doc.setFont('times', 'italic');
+    doc.setFont('Lora', 'italic');
     doc.setFontSize(10);
     doc.setTextColor(100, 75, 55);
     const lines = doc.splitTextToSize(`Note: ${m.tips}`, CONTENT_W);
@@ -277,7 +345,7 @@ function drawRecipe(doc: jsPDF, recipe: Recipe, c: Cursor) {
     doc.setDrawColor(232, 223, 211);
     doc.line(MARGIN_X, c.y, PAGE_W - MARGIN_X, c.y);
     c.y += 10;
-    doc.setFont('times', 'italic');
+    doc.setFont('Lora', 'italic');
     doc.setFontSize(9);
     doc.setTextColor(120, 110, 90);
     const lines = doc.splitTextToSize(recipe.history_note, CONTENT_W);
@@ -294,7 +362,7 @@ function drawColophon(doc: jsPDF) {
   doc.setFontSize(8);
   doc.setTextColor(120, 90, 60);
   centeredText(doc, 'Colophon', PAGE_H / 2 - 40);
-  doc.setFont('times', 'italic');
+  doc.setFont('Lora', 'italic');
   doc.setFontSize(10);
   doc.setTextColor(90, 70, 50);
   centeredText(doc, 'Printed from Heritage Kitchen', PAGE_H / 2);
@@ -366,14 +434,14 @@ function drawCopyrightPage(doc: jsPDF) {
   doc.setTextColor(120, 90, 60);
   centeredText(doc, 'HERITAGE KITCHEN', PAGE_H / 2 - 60);
 
-  doc.setFont('times', 'italic');
+  doc.setFont('Lora', 'italic');
   doc.setFontSize(10);
   doc.setTextColor(100, 80, 60);
   const year = new Date().getFullYear();
   centeredText(doc, `Typeset ${year} by Heritage Kitchen.`, PAGE_H / 2 - 30);
   centeredText(doc, 'heritagekitchen.app', PAGE_H / 2 - 14);
 
-  doc.setFont('times', 'normal');
+  doc.setFont('Lora', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(90, 75, 60);
   const disclaimer = doc.splitTextToSize(
@@ -401,7 +469,7 @@ function drawForeword(doc: jsPDF, project: CookbookProject) {
     project.foreword ??
     'These recipes were written for kitchens very different from yours. The stoves were wood. The butter was unsalted and came from a neighbor. The flour was bought in barrels. What follows is our attempt to carry them across the hundred years between then and now without losing what made them good in the first place. Cook slowly. Taste often. Leave the phone in another room.';
 
-  doc.setFont('times', 'normal');
+  doc.setFont('Lora', 'normal');
   doc.setFontSize(11);
   doc.setTextColor(59, 35, 20);
   const lines = doc.splitTextToSize(text, CONTENT_W) as string[];
@@ -431,13 +499,13 @@ function drawCategoryDivider(doc: jsPDF, categorySlug: string) {
   doc.setTextColor(168, 75, 47);
   centeredText(doc, 'HERITAGE KITCHEN', topY + 18);
 
-  doc.setFont('times', 'bold');
+  doc.setFont('Playfair', 'normal');
   doc.setFontSize(28);
   doc.setTextColor(59, 35, 20);
   centeredText(doc, meta.label, PAGE_H / 2 + 6);
 
   if (meta.blurb) {
-    doc.setFont('times', 'italic');
+    doc.setFont('Lora', 'italic');
     doc.setFontSize(11);
     doc.setTextColor(120, 110, 90);
     const blurbLines = doc.splitTextToSize(meta.blurb, CONTENT_W - 60) as string[];
@@ -450,13 +518,13 @@ function drawCategoryDivider(doc: jsPDF, categorySlug: string) {
 }
 
 function drawRecipeIndex(doc: jsPDF, recipes: Recipe[]) {
-  doc.setFont('times', 'bold');
+  doc.setFont('Playfair', 'normal');
   doc.setFontSize(22);
   doc.setTextColor(59, 35, 20);
   doc.text('Index', MARGIN_X, MARGIN_TOP);
 
   const sorted = [...recipes].sort((a, b) => a.title.localeCompare(b.title));
-  doc.setFont('times', 'normal');
+  doc.setFont('Lora', 'normal');
   doc.setFontSize(10);
 
   let y = MARGIN_TOP + 32;
@@ -469,7 +537,7 @@ function drawRecipeIndex(doc: jsPDF, recipes: Recipe[]) {
         y = MARGIN_TOP + 32;
       } else {
         doc.addPage();
-        doc.setFont('times', 'normal');
+        doc.setFont('Lora', 'normal');
         doc.setFontSize(10);
         doc.setTextColor(59, 35, 20);
         col = 0;
@@ -488,7 +556,7 @@ function drawRecipeIndex(doc: jsPDF, recipes: Recipe[]) {
 }
 
 function drawBibliography(doc: jsPDF, recipes: Recipe[]) {
-  doc.setFont('times', 'bold');
+  doc.setFont('Playfair', 'normal');
   doc.setFontSize(22);
   doc.setTextColor(59, 35, 20);
   doc.text('Source books', MARGIN_X, MARGIN_TOP);
@@ -508,7 +576,7 @@ function drawBibliography(doc: jsPDF, recipes: Recipe[]) {
   }
   books.sort((a, b) => Number(a.year) - Number(b.year));
 
-  doc.setFont('times', 'normal');
+  doc.setFont('Lora', 'normal');
   doc.setFontSize(11);
   let y = MARGIN_TOP + 36;
   for (const b of books) {
@@ -516,11 +584,11 @@ function drawBibliography(doc: jsPDF, recipes: Recipe[]) {
       doc.addPage();
       y = MARGIN_TOP;
     }
-    doc.setFont('times', 'bold');
+    doc.setFont('Playfair', 'normal');
     doc.setTextColor(59, 35, 20);
     doc.text(b.title, MARGIN_X, y);
     y += 14;
-    doc.setFont('times', 'italic');
+    doc.setFont('Lora', 'italic');
     doc.setTextColor(120, 110, 90);
     doc.text(`${b.author}  \u00B7  ${b.year}`, MARGIN_X, y);
     y += 22;
@@ -533,7 +601,7 @@ function drawAboutHeritageKitchen(doc: jsPDF) {
   doc.setTextColor(120, 90, 60);
   centeredText(doc, 'ABOUT HERITAGE KITCHEN', PAGE_H / 2 - 90);
 
-  doc.setFont('times', 'italic');
+  doc.setFont('Lora', 'italic');
   doc.setFontSize(11);
   doc.setTextColor(100, 80, 60);
   const lines = [
@@ -547,12 +615,12 @@ function drawAboutHeritageKitchen(doc: jsPDF) {
     y += 16;
   }
 
-  doc.setFont('times', 'normal');
+  doc.setFont('Lora', 'normal');
   doc.setFontSize(13);
   doc.setTextColor(168, 75, 47);
   centeredText(doc, 'heritagekitchen.app', PAGE_H / 2 + 20);
 
-  doc.setFont('times', 'italic');
+  doc.setFont('Lora', 'italic');
   doc.setFontSize(9);
   doc.setTextColor(120, 110, 90);
   centeredText(doc, '\u201cEver ancient, ever new.\u201d', PAGE_H / 2 + 50);
@@ -567,6 +635,9 @@ export async function generateCookbookPdfWithMeta(
     format: [PAGE_W, PAGE_H],
     compress: true,
   });
+
+  const fonts = await loadFonts();
+  applyFonts(doc, fonts);
 
   // -------- Front matter --------
   drawTitlePage(doc, project);
@@ -689,6 +760,9 @@ export async function generateCoverPdf(
     compress: true,
   });
 
+  const fonts = await loadFonts();
+  applyFonts(doc, fonts);
+
   // Full-bleed cream field so the wrap area is covered.
   doc.setFillColor(...CREAM);
   doc.rect(0, 0, totalW, totalH, 'F');
@@ -744,7 +818,7 @@ function drawFrontCover(
   );
 
   // Title in large serif, wrapped, vertically centered between the rules
-  doc.setFont('times', 'bold');
+  doc.setFont('Playfair', 'normal');
   doc.setFontSize(32);
   doc.setTextColor(...INK);
   const titleLines = doc.splitTextToSize(project.title, innerW) as string[];
@@ -759,7 +833,7 @@ function drawFrontCover(
 
   // Subtitle in serif italic
   if (project.subtitle) {
-    doc.setFont('times', 'italic');
+    doc.setFont('Lora', 'italic');
     doc.setFontSize(14);
     doc.setTextColor(...MUTED);
     const subLines = doc.splitTextToSize(project.subtitle, innerW - 40) as string[];
@@ -771,7 +845,7 @@ function drawFrontCover(
   }
 
   // Fleuron ornament near the bottom rule
-  doc.setFont('times', 'normal');
+  doc.setFont('Lora', 'normal');
   doc.setFontSize(18);
   doc.setTextColor(...TERRACOTTA);
   centered(doc, '\u2766', x + w / 2, bottomRuleY - 14);
@@ -800,7 +874,7 @@ function drawSpine(
   doc.line(x + 3, y + h - 30, x + spineW - 3, y + h - 30);
 
   // Title running vertically bottom-to-top
-  doc.setFont('times', 'bold');
+  doc.setFont('Playfair', 'normal');
   doc.setFontSize(14);
   doc.setTextColor(...INK);
   // Place the baseline slightly left of center so the rotated type
@@ -833,7 +907,7 @@ function drawBackCover(
   const safe = 48;
 
   // Augustine epigraph, centered high on the back cover
-  doc.setFont('times', 'italic');
+  doc.setFont('Lora', 'italic');
   doc.setFontSize(16);
   doc.setTextColor(...INK);
   const q1 = '\u201cLate have I loved you,';
@@ -848,7 +922,7 @@ function drawBackCover(
   centered(doc, '\u2014 Augustine, Confessions X.27', x + w / 2, y + h * 0.38 + 46);
 
   // Site URL footer
-  doc.setFont('times', 'normal');
+  doc.setFont('Lora', 'normal');
   doc.setFontSize(10);
   doc.setTextColor(...TERRACOTTA);
   centered(doc, 'heritagekitchen.app', x + w / 2, y + h - safe - 18);
