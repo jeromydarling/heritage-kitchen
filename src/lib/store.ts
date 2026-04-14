@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
 
+export type StoreKind = 'affiliate' | 'referral' | 'print_on_demand' | 'etsy';
+
 export interface StoreItem {
   slug: string;
   title: string;
@@ -9,10 +11,15 @@ export interface StoreItem {
   maker_name: string | null;
   maker_url: string | null;
   category: string;
-  kind: 'affiliate' | 'print_on_demand';
+  kind: StoreKind;
   affiliate_url: string | null;
+  affiliate_network?: string | null;
+  commission_rate?: string | null;
   image_url: string | null;
   price_display: string | null;
+  partner_status?: 'prospect' | 'active' | 'inactive' | 'contacted' | 'declined';
+  last_verified?: string | null;
+  source_url?: string | null;
   published: boolean;
   featured: boolean;
   sort_order: number;
@@ -114,9 +121,13 @@ export function useStoreItems() {
 export const CATEGORY_LABELS: Record<string, string> = {
   'flour-and-grain': 'Flour &amp; grain',
   cookware: 'Cookware',
+  'kitchen-tools': 'Kitchen tools',
   preserving: 'Preserving',
+  starters: 'Starters &amp; cultures',
+  'kitchen-garden': 'Kitchen garden',
   monastery: 'From the monastery',
   spices: 'Spices',
   books: 'Books',
+  apparel: 'Kitchen linens &amp; workwear',
   merch: 'Heritage Kitchen merch',
 };
