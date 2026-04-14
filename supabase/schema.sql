@@ -405,6 +405,9 @@ create table if not exists editions (
 
 alter table editions add column if not exists interior_pdf_url text;
 alter table editions add column if not exists cover_pdf_url text;
+-- Lesson-based or mixed editions. recipe_ids is already jsonb[];
+-- lesson_ids holds the ordered list of lesson ids included in the book.
+alter table editions add column if not exists lesson_ids jsonb default '[]'::jsonb;
 -- Almanac year for editions in the annual "Heritage Kitchen Almanac" series.
 -- NULL for non-almanac editions.
 alter table editions add column if not exists almanac_year integer;

@@ -11,6 +11,7 @@ export interface Edition {
   cover_image_url: string | null;
   intro_text: string | null;
   recipe_ids: string[];
+  lesson_ids: string[];
   price_usd: number;
   price_pdf_usd: number | null;
   format: EditionFormat;

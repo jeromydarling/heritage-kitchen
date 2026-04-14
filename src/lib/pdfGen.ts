@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import type { Recipe } from './types';
+import type { Lesson } from './lessons';
 
 // ====================================================================
 // FONT LOADING
@@ -91,6 +92,10 @@ export interface CookbookProject {
   /** When true, recipes are grouped by category with a divider page between groups. */
   groupByCategory?: boolean;
   recipes: Recipe[];
+  /** Optional lessons to include after the recipe section. Lesson-only
+   *  editions and mixed anthology editions both work by leaving recipes
+   *  empty or partial and passing in lessons here. */
+  lessons?: Lesson[];
 }
 
 // Page dimensions â€” 6x9 inches in points (1 inch = 72 points).
@@ -354,6 +359,149 @@ function drawRecipe(doc: jsPDF, recipe: Recipe, c: Cursor) {
       doc.text(line, MARGIN_X, c.y);
       c.y += 12;
     }
+  }
+}
+
+function drawLesson(doc: jsPDF, lesson: Lesson, c: Cursor) {
+  // Source line (small caps)
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(120, 90, 60);
+  doc.text(
+    `${(lesson.source_book ?? '').toUpperCase()}  \u00B7  ${lesson.source_year ?? ''}  \u00B7  ${(lesson.topic ?? '').toUpperCase().replace(/-/g, ' ')}`,
+    MARGIN_X,
+    c.y,
+  );
+  c.y += 14;
+
+  // Title
+  doc.setFont('Playfair', 'normal');
+  doc.setFontSize(22);
+  doc.setTextColor(59, 35, 20);
+  const titleLines = doc.splitTextToSize(lesson.title, CONTENT_W) as string[];
+  for (const line of titleLines) {
+    needRoom(doc, c, 26);
+    doc.text(line, MARGIN_X, c.y);
+    c.y += 26;
+  }
+
+  // Key takeaways card (drawn as a simple ruled block)
+  if (lesson.key_takeaways && lesson.key_takeaways.length > 0) {
+    c.y += 6;
+    needRoom(doc, c, 40);
+    const startY = c.y;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(168, 75, 47);
+    doc.text('THE TAKEAWAYS', MARGIN_X + 8, startY + 12);
+
+    doc.setFont('Lora', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(59, 35, 20);
+    let y = startY + 28;
+    for (const t of lesson.key_takeaways) {
+      const lines = doc.splitTextToSize(`\u00B7  ${t}`, CONTENT_W - 24) as string[];
+      for (const line of lines) {
+        needRoom(doc, c, 13);
+        doc.text(line, MARGIN_X + 12, y);
+        y += 13;
+        c.y = y;
+      }
+      y += 2;
+      c.y = y;
+    }
+    // Background rule and border for the takeaways block
+    doc.setDrawColor(232, 223, 211);
+    doc.setLineWidth(0.5);
+    doc.line(MARGIN_X, startY + 4, MARGIN_X + CONTENT_W, startY + 4);
+    doc.line(MARGIN_X, y + 2, MARGIN_X + CONTENT_W, y + 2);
+    c.y = y + 10;
+  }
+
+  // Original text in monospace / typewriter
+  needRoom(doc, c, 30);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(168, 75, 47);
+  doc.text('AS WRITTEN IN ' + (lesson.source_year ?? ''), MARGIN_X, c.y);
+  c.y += 14;
+  doc.setFont('CourierPrime', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(59, 35, 20);
+  const origLines = doc.splitTextToSize(lesson.original_text ?? '', CONTENT_W) as string[];
+  for (const line of origLines) {
+    needRoom(doc, c, 12);
+    doc.text(line, MARGIN_X, c.y);
+    c.y += 12;
+  }
+  c.y += 10;
+
+  // Modern explanation
+  needRoom(doc, c, 30);
+  doc.setFont('Playfair', 'normal');
+  doc.setFontSize(16);
+  doc.setTextColor(59, 35, 20);
+  doc.text("What's actually going on", MARGIN_X, c.y);
+  c.y += 22;
+  doc.setFont('Lora', 'normal');
+  doc.setFontSize(10.5);
+  for (const para of (lesson.modern_explanation ?? '').split(/\n\n+/)) {
+    if (!para.trim()) continue;
+    const lines = doc.splitTextToSize(para.trim(), CONTENT_W) as string[];
+    for (const line of lines) {
+      needRoom(doc, c, 14);
+      doc.text(line, MARGIN_X, c.y);
+      c.y += 14;
+    }
+    c.y += 6;
+  }
+
+  // Still true / Needs updating two-column block
+  if (lesson.still_true || lesson.outdated) {
+    c.y += 6;
+    needRoom(doc, c, 60);
+    const colW = (CONTENT_W - 14) / 2;
+    const colStartY = c.y;
+
+    // Left column: still true (green accent)
+    doc.setDrawColor(22, 101, 52);
+    doc.setLineWidth(2);
+    doc.line(MARGIN_X, colStartY, MARGIN_X, colStartY + 100);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(22, 101, 52);
+    doc.text('STILL TRUE', MARGIN_X + 8, colStartY + 10);
+    doc.setFont('Lora', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(59, 35, 20);
+    const stLines = doc.splitTextToSize(lesson.still_true ?? '', colW - 14) as string[];
+    let stY = colStartY + 24;
+    for (const line of stLines) {
+      doc.text(line, MARGIN_X + 8, stY);
+      stY += 12;
+    }
+
+    // Right column: outdated (terracotta accent)
+    const rightX = MARGIN_X + colW + 14;
+    doc.setDrawColor(168, 75, 47);
+    doc.setLineWidth(2);
+    doc.line(rightX, colStartY, rightX, colStartY + 100);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(168, 75, 47);
+    doc.text('NEEDS UPDATING', rightX + 8, colStartY + 10);
+    doc.setFont('Lora', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(59, 35, 20);
+    const otLines = doc.splitTextToSize(lesson.outdated ?? '', colW - 14) as string[];
+    let otY = colStartY + 24;
+    for (const line of otLines) {
+      doc.text(line, rightX + 8, otY);
+      otY += 12;
+    }
+
+    // Advance cursor to below the taller of the two columns
+    c.y = Math.max(stY, otY) + 14;
   }
 }
 
@@ -678,6 +826,34 @@ export async function generateCookbookPdfWithMeta(
       doc.addPage();
       const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
       drawRecipe(doc, recipe, cursor);
+    }
+  }
+
+  // -------- Lessons section (optional) --------
+  if (project.lessons && project.lessons.length > 0) {
+    doc.addPage();
+    // Lessons section divider
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(168, 75, 47);
+    centeredText(doc, 'HERITAGE KITCHEN', PAGE_H * 0.38 + 18);
+    doc.setFont('Playfair', 'normal');
+    doc.setFontSize(28);
+    doc.setTextColor(59, 35, 20);
+    centeredText(doc, 'How to Cook', PAGE_H / 2 + 6);
+    doc.setFont('Lora', 'italic');
+    doc.setFontSize(11);
+    doc.setTextColor(120, 110, 90);
+    centeredText(
+      doc,
+      'Lessons from the 1900s home-economics classroom',
+      PAGE_H / 2 + 34,
+    );
+
+    for (const lesson of project.lessons) {
+      doc.addPage();
+      const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+      drawLesson(doc, lesson, cursor);
     }
   }
 
