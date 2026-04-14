@@ -50,18 +50,18 @@ export default function SearchPage() {
       </header>
 
       {loading ? (
-        <p className="text-muted">Searchingâ€¦</p>
+        <p className="text-muted">Searching…</p>
       ) : query.trim() === '' ? (
         <p className="text-muted">Type something above to search the library.</p>
       ) : results.length === 0 ? (
         <p className="text-muted">
-          No recipes matched â€œ{query}â€. Try a different word â€” the library has a lot of old
-          vocabulary (â€œcookyâ€, â€œreceiptâ€, â€œforcemeatâ€â€¦).
+          No recipes matched “{query}”. Try a different word — the library has a lot of old
+          vocabulary (“cooky”, “receipt”, “forcemeat”…).
         </p>
       ) : (
         <div>
           <p className="mb-4 text-sm text-muted">
-            {results.length} result{results.length === 1 ? '' : 's'} for â€œ{query}â€
+            {results.length} result{results.length === 1 ? '' : 's'} for “{query}”
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {results.slice(0, 60).map((r) => (

@@ -3,7 +3,7 @@
 Cook the old food, together.
 
 Heritage Kitchen is a recipe blog that presents 3,485 public-domain recipes from
-five classic American cookbooks (1869â€“1917), each shown side-by-side in the
+five classic American cookbooks (1869–1917), each shown side-by-side in the
 cook's original words and as a modern adaptation you can follow today.
 
 ## Stack
@@ -11,7 +11,7 @@ cook's original words and as a modern adaptation you can follow today.
 - **Vite + React 18 + TypeScript**
 - **Tailwind CSS** with a warm, vintage-cookbook palette
 - **React Router** (hash router, ideal for static GitHub Pages hosting)
-- **Supabase** (Postgres + Auth + Storage + Edge Functions) â€” optional at
+- **Supabase** (Postgres + Auth + Storage + Edge Functions) — optional at
   build time. The site gracefully falls back to bundled sample recipes when
   Supabase isn't configured, so it deploys and browses fine on day one.
 
@@ -52,7 +52,7 @@ Two options:
 | `/` | Hero, category grid, random featured recipe, library filters |
 | `/category/:slug` | Paginated, sortable recipe grid for one of the 12 categories |
 | `/recipe/:id` | **The core UX.** Original / Modern tab switcher, AI illustration, history note |
-| `/search?q=â€¦` | Full-text search across titles, ingredients, tags, and original text |
+| `/search?q=…` | Full-text search across titles, ingredients, tags, and original text |
 | `/about` | Project description and source-book bibliography |
 | `/admin` | Supabase-auth-gated image management (regenerate AI illustrations) |
 

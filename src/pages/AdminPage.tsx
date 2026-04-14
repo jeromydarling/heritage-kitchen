@@ -176,14 +176,14 @@ export default function AdminPage() {
             <div className="space-y-2 p-3 text-sm">
               <p className="font-serif text-base leading-tight">{r.title}</p>
               <p className="text-xs text-muted">
-                {r.source_book} Â· {r.source_year}
+                {r.source_book} · {r.source_year}
               </p>
               <button
                 onClick={() => regenerate(r)}
                 disabled={busy === r.id}
                 className="btn w-full justify-center"
               >
-                {busy === r.id ? 'Regeneratingâ€¦' : 'Regenerate'}
+                {busy === r.id ? 'Regenerating…' : 'Regenerate'}
               </button>
             </div>
           </div>

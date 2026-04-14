@@ -70,7 +70,7 @@ function Placeholder({
           <circle cx="32" cy="18" r="2" />
         </svg>
         <span className="font-serif text-xs italic text-muted">
-          {loading ? 'Sketching the illustrationâ€¦' : 'Illustration coming soon'}
+          {loading ? 'Sketching the illustration…' : 'Illustration coming soon'}
         </span>
       </div>
     </div>

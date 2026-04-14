@@ -15,7 +15,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       <div className="flex flex-1 flex-col gap-2 p-4">
         <h3 className="font-serif text-lg leading-snug">{recipe.title}</h3>
         <p className="text-xs text-muted">
-          {recipe.source_book} Â· {recipe.source_year}
+          {recipe.source_book} · {recipe.source_year}
         </p>
         <div className="mt-auto flex items-center justify-between pt-2">
           <DifficultyBadge difficulty={recipe.difficulty} />

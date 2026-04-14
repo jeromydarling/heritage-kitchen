@@ -3,7 +3,7 @@ import { sampleRecipes } from './sampleRecipes';
 import { supabase, isSupabaseConfigured } from './supabase';
 
 // Path to the JSON dataset in /public. The full 3,485-recipe file lives at
-// public/heritage_kitchen_recipes.json and is fetched on first load â€” no
+// public/heritage_kitchen_recipes.json and is fetched on first load — no
 // Supabase required for read-only browsing.
 const PUBLIC_DATASET_URL = `${import.meta.env.BASE_URL}heritage_kitchen_recipes.json`;
 
@@ -41,7 +41,7 @@ export async function loadRecipes(): Promise<Recipe[]> {
         }
       }
     } catch {
-      // ignore â€” fall through to sample
+      // ignore — fall through to sample
     }
 
     cache = sampleRecipes;

@@ -13,13 +13,13 @@ export default function AboutPage() {
       <section className="space-y-4 text-base leading-relaxed">
         <p>
           Heritage Kitchen draws from five classic American cookbooks published between 1869 and
-          1917 â€” 3,485 recipes in all, every one of them in the public domain. For each recipe we
-          show two things side by side: the cookâ€™s original words, preserved as written, and a
+          1917 — 3,485 recipes in all, every one of them in the public domain. For each recipe we
+          show two things side by side: the cook's original words, preserved as written, and a
           modern adaptation you can actually follow in a present-day kitchen.
         </p>
         <p>
-          The original text is there so you can hear the voice of the person who wrote it â€” Fannie
-          Farmer, Miss Parloa, Mrs. Lincoln â€” and see how much (and how little) has changed about
+          The original text is there so you can hear the voice of the person who wrote it — Fannie
+          Farmer, Miss Parloa, Mrs. Lincoln — and see how much (and how little) has changed about
           home cooking in a hundred and thirty years. The modern version is there so dinner
           actually happens.
         </p>
@@ -32,7 +32,7 @@ export default function AboutPage() {
             <li key={b.title} className="card p-5">
               <p className="font-serif text-lg">{b.title}</p>
               <p className="text-sm text-muted">
-                {b.author} Â· {b.year}
+                {b.author} · {b.year}
               </p>
               <a
                 href={b.gutenberg}
@@ -40,7 +40,7 @@ export default function AboutPage() {
                 rel="noreferrer"
                 className="mt-2 inline-block text-sm"
               >
-                Read the original on Project Gutenberg â†—
+                Read the original on Project Gutenberg ↗
               </a>
             </li>
           ))}

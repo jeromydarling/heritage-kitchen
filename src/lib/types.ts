@@ -70,7 +70,7 @@ export const SOURCE_BOOKS = [
     gutenberg: 'https://www.gutenberg.org/ebooks/65061',
   },
   {
-    title: 'Mrs. Lincolnâ€™s Boston Cook Book',
+    title: "Mrs. Lincoln's Boston Cook Book",
     author: 'Mary J. Lincoln',
     year: '1884',
     gutenberg: 'https://www.gutenberg.org/ebooks/60107',
@@ -82,7 +82,7 @@ export const SOURCE_BOOKS = [
     gutenberg: 'https://www.gutenberg.org/ebooks/27291',
   },
   {
-    title: 'Miss Parloaâ€™s New Cook Book',
+    title: "Miss Parloa's New Cook Book",
     author: 'Maria Parloa',
     year: '1887',
     gutenberg: 'https://www.gutenberg.org/ebooks/43772',

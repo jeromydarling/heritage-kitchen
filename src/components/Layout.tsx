@@ -64,7 +64,7 @@ export default function Layout() {
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search 3,485 recipes â€” e.g. gingerbread, tomatoes, Fannie Farmerâ€¦"
+              placeholder="Search 3,485 recipes — e.g. gingerbread, tomatoes, Fannie Farmer…"
               className="w-full rounded-full border border-rule bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:border-terracotta focus:outline-none"
               aria-label="Search recipes"
             />
@@ -82,7 +82,7 @@ export default function Layout() {
       <footer className="border-t border-rule bg-surface">
         <div className="mx-auto max-w-6xl px-4 py-6 text-xs text-muted sm:flex sm:items-center sm:justify-between">
           <p>
-            Heritage Kitchen Â· 3,485 public-domain recipes from the 1880sâ€“1920s, adapted for
+            Heritage Kitchen · 3,485 public-domain recipes from the 1880s–1920s, adapted for
             today's families.
           </p>
           <p>

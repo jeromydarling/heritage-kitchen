@@ -37,7 +37,7 @@ export default function CategoryPage() {
     return (
       <div>
         <p className="text-muted">
-          That category doesnâ€™t exist. <Link to="/">Go home</Link>.
+          That category doesn't exist. <Link to="/">Go home</Link>.
         </p>
       </div>
     );
@@ -72,7 +72,7 @@ export default function CategoryPage() {
 
       {paginated.length === 0 ? (
         <p className="text-muted">
-          No recipes in this category yet. The full 3,485-recipe dataset hasnâ€™t been loaded â€” see{' '}
+          No recipes in this category yet. The full 3,485-recipe dataset hasn't been loaded — see{' '}
           <Link to="/about">About</Link> for details.
         </p>
       ) : (

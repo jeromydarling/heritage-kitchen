@@ -50,7 +50,7 @@ export default function RecipePage() {
     script.text = JSON.stringify(ld);
     document.head.appendChild(script);
     const origTitle = document.title;
-    document.title = `${recipe.title} â€” Heritage Kitchen`;
+    document.title = `${recipe.title} — Heritage Kitchen`;
     return () => {
       script.remove();
       document.title = origTitle;
@@ -58,7 +58,7 @@ export default function RecipePage() {
   }, [recipe]);
 
   if (!recipe) {
-    return <p className="text-muted">Loadingâ€¦</p>;
+    return <p className="text-muted">Loading…</p>;
   }
 
   const category = CATEGORIES.find((c) => c.slug === recipe.category);
@@ -89,7 +89,7 @@ export default function RecipePage() {
         </div>
         <div className="sm:col-span-3">
           <p className="text-xs uppercase tracking-widest text-terracotta">
-            {recipe.source_book} Â· {recipe.source_year}
+            {recipe.source_book} · {recipe.source_year}
           </p>
           <h1 className="mt-1 font-serif text-4xl leading-tight sm:text-5xl">{recipe.title}</h1>
           <p className="mt-2 text-sm text-muted">by {recipe.source_author}</p>
@@ -144,11 +144,11 @@ export default function RecipePage() {
               rel="noreferrer"
               className="mt-3 inline-block text-sm"
             >
-              View on Project Gutenberg â†—
+              View on Project Gutenberg ↗
             </a>
           </div>
           <button onClick={tryAnother} className="btn w-full justify-center">
-            Try another {category?.label.toLowerCase() ?? 'recipe'} â†’
+            Try another {category?.label.toLowerCase() ?? 'recipe'} →
           </button>
         </aside>
       </div>
@@ -275,7 +275,7 @@ function Stat({ label, value }: { label: string; value?: string }) {
   return (
     <div>
       <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-muted">{label}</p>
-      <p className="mt-0.5 font-serif text-base capitalize">{value || 'â€”'}</p>
+      <p className="mt-0.5 font-serif text-base capitalize">{value || '—'}</p>
     </div>
   );
 }

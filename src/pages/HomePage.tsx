@@ -42,7 +42,7 @@ export default function HomePage() {
           </h1>
           <p className="mt-5 text-lg text-muted">
             {total ? total.toLocaleString() : '3,485'} public-domain recipes from five classic American
-            cookbooks (1869â€“1917), each shown in the cookâ€™s original words and adapted for a modern
+            cookbooks (1869–1917), each shown in the cook's original words and adapted for a modern
             kitchen.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
@@ -86,9 +86,9 @@ export default function HomePage() {
       {featured && (
         <section>
           <div className="mb-6 flex items-end justify-between">
-            <h2 className="font-serif text-2xl">Todayâ€™s random recipe</h2>
+            <h2 className="font-serif text-2xl">Today's random recipe</h2>
             <Link to={`/recipe/${featured.id}`} className="text-sm">
-              Open â†’
+              Open →
             </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
