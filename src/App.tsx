@@ -20,6 +20,7 @@ import StorePage from './pages/StorePage';
 import MonasteriesPage from './pages/MonasteriesPage';
 import MonasteryDetailPage from './pages/MonasteryDetailPage';
 import FriendsPage from './pages/FriendsPage';
+import ServicesPage from './pages/ServicesPage';
 import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -45,6 +46,7 @@ export default function App() {
         <Route path="monasteries" element={<MonasteriesPage />} />
         <Route path="monasteries/:slug" element={<MonasteryDetailPage />} />
         <Route path="friends" element={<FriendsPage />} />
+        <Route path="services" element={<ServicesPage />} />
         <Route path="plan" element={<MealPlanPage />} />
         <Route path="shopping" element={<ShoppingListPage />} />
         <Route path="search" element={<SearchPage />} />

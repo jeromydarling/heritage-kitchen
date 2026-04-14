@@ -446,6 +446,46 @@ values (
 on conflict (slug) do nothing;
 
 -- ==========================================================================
+-- Service enquiries: custom cookbook, parish cookbook, historical research
+-- ==========================================================================
+--
+-- A simple inbox for the Tier 4 relationship-sale services. The frontend
+-- posts into this table via a public insert policy (rate-limited by IP
+-- at the edge-function level in a later commit). No reads by default;
+-- admin reads by the site owner.
+
+create table if not exists service_enquiries (
+  id uuid primary key default gen_random_uuid(),
+  kind text not null check (kind in ('custom_cookbook','parish_cookbook','research','other')),
+  name text not null,
+  email text not null,
+  subject text,
+  message text not null,
+  budget_range text,
+  status text not null default 'new' check (status in ('new','replied','scheduled','completed','declined')),
+  created_at timestamptz default now()
+);
+
+create index if not exists idx_service_enquiries_status
+  on service_enquiries (status, created_at desc);
+
+alter table service_enquiries enable row level security;
+
+-- Anyone can insert a new enquiry (so the contact form works without
+-- sign-in), but nobody can read them except the admin.
+drop policy if exists "service_enquiries_public_insert" on service_enquiries;
+create policy "service_enquiries_public_insert" on service_enquiries
+  for insert with check (true);
+
+drop policy if exists "service_enquiries_admin_read" on service_enquiries;
+create policy "service_enquiries_admin_read" on service_enquiries
+  for select using (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+drop policy if exists "service_enquiries_admin_write" on service_enquiries;
+create policy "service_enquiries_admin_write" on service_enquiries
+  for update using (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- ==========================================================================
 -- Sponsorships: "Friends of Heritage Kitchen" and adopt-a-recipe
 -- ==========================================================================
 --

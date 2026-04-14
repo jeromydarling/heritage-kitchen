@@ -172,6 +172,9 @@ export default function Layout() {
             <NavLink to="/about" className="!no-underline hover:text-terracotta">
               About
             </NavLink>
+            <NavLink to="/services" className="!no-underline hover:text-terracotta">
+              Commissions
+            </NavLink>
             <NavLink to="/friends" className="!no-underline hover:text-terracotta">
               Friends of Heritage Kitchen
             </NavLink>
