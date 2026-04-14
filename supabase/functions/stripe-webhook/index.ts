@@ -155,13 +155,14 @@ async function handleEditionOrder(
   session: Record<string, unknown>,
   supabase: ReturnType<typeof createClient>,
 ) {
-  const edition_slug = (session.metadata as Record<string, string> | undefined)
-    ?.edition_slug;
+  const meta = (session.metadata ?? {}) as Record<string, string>;
+  const edition_slug = meta.edition_slug;
+  const format = (meta.format ?? 'print') as 'print' | 'pdf';
   if (!edition_slug) {
     return new Response('missing edition_slug metadata', { status: 400 });
   }
 
-  // Load the edition so we know what to print
+  // Load the edition so we know what to print or deliver
   const { data: edition } = await supabase
     .from('editions')
     .select('*')
@@ -169,6 +170,40 @@ async function handleEditionOrder(
     .single();
   if (!edition) {
     return new Response('edition not found', { status: 404 });
+  }
+
+  // Digital delivery path: no shipping, no Lulu. Generate a signed
+  // download URL for the stored PDF, expire it in a year, store it on
+  // the order row so the customer's success page can read it.
+  if (format === 'pdf') {
+    const customer =
+      (session.customer_details as Record<string, string> | undefined) ?? {};
+    if (!edition.pdf_storage_path) {
+      return new Response('edition has no pdf_storage_path configured', {
+        status: 500,
+      });
+    }
+    const expiresIn = 60 * 60 * 24 * 365; // one year
+    const { data: signed, error: signErr } = await supabase.storage
+      .from('cookbook-pdfs')
+      .createSignedUrl(edition.pdf_storage_path, expiresIn);
+    if (signErr || !signed) {
+      return new Response('failed to sign download url', { status: 500 });
+    }
+    const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
+    await supabase.from('edition_orders').insert({
+      edition_slug,
+      customer_email: customer.email ?? '',
+      customer_name: customer.name ?? '',
+      format: 'pdf',
+      status: 'delivered',
+      stripe_session_id: session.id,
+      amount_paid_cents: session.amount_total,
+      currency: String(session.currency ?? 'USD').toUpperCase(),
+      pdf_download_url: signed.signedUrl,
+      pdf_download_expires_at: expiresAt,
+    });
+    return new Response('ok (pdf delivered)', { status: 200 });
   }
 
   // Extract shipping from Stripe's shipping_details (collected on checkout)

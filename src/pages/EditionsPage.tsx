@@ -61,9 +61,20 @@ export default function EditionsPage() {
                 {e.subtitle && (
                   <p className="text-sm italic text-muted">{e.subtitle}</p>
                 )}
-                <p className="mt-auto pt-3 text-base font-serif">
-                  ${e.price_usd.toFixed(2)}
-                </p>
+                <div className="mt-auto flex items-baseline justify-between pt-3">
+                  <p className="font-serif text-base">
+                    {e.format === 'pdf'
+                      ? `PDF $${(e.price_pdf_usd ?? 0).toFixed(2)}`
+                      : e.format === 'both' && e.price_pdf_usd
+                        ? `From $${e.price_pdf_usd.toFixed(2)}`
+                        : `$${e.price_usd.toFixed(2)}`}
+                  </p>
+                  {e.format === 'pdf' && (
+                    <span className="rounded-full border border-rule px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted">
+                      Instant
+                    </span>
+                  )}
+                </div>
               </div>
             </Link>
           ))}

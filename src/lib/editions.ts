@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
 
+export type EditionFormat = 'print' | 'pdf' | 'both';
+
 export interface Edition {
   slug: string;
   title: string;
@@ -10,6 +12,8 @@ export interface Edition {
   intro_text: string | null;
   recipe_ids: string[];
   price_usd: number;
+  price_pdf_usd: number | null;
+  format: EditionFormat;
   page_count: number | null;
   published: boolean;
   featured: boolean;
@@ -88,14 +92,41 @@ export function useEdition(slug: string) {
 
 /**
  * Creates a Stripe Checkout Session for an edition order and returns the
- * redirect URL. Stripe collects the shipping address on its own page, so
- * we don't need to build one ourselves for editions.
+ * redirect URL. For printed editions, Stripe collects the shipping
+ * address on its own page. For PDF editions, shipping is skipped and the
+ * customer gets an instant download on the success page.
  */
-export async function startEditionCheckout(slug: string): Promise<string> {
+export async function startEditionCheckout(
+  slug: string,
+  format: 'print' | 'pdf' = 'print',
+): Promise<string> {
   if (!supabase) throw new Error('Supabase not configured');
   const { data, error } = await supabase.functions.invoke('stripe-checkout-edition', {
-    body: { edition_slug: slug },
+    body: { edition_slug: slug, format },
   });
   if (error) throw error;
   return (data as { url: string }).url;
+}
+
+export interface EditionOrderDownload {
+  edition_slug: string;
+  pdf_download_url: string | null;
+  pdf_download_expires_at: string | null;
+  status: string;
+}
+
+/**
+ * Fetches an edition order by its Stripe checkout session id. Used on the
+ * download success page to show the signed PDF URL after payment.
+ */
+export async function fetchEditionOrderBySession(
+  sessionId: string,
+): Promise<EditionOrderDownload | null> {
+  if (!supabase) return null;
+  const { data } = await supabase
+    .from('edition_orders')
+    .select('edition_slug, pdf_download_url, pdf_download_expires_at, status')
+    .eq('stripe_session_id', sessionId)
+    .maybeSingle();
+  return (data as EditionOrderDownload) ?? null;
 }

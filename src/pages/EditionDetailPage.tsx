@@ -1,24 +1,66 @@
-import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useEdition, startEditionCheckout } from '../lib/editions';
+import { useEffect, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import {
+  useEdition,
+  startEditionCheckout,
+  fetchEditionOrderBySession,
+  type EditionOrderDownload,
+} from '../lib/editions';
 import { authAvailable } from '../lib/auth';
 
 export default function EditionDetailPage() {
   const { slug = '' } = useParams();
   const { edition, loading } = useEdition(slug);
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
+  const [params] = useSearchParams();
+  const justPaid = params.get('paid') === '1';
+  const paidFormat = params.get('format');
+  const sessionId = params.get('session_id');
 
-  async function buy() {
+  const [busyFormat, setBusyFormat] = useState<'print' | 'pdf' | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [download, setDownload] = useState<EditionOrderDownload | null>(null);
+  const [downloadPolling, setDownloadPolling] = useState(false);
+
+  // If the customer just came back from Stripe with a PDF purchase, poll
+  // for the order row to appear (the webhook may take a moment).
+  useEffect(() => {
+    if (paidFormat !== 'pdf' || !sessionId) return;
+    let cancelled = false;
+    let attempts = 0;
+    setDownloadPolling(true);
+
+    async function poll() {
+      if (cancelled) return;
+      attempts++;
+      const order = await fetchEditionOrderBySession(sessionId!);
+      if (order?.pdf_download_url) {
+        setDownload(order);
+        setDownloadPolling(false);
+        return;
+      }
+      if (attempts > 20) {
+        setDownloadPolling(false);
+        return;
+      }
+      setTimeout(poll, 1500);
+    }
+    void poll();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [paidFormat, sessionId]);
+
+  async function buy(format: 'print' | 'pdf') {
     if (!edition) return;
-    setBusy(true);
+    setBusyFormat(format);
     setErr(null);
     try {
-      const url = await startEditionCheckout(edition.slug);
+      const url = await startEditionCheckout(edition.slug, format);
       window.location.href = url;
     } catch (e) {
       setErr((e as Error).message);
-      setBusy(false);
+      setBusyFormat(null);
     }
   }
 
@@ -34,6 +76,9 @@ export default function EditionDetailPage() {
     );
   }
 
+  const hasPrint = edition.format === 'print' || edition.format === 'both';
+  const hasPdf = edition.format === 'pdf' || edition.format === 'both';
+
   return (
     <article className="space-y-10">
       <nav className="text-xs uppercase tracking-widest text-muted">
@@ -41,6 +86,10 @@ export default function EditionDetailPage() {
         <Link to="/editions">Editions</Link> <span className="mx-1 text-rule">/</span>
         <span>{edition.title}</span>
       </nav>
+
+      {justPaid && paidFormat === 'pdf' && (
+        <DownloadCard download={download} polling={downloadPolling} />
+      )}
 
       <header className="grid gap-8 sm:grid-cols-5">
         <div className="sm:col-span-2">
@@ -89,37 +138,66 @@ export default function EditionDetailPage() {
             </p>
           )}
 
-          <div className="mt-8 flex items-baseline gap-4">
-            <span className="font-serif text-3xl">
-              ${edition.price_usd.toFixed(2)}
-            </span>
-            <span className="text-sm text-muted">Printed and shipped</span>
-          </div>
-
-          <div className="mt-6 space-y-3">
-            {authAvailable ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => void buy()}
-                  disabled={busy}
-                  className="btn-primary w-full sm:w-auto"
-                >
-                  {busy ? 'Redirecting to checkoutâ€¦' : 'Order a copy'}
-                </button>
-                {err && <p className="text-sm text-terracotta">{err}</p>}
-                <p className="text-xs text-muted">
-                  Payment is handled by Stripe. Shipping worldwide via
-                  Lulu print-on-demand &mdash; usually ships within a week.
-                </p>
-              </>
-            ) : (
-              <p className="text-muted">
-                Direct ordering requires Stripe to be configured on this
-                build. See the README for setup.
+          {authAvailable ? (
+            <div className="mt-8 space-y-3">
+              {hasPrint && (
+                <div className="flex items-center justify-between gap-4 rounded-2xl border border-rule bg-surface p-4">
+                  <div>
+                    <p className="font-serif text-lg">Printed copy</p>
+                    <p className="text-xs text-muted">
+                      Ships worldwide via Lulu print-on-demand
+                    </p>
+                  </div>
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-serif text-2xl">
+                      ${edition.price_usd.toFixed(2)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => void buy('print')}
+                      disabled={busyFormat !== null}
+                      className="btn-primary"
+                    >
+                      {busyFormat === 'print' ? 'Redirectingâ€¦' : 'Order'}
+                    </button>
+                  </div>
+                </div>
+              )}
+              {hasPdf && edition.price_pdf_usd != null && (
+                <div className="flex items-center justify-between gap-4 rounded-2xl border border-rule bg-surface p-4">
+                  <div>
+                    <p className="font-serif text-lg">PDF download</p>
+                    <p className="text-xs text-muted">
+                      Instant, worldwide, print-at-home friendly
+                    </p>
+                  </div>
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-serif text-2xl">
+                      ${edition.price_pdf_usd.toFixed(2)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => void buy('pdf')}
+                      disabled={busyFormat !== null}
+                      className="btn-primary"
+                    >
+                      {busyFormat === 'pdf' ? 'Redirectingâ€¦' : 'Buy PDF'}
+                    </button>
+                  </div>
+                </div>
+              )}
+              {err && <p className="text-sm text-terracotta">{err}</p>}
+              <p className="text-xs text-muted">
+                Payment is handled by Stripe. No accounts required for
+                buying.
               </p>
-            )}
-          </div>
+            </div>
+          ) : (
+            <p className="mt-6 text-muted">
+              Direct ordering requires Stripe to be configured on this
+              build. See the README for setup.
+            </p>
+          )}
         </div>
       </header>
 
@@ -142,5 +220,60 @@ export default function EditionDetailPage() {
         </section>
       )}
     </article>
+  );
+}
+
+function DownloadCard({
+  download,
+  polling,
+}: {
+  download: EditionOrderDownload | null;
+  polling: boolean;
+}) {
+  if (polling) {
+    return (
+      <div className="card border-terracotta/40 bg-terracotta/5 p-6">
+        <p className="text-xs uppercase tracking-widest text-terracotta">
+          Payment received
+        </p>
+        <h2 className="mt-2 font-serif text-2xl">
+          Preparing your downloadâ€¦
+        </h2>
+        <p className="mt-2 text-sm text-muted">
+          This usually takes a few seconds. Your link will appear here as
+          soon as Stripe and our download service sync up.
+        </p>
+      </div>
+    );
+  }
+  if (!download || !download.pdf_download_url) {
+    return (
+      <div className="card p-6">
+        <p className="text-sm text-muted">
+          Your payment is confirmed. If the download link doesn't appear
+          in a moment, check your email &mdash; we'll send it there as a
+          backup.
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className="card border-emerald-200 bg-emerald-50 p-6">
+      <p className="text-xs uppercase tracking-widest text-emerald-800">
+        Ready to download
+      </p>
+      <h2 className="mt-2 font-serif text-2xl text-ink">Thank you.</h2>
+      <p className="mt-2 text-sm text-ink/80">
+        Your cookbook is ready. This link is valid for a year, and we've
+        also emailed it to you as a backup.
+      </p>
+      <a
+        href={download.pdf_download_url}
+        className="btn-primary mt-4"
+        download
+      >
+        Download the PDF
+      </a>
+    </div>
   );
 }

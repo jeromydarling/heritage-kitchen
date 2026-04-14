@@ -355,6 +355,13 @@ create table if not exists editions (
 alter table editions add column if not exists interior_pdf_url text;
 alter table editions add column if not exists cover_pdf_url text;
 
+-- Format and digital-only support
+alter table editions add column if not exists format text default 'print'
+  check (format in ('print','pdf','both'));
+alter table editions add column if not exists price_pdf_usd numeric(10,2);
+-- The storage path inside the cookbook-pdfs bucket for downloadable PDFs.
+alter table editions add column if not exists pdf_storage_path text;
+
 create index if not exists idx_editions_published on editions (published, sort_order);
 
 alter table editions enable row level security;
@@ -375,17 +382,26 @@ create table if not exists edition_orders (
   edition_slug text not null references editions (slug) on delete restrict,
   customer_email text not null,
   customer_name text,
-  shipping_address jsonb not null,
+  shipping_address jsonb,
+  format text not null default 'print' check (format in ('print','pdf')),
   status text not null default 'pending' check (status in ('pending','ordered','in_production','shipped','delivered','cancelled','failed')),
   lulu_order_id text,
   lulu_status text,
   lulu_tracking_url text,
+  pdf_download_url text,
+  pdf_download_expires_at timestamptz,
   stripe_session_id text,
   amount_paid_cents integer,
   currency text,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
+
+-- Backfill columns for existing databases
+alter table edition_orders add column if not exists format text default 'print';
+alter table edition_orders add column if not exists pdf_download_url text;
+alter table edition_orders add column if not exists pdf_download_expires_at timestamptz;
+alter table edition_orders alter column shipping_address drop not null;
 
 create index if not exists idx_edition_orders_email on edition_orders (customer_email);
 create index if not exists idx_edition_orders_lulu on edition_orders (lulu_order_id);
@@ -412,7 +428,7 @@ create policy "edition_orders_admin_write" on edition_orders
 -- you have ones you actually want to publish.
 -- ==========================================================================
 
-insert into editions (slug, title, subtitle, description, intro_text, recipe_ids, price_usd, published, featured, sort_order)
+insert into editions (slug, title, subtitle, description, intro_text, recipe_ids, price_usd, price_pdf_usd, format, published, featured, sort_order)
 values (
   'lenten-table',
   'The Lenten Table',
@@ -421,8 +437,27 @@ values (
   'Lent, in most modern accounts, is a season of giving something up. In the old farming calendar that the Church inherited and baptized, it was also something else: the weeks when the cellar was empty and the first greens had not yet come up. Fasting was a way to make virtue out of necessity, and to save the new lambs from slaughter at the moment the household most wanted to eat them.\n\nThis little book is a table of simple food to carry you through those forty days. You will not find it showy. You will find it quiet and good.',
   '[]'::jsonb,
   34.00,
+  9.00,
+  'both',
   false,
   true,
   1
+)
+on conflict (slug) do nothing;
+
+insert into editions (slug, title, subtitle, description, intro_text, recipe_ids, price_usd, price_pdf_usd, format, published, featured, sort_order)
+values (
+  'advent-pantry',
+  'The Advent Pantry',
+  'Four weeks of waiting, quietly',
+  'A digital-only guide to the four weeks of Advent in the kitchen: simple suppers for the waiting, make-ahead cookies and breads for the feast that is coming, and a small liturgical calendar of what to start when. Instant PDF download.',
+  'Christmas cooking, done properly, starts four weeks early. The fruitcake soaks, the cookies wait in tins, the bread dough proves slowly in a cold pantry. The old word for this is Advent, which simply means arriving â€” the feast is on its way, and these weeks are how we make room for it.',
+  '[]'::jsonb,
+  0.00,
+  9.00,
+  'pdf',
+  false,
+  true,
+  2
 )
 on conflict (slug) do nothing;

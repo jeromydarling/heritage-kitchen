@@ -42,8 +42,9 @@ const CORS = {
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   try {
-    const { edition_slug } = await req.json();
+    const { edition_slug, format } = await req.json();
     if (!edition_slug) return json({ error: 'edition_slug is required' }, 400);
+    const wantedFormat = (format === 'pdf' ? 'pdf' : 'print') as 'pdf' | 'print';
 
     const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
     const { data: edition } = await supabase
@@ -54,31 +55,59 @@ serve(async (req) => {
       .maybeSingle();
     if (!edition) return json({ error: 'edition not found' }, 404);
 
-    const cents = Math.round(Number(edition.price_usd) * 100);
-    const successUrl = STRIPE_SUCCESS_URL.replace('{slug}', edition_slug);
+    // Make sure the requested format is actually available for this edition
+    const availableFormat = edition.format ?? 'print';
+    if (
+      (wantedFormat === 'pdf' && availableFormat === 'print') ||
+      (wantedFormat === 'print' && availableFormat === 'pdf')
+    ) {
+      return json({ error: 'format not available for this edition' }, 400);
+    }
+
+    const price =
+      wantedFormat === 'pdf' ? Number(edition.price_pdf_usd) : Number(edition.price_usd);
+    if (!price || price <= 0) {
+      return json({ error: 'edition is missing a price for that format' }, 400);
+    }
+    const cents = Math.round(price * 100);
+
+    // Different success URLs so the page can render download vs. status.
+    const successPath =
+      wantedFormat === 'pdf'
+        ? STRIPE_SUCCESS_URL.replace('{slug}', edition_slug) +
+          (STRIPE_SUCCESS_URL.includes('?') ? '&' : '?') +
+          'format=pdf&session_id={CHECKOUT_SESSION_ID}'
+        : STRIPE_SUCCESS_URL.replace('{slug}', edition_slug);
     const cancelUrl = STRIPE_CANCEL_URL.replace('{slug}', edition_slug);
 
     const params = new URLSearchParams();
     params.set('mode', 'payment');
-    params.set('success_url', successUrl);
+    params.set('success_url', successPath);
     params.set('cancel_url', cancelUrl);
     params.set('metadata[edition_slug]', edition_slug);
     params.set('metadata[kind]', 'edition');
+    params.set('metadata[format]', wantedFormat);
     params.set('line_items[0][quantity]', '1');
     params.set('line_items[0][price_data][currency]', 'usd');
     params.set('line_items[0][price_data][unit_amount]', cents.toString());
-    params.set('line_items[0][price_data][product_data][name]', edition.title);
+    const titleSuffix = wantedFormat === 'pdf' ? ' (PDF download)' : '';
+    params.set(
+      'line_items[0][price_data][product_data][name]',
+      edition.title + titleSuffix,
+    );
     if (edition.subtitle) {
       params.set(
         'line_items[0][price_data][product_data][description]',
         edition.subtitle,
       );
     }
-    params.set('shipping_address_collection[allowed_countries][0]', 'US');
-    params.set('shipping_address_collection[allowed_countries][1]', 'CA');
-    params.set('shipping_address_collection[allowed_countries][2]', 'GB');
-    params.set('shipping_address_collection[allowed_countries][3]', 'AU');
-    params.set('phone_number_collection[enabled]', 'true');
+    if (wantedFormat === 'print') {
+      params.set('shipping_address_collection[allowed_countries][0]', 'US');
+      params.set('shipping_address_collection[allowed_countries][1]', 'CA');
+      params.set('shipping_address_collection[allowed_countries][2]', 'GB');
+      params.set('shipping_address_collection[allowed_countries][3]', 'AU');
+      params.set('phone_number_collection[enabled]', 'true');
+    }
 
     const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
