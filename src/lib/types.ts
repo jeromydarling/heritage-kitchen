@@ -39,6 +39,9 @@ export interface Recipe {
   difficulty: Difficulty;
   image_prompt: string;
   image_url?: string | null;
+  // Computed client-side by the classifier. "essay" entries are historical
+  // articles rather than cookable recipes (e.g. "Coffee", "Baking of Bread").
+  content_type?: 'recipe' | 'essay';
 }
 
 export interface CategoryMeta {

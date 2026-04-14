@@ -1,6 +1,17 @@
-import { SOURCE_BOOKS } from '../lib/types';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { SOURCE_BOOKS, type Recipe } from '../lib/types';
+import { loadEssays } from '../lib/recipes';
 
 export default function AboutPage() {
+  const [essays, setEssays] = useState<Recipe[]>([]);
+
+  useEffect(() => {
+    loadEssays().then((all) =>
+      setEssays([...all].sort((a, b) => a.title.localeCompare(b.title))),
+    );
+  }, []);
+
   return (
     <div className="mx-auto max-w-2xl space-y-10">
       <header>
@@ -13,9 +24,9 @@ export default function AboutPage() {
       <section className="space-y-4 text-base leading-relaxed">
         <p>
           Heritage Kitchen draws from five classic American cookbooks published between 1869 and
-          1917 — 3,485 recipes in all, every one of them in the public domain. For each recipe we
-          show two things side by side: the cook's original words, preserved as written, and a
-          modern adaptation you can actually follow in a present-day kitchen.
+          1917 — every one of them in the public domain. For each recipe we show two things side
+          by side: the cook's original words, preserved as written, and a modern adaptation you
+          can actually follow in a present-day kitchen.
         </p>
         <p>
           The original text is there so you can hear the voice of the person who wrote it — Fannie
@@ -46,6 +57,26 @@ export default function AboutPage() {
           ))}
         </ul>
       </section>
+
+      {essays.length > 0 && (
+        <section>
+          <h2 className="font-serif text-2xl">Historical essays</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            Not every entry in these cookbooks is a recipe. Some are short essays on an
+            ingredient, a technique, or the science of the kitchen — little detours from the main
+            business of dinner. We surface these alongside related recipes, and here they all are
+            in one list.
+          </p>
+          <ul className="mt-5 grid gap-x-6 gap-y-2 sm:grid-cols-2">
+            {essays.map((e) => (
+              <li key={e.id} className="text-sm">
+                <Link to={`/essay/${e.id}`}>{e.title}</Link>
+                <span className="ml-2 text-xs text-muted">· {e.source_year}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="space-y-3 text-sm text-muted">
         <h2 className="font-serif text-2xl text-ink">A note on the public domain</h2>

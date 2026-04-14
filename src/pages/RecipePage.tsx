@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getRecipe, getRandomRecipe } from '../lib/recipes';
+import {
+  getRecipe,
+  getRandomRecipe,
+  getRelatedEssays,
+  getEntry,
+} from '../lib/recipes';
 import { CATEGORIES, type Recipe } from '../lib/types';
 import TabSwitcher from '../components/TabSwitcher';
 import RecipeImage from '../components/RecipeImage';
@@ -12,15 +17,30 @@ export default function RecipePage() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const [recipe, setRecipe] = useState<Recipe | undefined>();
+  const [relatedEssays, setRelatedEssays] = useState<Recipe[]>([]);
   const [tab, setTab] = useState<Tab>('modern');
   const [checked, setChecked] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     setChecked({});
     setTab('modern');
-    getRecipe(id).then(setRecipe);
+    setRelatedEssays([]);
+    (async () => {
+      const r = await getRecipe(id);
+      if (r) {
+        setRecipe(r);
+        setRelatedEssays(await getRelatedEssays(r));
+        return;
+      }
+      // If the id resolves to an essay entry, bounce the user over to the
+      // essay page instead of showing an empty "recipe not found" state.
+      const entry = await getEntry(id);
+      if (entry && entry.content_type === 'essay') {
+        navigate(`/essay/${entry.id}`, { replace: true });
+      }
+    })();
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(() => {
     if (!recipe) return;
@@ -147,6 +167,26 @@ export default function RecipePage() {
               View on Project Gutenberg ↗
             </a>
           </div>
+          {relatedEssays.length > 0 && (
+            <div className="card p-5">
+              <h3 className="font-serif text-lg">Read more</h3>
+              <p className="mt-1 text-xs text-muted">
+                Historical essays from the cookbooks
+              </p>
+              <ul className="mt-3 space-y-2">
+                {relatedEssays.map((e) => (
+                  <li key={e.id}>
+                    <Link to={`/essay/${e.id}`} className="text-sm">
+                      {e.title}
+                    </Link>
+                    <span className="ml-2 text-xs text-muted">
+                      {e.source_year}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <button onClick={tryAnother} className="btn w-full justify-center">
             Try another {category?.label.toLowerCase() ?? 'recipe'} →
           </button>

@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import RecipePage from './pages/RecipePage';
+import EssayPage from './pages/EssayPage';
 import SearchPage from './pages/SearchPage';
 import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
@@ -15,6 +16,7 @@ export default function App() {
         <Route index element={<HomePage />} />
         <Route path="category/:slug" element={<CategoryPage />} />
         <Route path="recipe/:id" element={<RecipePage />} />
+        <Route path="essay/:id" element={<EssayPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="admin" element={<AdminPage />} />
