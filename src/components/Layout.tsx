@@ -161,20 +161,30 @@ export default function Layout() {
       </main>
 
       <footer className="border-t border-rule bg-surface">
-        <div className="mx-auto max-w-6xl space-y-2 px-4 py-8 text-xs text-muted sm:flex sm:items-center sm:justify-between sm:space-y-0">
+        <div className="mx-auto max-w-6xl space-y-4 px-4 py-8 text-xs text-muted">
           <p className="font-serif italic">
             &ldquo;Late have I loved you, Beauty so ancient and so new.&rdquo;
             <span className="ml-2 not-italic">
               — Augustine, <em>Confessions</em> X.27
             </span>
           </p>
-          <p>
-            Source texts via{' '}
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            <NavLink to="/about" className="!no-underline hover:text-terracotta">
+              About
+            </NavLink>
+            <NavLink to="/friends" className="!no-underline hover:text-terracotta">
+              Friends of Heritage Kitchen
+            </NavLink>
+            <NavLink to="/monasteries" className="!no-underline hover:text-terracotta">
+              Monasteries
+            </NavLink>
+            <NavLink to="/store" className="!no-underline hover:text-terracotta">
+              Store
+            </NavLink>
             <a href="https://www.gutenberg.org" target="_blank" rel="noreferrer">
-              Project Gutenberg
+              Source texts via Project Gutenberg
             </a>
-            .
-          </p>
+          </div>
         </div>
       </footer>
 

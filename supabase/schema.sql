@@ -446,6 +446,69 @@ values (
 on conflict (slug) do nothing;
 
 -- ==========================================================================
+-- Sponsorships: "Friends of Heritage Kitchen" and adopt-a-recipe
+-- ==========================================================================
+--
+-- Annual sponsorships from aligned brands (King Arthur, Anson Mills,
+-- Lodge, Diaspora Co., etc.) and small-producer recipe adoptions.
+-- Deliberately modeled like museum donor credits, not ad units.
+
+create table if not exists sponsors (
+  slug text primary key,
+  name text not null,
+  tier text not null default 'friend'
+    check (tier in ('patron','supporter','friend')),
+  url text,
+  logo_url text,
+  description text,
+  since date,
+  until date,
+  published boolean not null default true,
+  sort_order integer default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists idx_sponsors_published
+  on sponsors (published, tier, sort_order);
+
+alter table sponsors enable row level security;
+
+drop policy if exists "sponsors_public_read" on sponsors;
+create policy "sponsors_public_read" on sponsors
+  for select using (published = true);
+
+drop policy if exists "sponsors_admin_write" on sponsors;
+create policy "sponsors_admin_write" on sponsors
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+create table if not exists recipe_adoptions (
+  id uuid primary key default gen_random_uuid(),
+  recipe_id text not null,
+  sponsor_slug text references sponsors (slug) on delete set null,
+  credit_text text,
+  adopted_from date,
+  adopted_until date,
+  active boolean not null default true,
+  created_at timestamptz default now()
+);
+
+create index if not exists idx_recipe_adoptions_recipe
+  on recipe_adoptions (recipe_id, active);
+
+alter table recipe_adoptions enable row level security;
+
+drop policy if exists "recipe_adoptions_public_read" on recipe_adoptions;
+create policy "recipe_adoptions_public_read" on recipe_adoptions
+  for select using (active = true);
+
+drop policy if exists "recipe_adoptions_admin_write" on recipe_adoptions;
+create policy "recipe_adoptions_admin_write" on recipe_adoptions
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- ==========================================================================
 -- Monasteries: a directory of contemplative communities whose food sales
 -- support their houses. This is a mission-aligned editorial product, not
 -- a store category.

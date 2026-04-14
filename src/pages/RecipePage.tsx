@@ -11,6 +11,7 @@ import TabSwitcher from '../components/TabSwitcher';
 import RecipeImage from '../components/RecipeImage';
 import DifficultyBadge from '../components/DifficultyBadge';
 import RecipeActions from '../components/RecipeActions';
+import AdoptionCredit from '../components/AdoptionCredit';
 
 type Tab = 'original' | 'modern';
 
@@ -193,6 +194,7 @@ export default function RecipePage() {
           <button onClick={tryAnother} className="btn w-full justify-center">
             Try another {category?.label.toLowerCase() ?? 'recipe'} →
           </button>
+          <AdoptionCredit recipeId={recipe.id} />
         </aside>
       </div>
     </article>

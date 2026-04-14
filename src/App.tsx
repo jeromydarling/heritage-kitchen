@@ -19,6 +19,7 @@ import CourseDetailPage from './pages/CourseDetailPage';
 import StorePage from './pages/StorePage';
 import MonasteriesPage from './pages/MonasteriesPage';
 import MonasteryDetailPage from './pages/MonasteryDetailPage';
+import FriendsPage from './pages/FriendsPage';
 import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -43,6 +44,7 @@ export default function App() {
         <Route path="store" element={<StorePage />} />
         <Route path="monasteries" element={<MonasteriesPage />} />
         <Route path="monasteries/:slug" element={<MonasteryDetailPage />} />
+        <Route path="friends" element={<FriendsPage />} />
         <Route path="plan" element={<MealPlanPage />} />
         <Route path="shopping" element={<ShoppingListPage />} />
         <Route path="search" element={<SearchPage />} />
