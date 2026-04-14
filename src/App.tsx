@@ -25,6 +25,15 @@ import AlmanacPage from './pages/AlmanacPage';
 import LicensingPage from './pages/LicensingPage';
 import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminOverviewPage from './pages/admin/AdminOverviewPage';
+import EditionsAdminPage from './pages/admin/EditionsAdminPage';
+import CoursesAdminPage from './pages/admin/CoursesAdminPage';
+import StoreAdminPage from './pages/admin/StoreAdminPage';
+import MonasteriesAdminPage from './pages/admin/MonasteriesAdminPage';
+import SponsorsAdminPage from './pages/admin/SponsorsAdminPage';
+import AdoptionsAdminPage from './pages/admin/AdoptionsAdminPage';
+import EnquiriesAdminPage from './pages/admin/EnquiriesAdminPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
@@ -55,7 +64,17 @@ export default function App() {
         <Route path="shopping" element={<ShoppingListPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="about" element={<AboutPage />} />
-        <Route path="admin" element={<AdminPage />} />
+        <Route path="admin" element={<AdminLayout />}>
+          <Route index element={<AdminOverviewPage />} />
+          <Route path="editions" element={<EditionsAdminPage />} />
+          <Route path="courses" element={<CoursesAdminPage />} />
+          <Route path="store" element={<StoreAdminPage />} />
+          <Route path="monasteries" element={<MonasteriesAdminPage />} />
+          <Route path="sponsors" element={<SponsorsAdminPage />} />
+          <Route path="adoptions" element={<AdoptionsAdminPage />} />
+          <Route path="enquiries" element={<EnquiriesAdminPage />} />
+          <Route path="images" element={<AdminPage />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
