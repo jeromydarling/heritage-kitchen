@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { Recipe } from './types';
+import { CATEGORIES } from './types';
 
 /**
  * Auto-linker for historical cross-references.
@@ -18,11 +19,61 @@ import type { Recipe } from './types';
 
 export type RecipeIndex = Map<string, Recipe[]>;
 
-// "see" is deliberately excluded — the old books say "see page 47" and
-// "see illustration" far more often than they name a recipe, so it
-// produces mostly false triggers. Recipe-specific phrases only.
+// The main trigger regex. "see" is handled specially because it has
+// three flavors in the old cookbooks: real cross-references ("see
+// SAUCES"), dead print-era page refs ("see page 47"), and English
+// grammar clauses ("see that it is kept clean"). The linker
+// discriminates between them after matching.
 const TRIGGER_RE =
-  /\b(same as|made as|proceed as for|prepared (?:as|like)|cooked as|baked as|served as|as for|as in)\s+/gi;
+  /\b(same as|made as|proceed as for|prepared (?:as|like)|cooked as|baked as|served as|as for|as in|see)\s+/gi;
+
+// Words that follow "see" in grammar constructions rather than
+// references. "see that X", "see if X", "see when X", etc.
+const SEE_GRAMMAR_WORDS = new Set([
+  'that',
+  'if',
+  'when',
+  'how',
+  'whether',
+  'to',
+  'no',
+  'some',
+  'the',
+]);
+
+// Print-era page reference tokens that follow "see". Page references
+// cannot be auto-linked (we have no page→recipe map for the source
+// books) so we mute them visually instead of leaving them dangling.
+const PAGE_REF_RE = /^(?:page|pages|p\.|pp\.|p\b)/i;
+
+// Match the full page-reference tail ("page 271", "pages 242-244",
+// "p. 581") so we know how much of the raw text to include in the
+// muted span.
+const PAGE_TAIL_RE = /^(?:pages?|pp?\.)\s*\d+(?:\s*[-–—]\s*\d+)?(?:\s+and\s*\d+)?/i;
+
+// Category label → slug index for "see SAUCES" / "see Salads" links
+// into the category browse pages.
+const CATEGORY_ALIASES: Record<string, string> = (() => {
+  const map: Record<string, string> = {};
+  for (const c of CATEGORIES) {
+    // Full label: "Sauces & Condiments" → "sauces and condiments"
+    const full = c.label.toLowerCase().replace(/&/g, 'and').replace(/\s+/g, ' ').trim();
+    map[full] = c.slug;
+    // First word of the slug: "sauces-and-condiments" → "sauces"
+    const first = c.slug.split('-')[0];
+    if (first && !(first in map)) map[first] = c.slug;
+  }
+  // A few common synonyms the old books use.
+  map.soup = 'soups-and-stews';
+  map.soups = 'soups-and-stews';
+  map.stews = 'soups-and-stews';
+  map.sauce = 'sauces-and-condiments';
+  map.pickle = 'preserves-and-pickles';
+  map.pickles = 'preserves-and-pickles';
+  map.preserve = 'preserves-and-pickles';
+  map.preserves = 'preserves-and-pickles';
+  return map;
+})();
 
 function normalize(s: string): string {
   return s
@@ -104,10 +155,37 @@ function findBestMatch(
   return null;
 }
 
+function findCategoryMatch(
+  candidate: string,
+): { slug: string; matchedLen: number; matchedText: string } | null {
+  // Look for a category alias at the start of the candidate. Try the
+  // longest phrase first (e.g. "sauces and condiments") down to the
+  // single word ("sauces").
+  const lower = candidate.toLowerCase();
+  for (const alias of Object.keys(CATEGORY_ALIASES).sort((a, b) => b.length - a.length)) {
+    if (lower.startsWith(alias)) {
+      // Make sure it ends on a word boundary — avoid matching "salad" inside "salads".
+      const after = candidate.charAt(alias.length);
+      if (after === '' || /[^\p{L}\p{N}]/u.test(after)) {
+        return {
+          slug: CATEGORY_ALIASES[alias],
+          matchedLen: alias.length,
+          matchedText: candidate.slice(0, alias.length),
+        };
+      }
+    }
+  }
+  return null;
+}
+
 /**
  * Parses `text` and replaces historical cross-references with links
  * into the recipe library. Returns a React fragment ready to render
- * inside a `<p>` or other block.
+ * inside a `<p>` or other block. Three kinds of references are
+ * recognized: recipe titles (the common case), category labels
+ * ("see SAUCES" → /category/sauces-and-condiments), and dead print-era
+ * page references ("see page 271") which are muted visually instead
+ * of linked.
  */
 export function linkRecipeReferences(
   text: string,
@@ -123,29 +201,90 @@ export function linkRecipeReferences(
   let m: RegExpExecArray | null;
   let key = 0;
   while ((m = TRIGGER_RE.exec(text)) !== null) {
+    const trigger = m[1].toLowerCase();
+    const triggerStart = m.index;
     const triggerEnd = m.index + m[0].length;
     const tail = text.slice(triggerEnd);
-    // Scan ahead up to the next sentence break (period, semi, paren,
-    // newline) — recipe titles don't cross those boundaries.
-    const breakIdx = tail.search(/[.;)\n]|,\s*(?:Serve|Cook|Add|Stir|Bake|Pour|Set|Drain|Season|Put|Place|Remove|Let|Allow|When|Until)/);
+
+    // ---- Handle "see" specially ----
+    if (trigger === 'see') {
+      // "see that / if / when / how / ..." — English grammar, skip.
+      const firstWordMatch = tail.match(/^(\S+)/);
+      const firstWord = firstWordMatch?.[1].toLowerCase().replace(/[^\p{L}]/gu, '');
+      if (firstWord && SEE_GRAMMAR_WORDS.has(firstWord)) {
+        TRIGGER_RE.lastIndex = triggerEnd;
+        continue;
+      }
+      // "see page 271", "see pages 242-244", "see p. 581" — mute.
+      if (PAGE_REF_RE.test(tail)) {
+        const pageTail = tail.match(PAGE_TAIL_RE);
+        const muteLen = pageTail ? pageTail[0].length : (tail.match(/^\S+/)?.[0].length ?? 0);
+        if (cursor < triggerStart) out.push(text.slice(cursor, triggerStart));
+        out.push(
+          <span
+            key={`xref-${key++}-${triggerStart}`}
+            className="text-muted/70 italic"
+            title="Page reference from the original print edition"
+          >
+            {text.slice(triggerStart, triggerEnd + muteLen)}
+          </span>,
+        );
+        cursor = triggerEnd + muteLen;
+        TRIGGER_RE.lastIndex = cursor;
+        continue;
+      }
+    }
+
+    // ---- Look for a link target in the span after the trigger ----
+    const breakIdx = tail.search(
+      /[.;)\n]|,\s*(?:Serve|Cook|Add|Stir|Bake|Pour|Set|Drain|Season|Put|Place|Remove|Let|Allow|When|Until)/,
+    );
     const spanLen = breakIdx === -1 ? Math.min(tail.length, 80) : breakIdx;
     const candidate = tail.slice(0, spanLen);
-    const hit = findBestMatch(candidate, index, currentId, sourceBook);
-    if (!hit) continue;
 
-    if (cursor < m.index) out.push(text.slice(cursor, m.index));
-    out.push(m[0]);
-    out.push(
-      <Link
-        key={`xref-${key++}-${m.index}`}
-        to={`/recipe/${hit.recipe.id}`}
-        className="text-terracotta underline decoration-terracotta/40 underline-offset-2 hover:decoration-terracotta"
-      >
-        {hit.matchedText}
-      </Link>,
-    );
-    cursor = triggerEnd + hit.matchedLen;
-    TRIGGER_RE.lastIndex = cursor;
+    // Try the recipe index first. Recipe titles are more specific than
+    // category aliases, so a phrase like "see Canned Red Peppers" will
+    // resolve to the recipe instead of the (wrong) "canned" fallback.
+    const recipeHit = findBestMatch(candidate, index, currentId, sourceBook);
+    if (recipeHit) {
+      if (cursor < triggerStart) out.push(text.slice(cursor, triggerStart));
+      out.push(m[0]);
+      out.push(
+        <Link
+          key={`xref-${key++}-${triggerStart}`}
+          to={`/recipe/${recipeHit.recipe.id}`}
+          className="text-terracotta underline decoration-terracotta/40 underline-offset-2 hover:decoration-terracotta"
+        >
+          {recipeHit.matchedText}
+        </Link>,
+      );
+      cursor = triggerEnd + recipeHit.matchedLen;
+      TRIGGER_RE.lastIndex = cursor;
+      continue;
+    }
+
+    // Fall back to category aliases. Only active after "see" — the
+    // other triggers ("same as", "proceed as for") don't point at
+    // whole categories, they point at specific recipes.
+    if (trigger === 'see') {
+      const catHit = findCategoryMatch(candidate);
+      if (catHit) {
+        if (cursor < triggerStart) out.push(text.slice(cursor, triggerStart));
+        out.push(m[0]);
+        out.push(
+          <Link
+            key={`xref-${key++}-${triggerStart}`}
+            to={`/category/${catHit.slug}`}
+            className="text-terracotta underline decoration-terracotta/40 underline-offset-2 hover:decoration-terracotta"
+          >
+            {catHit.matchedText}
+          </Link>,
+        );
+        cursor = triggerEnd + catHit.matchedLen;
+        TRIGGER_RE.lastIndex = cursor;
+        continue;
+      }
+    }
   }
   if (cursor < text.length) out.push(text.slice(cursor));
   if (out.length === 0) return text;
