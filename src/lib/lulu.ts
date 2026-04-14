@@ -1,19 +1,19 @@
 import { supabase } from './supabase';
 import type { Recipe } from './types';
-import { generateCookbookPdfWithMeta } from './pdfGen';
 
 /**
- * Client helpers for the Lulu Print API direct-ordering flow.
+ * Client helpers for the Lulu Print API direct-ordering flow backed by
+ * Stripe Checkout for payment.
  *
- * The flow (all from the browser):
- *   1. generate a PDF via pdfGen.ts
- *   2. upload it to the cookbook-pdfs Supabase Storage bucket
- *   3. ask the `lulu-quote` edge function for a price estimate
- *   4. ask the `lulu-create-order` edge function to create a real print job
- *   5. poll cookbook_projects to watch the status change
+ * The browser:
+ *   1. generates a PDF via pdfGen.ts (lazy-loaded)
+ *   2. uploads it to the cookbook-pdfs Supabase Storage bucket
+ *   3. asks `lulu-quote` for a price estimate
+ *   4. asks `stripe-checkout` to create a Stripe Checkout Session
+ *   5. redirects to Stripe
+ *   6. Stripe webhook creates the real Lulu print-job on successful payment
  *
- * The edge functions own the Lulu OAuth flow and credentials; nothing
- * sensitive lives in the browser.
+ * All sensitive Lulu/Stripe credentials live in the edge functions.
  */
 
 export interface ShippingAddress {
@@ -29,17 +29,20 @@ export interface ShippingAddress {
 }
 
 export interface LuluQuote {
-  total_cost_incl_tax: string;
+  project_id: string;
+  page_count: number;
+  lulu_cost: string;
+  markup: string;
+  customer_total: string;
   currency: string;
-  shipping_cost: string;
-  line_item_cost: string;
-  estimated_ship_date?: string;
+  shipping_cost: string | null;
+  estimated_ship_date: string | null;
 }
 
 /**
- * Generate the interior PDF, upload it to Supabase Storage, and record
- * its path on the cookbook project. Returns the public URL Lulu will
- * fetch.
+ * Generate the interior PDF (lazy-imports jspdf to keep the main bundle
+ * small), upload it to storage, and record its path and page count on
+ * the project. Returns the public URL Lulu will fetch.
  */
 export async function uploadInteriorPdf(
   projectId: string,
@@ -53,6 +56,7 @@ export async function uploadInteriorPdf(
 ): Promise<{ url: string; pageCount: number }> {
   if (!supabase) throw new Error('Supabase not configured');
 
+  const { generateCookbookPdfWithMeta } = await import('./pdfGen');
   const { blob, pageCount } = await generateCookbookPdfWithMeta(project);
   const path = `${userId}/${projectId}-interior.pdf`;
 
@@ -91,14 +95,24 @@ export async function requestLuluQuote(
   return data as LuluQuote;
 }
 
-export async function createLuluOrder(
+/**
+ * Creates a Stripe Checkout Session for a quoted cookbook order. Returns
+ * the Stripe-hosted URL the caller should redirect the browser to.
+ */
+export async function createStripeCheckoutForOrder(
   projectId: string,
+  quote: LuluQuote,
   shipping: ShippingAddress,
-): Promise<{ lulu_order_id: string }> {
+): Promise<{ url: string }> {
   if (!supabase) throw new Error('Supabase not configured');
-  const { data, error } = await supabase.functions.invoke('lulu-create-order', {
-    body: { project_id: projectId, shipping_address: shipping },
+  const { data, error } = await supabase.functions.invoke('stripe-checkout', {
+    body: {
+      project_id: projectId,
+      customer_total: quote.customer_total,
+      currency: quote.currency,
+      shipping_address: shipping,
+    },
   });
   if (error) throw error;
-  return data as { lulu_order_id: string };
+  return data as { url: string };
 }

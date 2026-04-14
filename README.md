@@ -102,26 +102,88 @@ per-user.
 - `/recipe/:id` has "Add to meal plan", "Add ingredients to shopping
   list", and "Print recipe" buttons on the personal sidebar.
 
-## Printable cookbooks (Lulu-ready PDFs)
+## Printable cookbooks (direct ordering via Lulu + Stripe)
 
-On `/cookbook/build`, signed-in users can pick recipes from their
-saved cookbook, give the book a title/subtitle/dedication, and generate
-a print-optimized view at `/print/cookbook/:id`. From there, a browser
-"Save as PDF" produces a Lulu-ready file at US Letter size with a
-serif-typography title page, table of contents, and one recipe per
-section. Users upload that PDF to [Lulu.com's print-on-demand
-service](https://www.lulu.com) to order a bound copy.
+On `/cookbook/build`, signed-in users pick recipes from their saved
+cookbook, give the book a title/subtitle/dedication, and click **Order
+a printed copy**. The flow is fully direct-ordered &mdash; no manual
+PDF upload to Lulu required:
 
-Later, we can upgrade to direct ordering via the
-[Lulu Print API](https://api.lulu.com/docs/api-reference). That
-requires:
+1. **Shipping address** is collected in the browser.
+2. **PDF generation** happens client-side via `src/lib/pdfGen.ts`
+   (jsPDF, lazy-imported so the ~130 kB gzipped chunk only loads when
+   someone opens the builder). Output is 6&times;9 inch, serif
+   typography, title page with the Augustine epigraph, table of
+   contents, one recipe per section, colophon. Padded to an even page
+   count and a 24-page minimum for hardcover binding.
+3. **Upload** to the `cookbook-pdfs` Supabase Storage bucket.
+4. **Quote** via the `lulu-quote` edge function, which OAuths into the
+   Lulu API and requests a real price calculation. Customer sees Lulu's
+   cost + your markup.
+5. **Stripe Checkout** session via the `stripe-checkout` edge function.
+   Redirects the browser to Stripe; payment never touches our site.
+6. **Stripe webhook** (`stripe-webhook`) fires on
+   `checkout.session.completed` and creates the real Lulu print-job
+   against your Lulu account, referencing the pre-uploaded PDF. Updates
+   `cookbook_projects.status` to `ordered` and records the Lulu order id.
+7. **Lulu webhook** (`lulu-webhook`) receives status updates as the
+   book moves through production / shipping / delivery and updates the
+   project status and tracking URL.
+8. **/order/:id** is the status page. It auto-refreshes every 10
+   seconds so returning customers always see the current state without
+   any manual action.
 
-- A Lulu developer account + API credentials (client id/secret)
-- A server-side edge function (`supabase/functions/lulu-order`)
-  that creates a print job with the user's PDF, collects shipping
-  details, and kicks off payment
-- Webhooks to update `cookbook_projects.status` as Lulu moves the
-  order through production
+### One-time setup for direct ordering
+
+**Stripe:**
+
+1. Create a Stripe account and grab a secret key
+   (`sk_test_...` for the sandbox, `sk_live_...` for production).
+2. In Stripe Dashboard &rarr; Developers &rarr; Webhooks, add an
+   endpoint: `https://<project-ref>.functions.supabase.co/stripe-webhook`
+   listening for `checkout.session.completed`. Copy the signing secret.
+3. Set these as Supabase Edge Function secrets:
+   ```
+   STRIPE_SECRET_KEY=sk_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   STRIPE_SUCCESS_URL=https://heritagekitchen.app/#/order/{id}?paid=1
+   STRIPE_CANCEL_URL=https://heritagekitchen.app/#/cookbook/build
+   ```
+
+**Lulu:**
+
+1. Create a Lulu developer account at https://developers.lulu.com and
+   grab a client key + secret for sandbox first, production later.
+2. In the Lulu developer dashboard &rarr; Webhooks, add an endpoint:
+   `https://<project-ref>.functions.supabase.co/lulu-webhook` listening
+   for `PRINT_JOB_STATUS_CHANGED`.
+3. Set these as Supabase Edge Function secrets:
+   ```
+   LULU_CLIENT_KEY=...
+   LULU_CLIENT_SECRET=...
+   LULU_ENV=sandbox           # or "production"
+   LULU_POD_PACKAGE_ID=0600X0900BWSTDPB060UW444MXX  # 6x9 B&W perfect-bound
+   LULU_COVER_URL=https://...                          # optional shared cover PDF
+   BOOK_MARKUP_USD=15         # your flat margin on top of Lulu's cost
+   ```
+4. Deploy the functions:
+   ```
+   supabase functions deploy lulu-quote
+   supabase functions deploy stripe-checkout
+   supabase functions deploy stripe-webhook --no-verify-jwt
+   supabase functions deploy lulu-webhook --no-verify-jwt
+   ```
+   The two webhook functions need `--no-verify-jwt` because Stripe and
+   Lulu don't send Supabase auth headers.
+
+### Choosing a POD package
+
+Lulu's catalog has roughly 3,000 format combinations. The default we
+use is `0600X0900BWSTDPB060UW444MXX` &mdash; 6&times;9 inches, black &
+white, standard quality, perfect-bound paperback, 60 lb uncoated white
+paper, 444 ppm matte. Swap the env var to switch to a different format
+(e.g. color premium hardcover for a high-end heirloom edition). The full
+list is at https://developers.lulu.com/home/pod-products.
 
 ## Weekly digest email
 

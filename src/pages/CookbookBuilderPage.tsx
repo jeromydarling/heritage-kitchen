@@ -5,18 +5,22 @@ import { useCookbook } from '../lib/userData';
 import { loadAllForIds } from '../lib/recipes';
 import type { Recipe } from '../lib/types';
 import { supabase } from '../lib/supabase';
+import {
+  uploadInteriorPdf,
+  requestLuluQuote,
+  createStripeCheckoutForOrder,
+  type ShippingAddress,
+  type LuluQuote,
+} from '../lib/lulu';
 
 /**
- * Step 1 of the Lulu cookbook flow: pick recipes and give the book a
- * title + dedication. We save it as a draft `cookbook_projects` row so
- * the user can come back to it, then send them to /print/cookbook/:id
- * which is the print-optimized view they can "Save as PDF" and upload to
- * Lulu.
- *
- * We deliberately do NOT talk to the Lulu Print API from the client â€” it
- * requires server-side credentials, webhooks, and a real Lulu developer
- * account. The plan is to ship a PDF-export-and-upload flow now and
- * upgrade to full API integration later.
+ * Lets a signed-in user turn their saved recipes into a printable cookbook.
+ * Flow:
+ *   1. Pick recipes, enter title/subtitle/dedication, save as draft.
+ *   2. Open the order flow, fill in shipping address.
+ *   3. "Get price" generates the PDF, uploads it, calls the quote edge function.
+ *   4. "Pay and order" creates a Stripe Checkout session and redirects.
+ *   5. Stripe webhook creates the real Lulu print-job on successful payment.
  */
 export default function CookbookBuilderPage() {
   const user = useUser();
@@ -29,6 +33,8 @@ export default function CookbookBuilderPage() {
   const [dedication, setDedication] = useState('For our family, past and present.');
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
+  const [step, setStep] = useState<'pick' | 'order'>('pick');
+  const [projectId, setProjectId] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -38,7 +44,6 @@ export default function CookbookBuilderPage() {
       }
       const list = await loadAllForIds(entries.map((e) => e.recipe_id));
       setSavedRecipes(list);
-      // Default to all saved recipes picked
       setPicked(new Set(list.map((r) => r.id)));
     }
     void load();
@@ -58,7 +63,27 @@ export default function CookbookBuilderPage() {
     });
   }
 
-  async function createAndPreview() {
+  async function saveDraftAndContinueToOrder() {
+    if (!user || !supabase || pickedList.length === 0) return;
+    setSaving(true);
+    const { data, error } = await supabase
+      .from('cookbook_projects')
+      .insert({
+        user_id: user.id,
+        title,
+        subtitle: subtitle || null,
+        dedication: dedication || null,
+        recipe_ids: pickedList.map((r) => r.id),
+      })
+      .select('id')
+      .single();
+    setSaving(false);
+    if (error || !data) return;
+    setProjectId(data.id);
+    setStep('order');
+  }
+
+  async function previewOnly() {
     if (!user || !supabase || pickedList.length === 0) return;
     setSaving(true);
     const { data, error } = await supabase
@@ -83,9 +108,26 @@ export default function CookbookBuilderPage() {
         <h1 className="font-serif text-3xl">Build a printable cookbook</h1>
         <p className="mt-3 text-muted">
           Sign in to turn your saved recipes into a printable family
-          cookbook you can order from Lulu.
+          cookbook you can order directly from the site.
         </p>
       </div>
+    );
+  }
+
+  if (step === 'order' && projectId) {
+    return (
+      <OrderFlow
+        projectId={projectId}
+        project={{
+          title,
+          subtitle: subtitle || null,
+          dedication: dedication || null,
+          recipes: pickedList,
+        }}
+        userId={user.id}
+        defaultEmail={user.email ?? ''}
+        onBack={() => setStep('pick')}
+      />
     );
   }
 
@@ -98,8 +140,9 @@ export default function CookbookBuilderPage() {
         <h1 className="mt-1 font-serif text-4xl">Build a printable cookbook</h1>
         <p className="mt-3 text-lg leading-relaxed text-muted">
           Turn the recipes you've saved into a real cookbook. We'll lay it
-          out in our house typography, you save it as a PDF, and Lulu
-          prints and ships it anywhere in the world.
+          out in our house typography and print it for you with hardcover
+          or softcover binding. Shipping anywhere Lulu prints is usually
+          about a week.
         </p>
       </header>
 
@@ -170,32 +213,268 @@ export default function CookbookBuilderPage() {
         <button
           type="button"
           disabled={pickedList.length === 0 || saving}
-          onClick={() => void createAndPreview()}
+          onClick={() => void saveDraftAndContinueToOrder()}
           className="btn-primary"
         >
-          {saving ? 'Savingâ€¦' : 'Preview printable view â†’'}
+          {saving ? 'Savingâ€¦' : 'Order a printed copy â†’'}
+        </button>
+        <button
+          type="button"
+          disabled={pickedList.length === 0 || saving}
+          onClick={() => void previewOnly()}
+          className="btn"
+        >
+          Preview in the browser
         </button>
       </section>
 
       <section className="card space-y-3 bg-paper p-6 text-sm leading-relaxed text-muted">
-        <h2 className="font-serif text-lg text-ink">How printing works</h2>
+        <h2 className="font-serif text-lg text-ink">About printed copies</h2>
         <p>
-          When you preview the printable view, your browser's "Save as PDF"
-          will produce a Lulu-ready file at US Letter size. Upload it to{' '}
+          Your cookbook is printed and shipped by{' '}
           <a href="https://www.lulu.com" target="_blank" rel="noreferrer">
-            Lulu.com
+            Lulu
           </a>
-          's print-on-demand service, pick your cover and paper stock, and
-          they'll ship a bound copy to you in about a week. We don't
-          charge for any of this; Lulu's price (usually $15â€“$40 for a
-          softcover family cookbook) is what you pay.
-        </p>
-        <p>
-          Later on we'll add direct ordering through Lulu's API so you
-          won't have to leave the site. For now, manual upload is the
-          simplest way to get a real book in your hands.
+          's print-on-demand service. Payment is handled securely through
+          Stripe; no card information ever touches our site. Orders usually
+          ship within about a week.
         </p>
       </section>
+    </div>
+  );
+}
+
+// -------- Order flow --------
+
+interface OrderFlowProps {
+  projectId: string;
+  project: {
+    title: string;
+    subtitle: string | null;
+    dedication: string | null;
+    recipes: Recipe[];
+  };
+  userId: string;
+  defaultEmail: string;
+  onBack: () => void;
+}
+
+function OrderFlow({ projectId, project, userId, defaultEmail, onBack }: OrderFlowProps) {
+  const [addr, setAddr] = useState<ShippingAddress>({
+    name: '',
+    street1: '',
+    street2: '',
+    city: '',
+    state_code: '',
+    postcode: '',
+    country_code: 'US',
+    phone_number: '',
+    email: defaultEmail,
+  });
+  const [quote, setQuote] = useState<LuluQuote | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [step, setStep] = useState<'address' | 'quote' | 'checkout'>('address');
+
+  async function getQuote() {
+    setBusy(true);
+    setErr(null);
+    try {
+      // 1. Generate + upload the PDF
+      await uploadInteriorPdf(projectId, userId, project);
+      // 2. Ask Lulu for a quote
+      const q = await requestLuluQuote(projectId, addr);
+      setQuote(q);
+      setStep('quote');
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function goToCheckout() {
+    if (!quote) return;
+    setBusy(true);
+    setErr(null);
+    try {
+      const { url } = await createStripeCheckoutForOrder(projectId, quote, addr);
+      window.location.href = url;
+    } catch (e) {
+      setErr((e as Error).message);
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="mx-auto max-w-xl space-y-8">
+      <header>
+        <button onClick={onBack} className="text-xs text-muted hover:text-terracotta">
+          â† Back to builder
+        </button>
+        <h1 className="mt-2 font-serif text-3xl">Order your printed cookbook</h1>
+        <p className="mt-2 text-sm text-muted">
+          Ships worldwide via Lulu. Payment is processed by Stripe.
+        </p>
+      </header>
+
+      <section className="card space-y-3 p-5 text-sm">
+        <div className="flex items-center justify-between">
+          <span className="text-muted">Title</span>
+          <span className="font-serif">{project.title}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-muted">Recipes</span>
+          <span>{project.recipes.length}</span>
+        </div>
+      </section>
+
+      {step === 'address' && (
+        <section className="card space-y-3 p-5">
+          <h2 className="font-serif text-lg">Shipping address</h2>
+          <AddressFields addr={addr} setAddr={setAddr} />
+          {err && <p className="text-sm text-terracotta">{err}</p>}
+          <button
+            type="button"
+            onClick={() => void getQuote()}
+            disabled={busy || !addr.name || !addr.street1 || !addr.city || !addr.postcode}
+            className="btn-primary w-full justify-center"
+          >
+            {busy ? 'Generating your PDF and quotingâ€¦' : 'Get price'}
+          </button>
+        </section>
+      )}
+
+      {step === 'quote' && quote && (
+        <section className="card space-y-4 p-5">
+          <h2 className="font-serif text-lg">Your quote</h2>
+          <dl className="space-y-2 text-sm">
+            <div className="flex items-baseline justify-between">
+              <dt className="text-muted">Page count</dt>
+              <dd>{quote.page_count}</dd>
+            </div>
+            <div className="flex items-baseline justify-between">
+              <dt className="text-muted">Printing &amp; shipping</dt>
+              <dd>${quote.lulu_cost}</dd>
+            </div>
+            <div className="flex items-baseline justify-between">
+              <dt className="text-muted">Heritage Kitchen</dt>
+              <dd>${quote.markup}</dd>
+            </div>
+            <div className="mt-3 flex items-baseline justify-between border-t border-rule pt-3 text-lg font-serif">
+              <dt>Total</dt>
+              <dd>
+                ${quote.customer_total} {quote.currency}
+              </dd>
+            </div>
+          </dl>
+          {err && <p className="text-sm text-terracotta">{err}</p>}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setStep('address')}
+              className="btn flex-1 justify-center"
+            >
+              Edit address
+            </button>
+            <button
+              type="button"
+              onClick={() => void goToCheckout()}
+              disabled={busy}
+              className="btn-primary flex-1 justify-center"
+            >
+              {busy ? 'Redirectingâ€¦' : 'Pay and order â†’'}
+            </button>
+          </div>
+          <p className="text-center text-xs text-muted">
+            You'll be taken to Stripe to complete payment.
+          </p>
+        </section>
+      )}
+    </div>
+  );
+}
+
+function AddressFields({
+  addr,
+  setAddr,
+}: {
+  addr: ShippingAddress;
+  setAddr: (a: ShippingAddress) => void;
+}) {
+  function field<K extends keyof ShippingAddress>(key: K) {
+    return (v: string) => setAddr({ ...addr, [key]: v });
+  }
+  const cls = 'w-full rounded-xl border border-rule bg-cream px-3 py-2 text-sm';
+  return (
+    <div className="space-y-2">
+      <input
+        placeholder="Full name"
+        value={addr.name}
+        onChange={(e) => field('name')(e.target.value)}
+        className={cls}
+      />
+      <input
+        placeholder="Email"
+        type="email"
+        value={addr.email}
+        onChange={(e) => field('email')(e.target.value)}
+        className={cls}
+      />
+      <input
+        placeholder="Phone"
+        value={addr.phone_number}
+        onChange={(e) => field('phone_number')(e.target.value)}
+        className={cls}
+      />
+      <input
+        placeholder="Street address"
+        value={addr.street1}
+        onChange={(e) => field('street1')(e.target.value)}
+        className={cls}
+      />
+      <input
+        placeholder="Apt, suite, etc. (optional)"
+        value={addr.street2 ?? ''}
+        onChange={(e) => field('street2')(e.target.value)}
+        className={cls}
+      />
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          placeholder="City"
+          value={addr.city}
+          onChange={(e) => field('city')(e.target.value)}
+          className={cls}
+        />
+        <input
+          placeholder="State / region"
+          value={addr.state_code}
+          onChange={(e) => field('state_code')(e.target.value)}
+          className={cls}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          placeholder="ZIP / postcode"
+          value={addr.postcode}
+          onChange={(e) => field('postcode')(e.target.value)}
+          className={cls}
+        />
+        <select
+          value={addr.country_code}
+          onChange={(e) => field('country_code')(e.target.value)}
+          className={cls}
+        >
+          <option value="US">United States</option>
+          <option value="CA">Canada</option>
+          <option value="GB">United Kingdom</option>
+          <option value="AU">Australia</option>
+          <option value="DE">Germany</option>
+          <option value="FR">France</option>
+          <option value="IT">Italy</option>
+          <option value="ES">Spain</option>
+        </select>
+      </div>
     </div>
   );
 }
