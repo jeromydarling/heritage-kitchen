@@ -61,6 +61,7 @@ export default function AdminLayout() {
           <AdminLink to="/admin/sponsors" label="Sponsors" />
           <AdminLink to="/admin/adoptions" label="Adopt-a-recipe" />
           <AdminLink to="/admin/enquiries" label="Enquiries" />
+          <AdminLink to="/admin/orders" label="Orders" />
           <div className="my-2 border-t border-rule" />
           <AdminLink to="/admin/images" label="Recipe images" />
           <div className="my-2 border-t border-rule" />

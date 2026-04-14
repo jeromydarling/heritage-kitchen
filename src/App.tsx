@@ -34,6 +34,7 @@ import MonasteriesAdminPage from './pages/admin/MonasteriesAdminPage';
 import SponsorsAdminPage from './pages/admin/SponsorsAdminPage';
 import AdoptionsAdminPage from './pages/admin/AdoptionsAdminPage';
 import EnquiriesAdminPage from './pages/admin/EnquiriesAdminPage';
+import OrdersAdminPage from './pages/admin/OrdersAdminPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
@@ -73,6 +74,7 @@ export default function App() {
           <Route path="sponsors" element={<SponsorsAdminPage />} />
           <Route path="adoptions" element={<AdoptionsAdminPage />} />
           <Route path="enquiries" element={<EnquiriesAdminPage />} />
+          <Route path="orders" element={<OrdersAdminPage />} />
           <Route path="images" element={<AdminPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
