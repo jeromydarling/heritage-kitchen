@@ -5,9 +5,15 @@ import {
   getRandomRecipe,
   getRelatedEssays,
   getEntry,
+  loadRecipes,
 } from '../lib/recipes';
 import { CATEGORIES, type Recipe } from '../lib/types';
 import { getRelatedLessons, type Lesson } from '../lib/lessons';
+import {
+  buildRecipeIndex,
+  linkRecipeReferences,
+  type RecipeIndex,
+} from '../lib/recipeLinker';
 import TabSwitcher from '../components/TabSwitcher';
 import RecipeImage from '../components/RecipeImage';
 import DifficultyBadge from '../components/DifficultyBadge';
@@ -22,6 +28,7 @@ export default function RecipePage() {
   const [recipe, setRecipe] = useState<Recipe | undefined>();
   const [relatedEssays, setRelatedEssays] = useState<Recipe[]>([]);
   const [relatedLessons, setRelatedLessons] = useState<Lesson[]>([]);
+  const [linkIndex, setLinkIndex] = useState<RecipeIndex>(() => new Map());
   const [tab, setTab] = useState<Tab>('modern');
   const [checked, setChecked] = useState<Record<number, boolean>>({});
 
@@ -39,6 +46,11 @@ export default function RecipePage() {
         // category. A bread recipe picks up the bread-and-dough lessons.
         const tags = [r.category, ...(r.tags ?? [])];
         setRelatedLessons(await getRelatedLessons(tags));
+        // Build the cross-reference index once the library is loaded.
+        // Recipes is already cached after the first call so this is
+        // cheap on subsequent visits.
+        const all = await loadRecipes();
+        setLinkIndex(buildRecipeIndex(all));
         return;
       }
       // If the id resolves to an essay entry, bounce the user over to the
@@ -147,9 +159,14 @@ export default function RecipePage() {
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           {tab === 'original' ? (
-            <OriginalView recipe={recipe} />
+            <OriginalView recipe={recipe} linkIndex={linkIndex} />
           ) : (
-            <ModernView recipe={recipe} checked={checked} setChecked={setChecked} />
+            <ModernView
+              recipe={recipe}
+              checked={checked}
+              setChecked={setChecked}
+              linkIndex={linkIndex}
+            />
           )}
         </div>
 
@@ -230,7 +247,7 @@ export default function RecipePage() {
   );
 }
 
-function OriginalView({ recipe }: { recipe: Recipe }) {
+function OriginalView({ recipe, linkIndex }: { recipe: Recipe; linkIndex: RecipeIndex }) {
   return (
     <section
       role="tabpanel"
@@ -246,7 +263,7 @@ function OriginalView({ recipe }: { recipe: Recipe }) {
       </p>
       <hr className="my-5 border-rule" />
       <pre className="whitespace-pre-wrap font-mono text-[0.95rem] leading-relaxed text-ink">
-        {recipe.original_recipe}
+        {linkRecipeReferences(recipe.original_recipe, recipe.id, linkIndex, recipe.source_book)}
       </pre>
     </section>
   );
@@ -256,10 +273,12 @@ function ModernView({
   recipe,
   checked,
   setChecked,
+  linkIndex,
 }: {
   recipe: Recipe;
   checked: Record<number, boolean>;
   setChecked: (v: Record<number, boolean>) => void;
+  linkIndex: RecipeIndex;
 }) {
   const { modern_recipe: m } = recipe;
   const ingredients = Array.isArray(m.ingredients) ? m.ingredients : m.ingredients ? [m.ingredients] : [];
@@ -328,7 +347,9 @@ function ModernView({
                 <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-terracotta text-sm font-semibold text-cream">
                   {i + 1}
                 </span>
-                <p className="leading-relaxed">{step}</p>
+                <p className="leading-relaxed">
+                  {linkRecipeReferences(step, recipe.id, linkIndex, recipe.source_book)}
+                </p>
               </li>
             ))}
           </ol>
