@@ -51,12 +51,18 @@ serve(async (req) => {
   }
 
   const session = event.data.object;
+  const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+
+  // Branch: edition orders vs user-built cookbook orders
+  const kind = session.metadata?.kind as string | undefined;
+  if (kind === 'edition') {
+    return await handleEditionOrder(session, supabase);
+  }
+
   const project_id = session.metadata?.project_id as string | undefined;
   if (!project_id) {
     return new Response('missing project_id metadata', { status: 400 });
   }
-
-  const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
   // Pull the project back, including the saved shipping address and PDF path.
   const { data: project } = await supabase
@@ -144,6 +150,133 @@ serve(async (req) => {
 
   return new Response('ok', { status: 200 });
 });
+
+async function handleEditionOrder(
+  session: Record<string, unknown>,
+  supabase: ReturnType<typeof createClient>,
+) {
+  const edition_slug = (session.metadata as Record<string, string> | undefined)
+    ?.edition_slug;
+  if (!edition_slug) {
+    return new Response('missing edition_slug metadata', { status: 400 });
+  }
+
+  // Load the edition so we know what to print
+  const { data: edition } = await supabase
+    .from('editions')
+    .select('*')
+    .eq('slug', edition_slug)
+    .single();
+  if (!edition) {
+    return new Response('edition not found', { status: 404 });
+  }
+
+  // Extract shipping from Stripe's shipping_details (collected on checkout)
+  const shipping = (session.shipping_details ?? session.shipping) as
+    | { name?: string; address?: Record<string, string> }
+    | undefined;
+  if (!shipping?.address) {
+    return new Response('missing shipping details on session', { status: 400 });
+  }
+
+  const addr = {
+    name: shipping.name ?? '',
+    street1: shipping.address.line1 ?? '',
+    street2: shipping.address.line2 ?? '',
+    city: shipping.address.city ?? '',
+    state_code: shipping.address.state ?? '',
+    postcode: shipping.address.postal_code ?? '',
+    country_code: shipping.address.country ?? 'US',
+    phone_number: (session.customer_details as Record<string, string> | undefined)?.phone ?? '',
+    email: (session.customer_details as Record<string, string> | undefined)?.email ?? '',
+  };
+
+  // Create an edition_orders row immediately so we have something to
+  // show in the admin UI even if Lulu creation fails.
+  const { data: order } = await supabase
+    .from('edition_orders')
+    .insert({
+      edition_slug,
+      customer_email: addr.email,
+      customer_name: addr.name,
+      shipping_address: addr,
+      status: 'pending',
+      stripe_session_id: session.id,
+      amount_paid_cents: session.amount_total,
+      currency: String(session.currency ?? 'USD').toUpperCase(),
+    })
+    .select('id')
+    .single();
+
+  // If the edition has an interior PDF URL pre-rendered (published
+  // cookbooks should; we'll add an admin flow to upload once),
+  // create the Lulu print-job. If not, leave the order in "pending"
+  // for the admin to handle manually.
+  const interior_url = (edition as Record<string, unknown>).interior_pdf_url as
+    | string
+    | undefined;
+  if (!interior_url) {
+    return new Response('ok (pending manual print)', { status: 200 });
+  }
+
+  const token = await getLuluToken();
+  const printJobBody = {
+    contact_email: addr.email,
+    external_id: order?.id ?? session.id,
+    line_items: [
+      {
+        external_id: `${order?.id ?? session.id}-interior`,
+        printable_normalization: {
+          cover: {
+            source_url: Deno.env.get('LULU_COVER_URL') ?? interior_url,
+          },
+          interior: {
+            source_url: interior_url,
+          },
+          pod_package_id: LULU_POD_PACKAGE_ID,
+        },
+        quantity: 1,
+        title: edition.title,
+      },
+    ],
+    production_delay: 120,
+    shipping_address: mapShipping(addr),
+    shipping_level: 'MAIL',
+  };
+
+  const res = await fetch(`${LULU_BASE}/print-jobs/`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(printJobBody),
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    await supabase
+      .from('edition_orders')
+      .update({
+        status: 'failed',
+        lulu_status: `create_failed: ${errText.slice(0, 500)}`,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', order?.id);
+    return new Response('lulu create failed: ' + errText, { status: 502 });
+  }
+  const job = await res.json();
+  await supabase
+    .from('edition_orders')
+    .update({
+      status: 'ordered',
+      lulu_order_id: String(job.id),
+      lulu_status: job.status?.name ?? 'CREATED',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', order?.id);
+
+  return new Response('ok', { status: 200 });
+}
 
 function mapShipping(addr: Record<string, string>) {
   return {

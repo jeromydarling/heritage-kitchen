@@ -12,6 +12,8 @@ import ShoppingListPage from './pages/ShoppingListPage';
 import CookbookBuilderPage from './pages/CookbookBuilderPage';
 import PrintCookbookPage from './pages/PrintCookbookPage';
 import OrderStatusPage from './pages/OrderStatusPage';
+import EditionsPage from './pages/EditionsPage';
+import EditionDetailPage from './pages/EditionDetailPage';
 import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -29,6 +31,8 @@ export default function App() {
         <Route path="cookbook/build" element={<CookbookBuilderPage />} />
         <Route path="print/cookbook/:id" element={<PrintCookbookPage />} />
         <Route path="order/:id" element={<OrderStatusPage />} />
+        <Route path="editions" element={<EditionsPage />} />
+        <Route path="editions/:slug" element={<EditionDetailPage />} />
         <Route path="plan" element={<MealPlanPage />} />
         <Route path="shopping" element={<ShoppingListPage />} />
         <Route path="search" element={<SearchPage />} />

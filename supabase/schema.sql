@@ -324,3 +324,105 @@ drop policy if exists "cookbook_projects_self" on cookbook_projects;
 create policy "cookbook_projects_self" on cookbook_projects
   for all using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
+
+-- ==========================================================================
+-- Editions: Heritage Kitchen editorial cookbooks for sale
+-- ==========================================================================
+--
+-- Each edition is a curated book of recipes from the library that Heritage
+-- Kitchen publishes and sells. Public-readable; admin-writable via the
+-- existing admin user id pattern.
+
+create table if not exists editions (
+  slug text primary key,
+  title text not null,
+  subtitle text,
+  description text,
+  cover_image_url text,
+  intro_text text,
+  recipe_ids jsonb not null default '[]'::jsonb,
+  price_usd numeric(10,2) not null,
+  page_count integer,
+  interior_pdf_url text,
+  cover_pdf_url text,
+  published boolean not null default false,
+  featured boolean not null default false,
+  sort_order integer default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+alter table editions add column if not exists interior_pdf_url text;
+alter table editions add column if not exists cover_pdf_url text;
+
+create index if not exists idx_editions_published on editions (published, sort_order);
+
+alter table editions enable row level security;
+
+drop policy if exists "editions_public_read" on editions;
+create policy "editions_public_read" on editions
+  for select using (published = true);
+
+drop policy if exists "editions_admin_write" on editions;
+create policy "editions_admin_write" on editions
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- Orders of editions (separate from cookbook_projects so we can track
+-- bulk orders of the same edition across customers).
+create table if not exists edition_orders (
+  id uuid primary key default gen_random_uuid(),
+  edition_slug text not null references editions (slug) on delete restrict,
+  customer_email text not null,
+  customer_name text,
+  shipping_address jsonb not null,
+  status text not null default 'pending' check (status in ('pending','ordered','in_production','shipped','delivered','cancelled','failed')),
+  lulu_order_id text,
+  lulu_status text,
+  lulu_tracking_url text,
+  stripe_session_id text,
+  amount_paid_cents integer,
+  currency text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists idx_edition_orders_email on edition_orders (customer_email);
+create index if not exists idx_edition_orders_lulu on edition_orders (lulu_order_id);
+
+alter table edition_orders enable row level security;
+
+-- Customers can read their own orders by email (after sign-in); admin can
+-- read/write all.
+drop policy if exists "edition_orders_self" on edition_orders;
+create policy "edition_orders_self" on edition_orders
+  for select using (
+    auth.jwt() ->> 'email' = customer_email
+    or auth.uid() = '<ADMIN_USER_ID>'::uuid
+  );
+
+drop policy if exists "edition_orders_admin_write" on edition_orders;
+create policy "edition_orders_admin_write" on edition_orders
+  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
+  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+
+-- ==========================================================================
+-- Seed: one example edition so the /editions page isn't empty on first
+-- deploy. Replace the recipe_ids with real slugs from the library once
+-- you have ones you actually want to publish.
+-- ==========================================================================
+
+insert into editions (slug, title, subtitle, description, intro_text, recipe_ids, price_usd, published, featured, sort_order)
+values (
+  'lenten-table',
+  'The Lenten Table',
+  'Forty Days of Simple Food',
+  'A short, honest cookbook for the forty days of Lent â€” meatless weekday suppers, Friday fish, and the breads and grains that have carried Christian families through the hungry gap for sixteen hundred years. Every recipe is from an American cookbook published between 1869 and 1917, modernized to work in a present-day kitchen.',
+  'Lent, in most modern accounts, is a season of giving something up. In the old farming calendar that the Church inherited and baptized, it was also something else: the weeks when the cellar was empty and the first greens had not yet come up. Fasting was a way to make virtue out of necessity, and to save the new lambs from slaughter at the moment the household most wanted to eat them.\n\nThis little book is a table of simple food to carry you through those forty days. You will not find it showy. You will find it quiet and good.',
+  '[]'::jsonb,
+  34.00,
+  false,
+  true,
+  1
+)
+on conflict (slug) do nothing;
