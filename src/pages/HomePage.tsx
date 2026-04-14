@@ -12,6 +12,7 @@ import {
   SUGGESTION_MODE_LABELS,
   type LiturgicalDay,
 } from '../lib/liturgical';
+import { useLiturgicalKitchen } from '../lib/preferences';
 import RecipeCard from '../components/RecipeCard';
 
 export default function HomePage() {
@@ -22,6 +23,7 @@ export default function HomePage() {
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [all, setAll] = useState<Recipe[]>([]);
   const [seasonal, setSeasonal] = useState<Recipe[]>([]);
+  const [calendarOn, setCalendarOn] = useLiturgicalKitchen();
   const navigate = useNavigate();
 
   const liturgicalDay: LiturgicalDay = useMemo(() => getLiturgicalDay(new Date()), []);
@@ -33,8 +35,12 @@ export default function HomePage() {
     });
     getCategoryCounts().then(setCounts);
     getRandomRecipe().then(setFeatured);
-    getSeasonalSuggestions(liturgicalDay, 3).then(setSeasonal);
-  }, [liturgicalDay]);
+    if (calendarOn) {
+      getSeasonalSuggestions(liturgicalDay, 3).then(setSeasonal);
+    } else {
+      setSeasonal([]);
+    }
+  }, [liturgicalDay, calendarOn]);
 
   const filtered = all.filter((r) => {
     if (bookFilter && r.source_book !== bookFilter) return false;
@@ -66,9 +72,15 @@ export default function HomePage() {
             since before your grandmother was born.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link to="/calendar" className="btn-primary">
-              Cook with the season
-            </Link>
+            {calendarOn ? (
+              <Link to="/calendar" className="btn-primary">
+                Cook with the season
+              </Link>
+            ) : (
+              <Link to="/category/breakfast-and-bakes" className="btn-primary">
+                Start browsing
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => featured && navigate(`/recipe/${featured.id}`)}
@@ -81,7 +93,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      <TodayCard day={liturgicalDay} suggestions={seasonal} />
+      {calendarOn && (
+        <TodayCard
+          day={liturgicalDay}
+          suggestions={seasonal}
+          onHide={() => setCalendarOn(false)}
+        />
+      )}
 
       <section>
         <div className="mb-6 flex items-end justify-between">
@@ -182,9 +200,11 @@ export default function HomePage() {
 function TodayCard({
   day,
   suggestions,
+  onHide,
 }: {
   day: LiturgicalDay;
   suggestions: Recipe[];
+  onHide: () => void;
 }) {
   const dateLabel = new Intl.DateTimeFormat(undefined, {
     weekday: 'long',
@@ -206,9 +226,19 @@ function TodayCard({
             {dateLabel} Â· {SUGGESTION_MODE_LABELS[day.suggestionMode]}
           </p>
         </div>
-        <Link to="/calendar" className="btn">
-          Full calendar â†’
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link to="/calendar" className="btn">
+            Full calendar â†’
+          </Link>
+          <button
+            type="button"
+            onClick={onHide}
+            className="text-xs text-muted hover:text-terracotta"
+            title="Hide the liturgical kitchen from the home page"
+          >
+            Hide
+          </button>
+        </div>
       </div>
 
       {suggestions.length > 0 && (

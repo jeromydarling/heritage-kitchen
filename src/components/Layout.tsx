@@ -1,9 +1,11 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useLiturgicalKitchen } from '../lib/preferences';
 
 export default function Layout() {
   const navigate = useNavigate();
   const [q, setQ] = useState('');
+  const [calendarOn] = useLiturgicalKitchen();
 
   function onSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -36,16 +38,18 @@ export default function Layout() {
             >
               Browse
             </NavLink>
-            <NavLink
-              to="/calendar"
-              className={({ isActive }) =>
-                `rounded-full px-3 py-1.5 !no-underline ${
-                  isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
-                }`
-              }
-            >
-              Calendar
-            </NavLink>
+            {calendarOn && (
+              <NavLink
+                to="/calendar"
+                className={({ isActive }) =>
+                  `rounded-full px-3 py-1.5 !no-underline ${
+                    isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
+                  }`
+                }
+              >
+                Calendar
+              </NavLink>
+            )}
             <NavLink
               to="/search"
               className={({ isActive }) =>
