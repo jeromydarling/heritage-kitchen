@@ -69,8 +69,11 @@ the site can surface "you made this last Good Friday" prompts.
 
 ### One-time Supabase setup
 
-1. Run `supabase/schema.sql` in the SQL editor. It creates `profiles`,
-   `cookbook_entries`, and `cook_log` with strict row-level security.
+1. Run `supabase/schema.sql` in the SQL editor. It creates all tables
+   with strict row-level security: `profiles`, `cookbook_entries`,
+   `cook_log`, `households`, `household_members`, `meal_plan_entries`,
+   `shopping_list_items`, and `cookbook_projects`. Safe to re-run; uses
+   `create table if not exists` and idempotent policy definitions.
 2. In the Supabase dashboard → Authentication → Providers → Google,
    enable Google OAuth. Create a Google Cloud OAuth client (Web
    application) and add `https://<project-ref>.supabase.co/auth/v1/callback`
@@ -80,6 +83,107 @@ the site can surface "you made this last Good Friday" prompts.
    so Supabase accepts it as a valid `redirectTo` when OAuth comes back.
 4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as repo secrets
    so the GitHub Pages build picks them up.
+
+## Meal plan, shopping list, households
+
+Signed-in users are automatically put into a "household" the first time
+they use a shared feature. The household has a 6-character invite code
+displayed on the `/cookbook` page; any other user can enter that code
+to join the same household. Members of a household share the **meal
+plan** and **shopping list**; personal saves, notes, and cook logs stay
+per-user.
+
+- `/plan` — week view meal planner. Each day shows its date, the
+  liturgical day, and the recipes planned for it. Click "Add a recipe"
+  to search the library and drop one onto a day.
+- `/shopping` — shared list with checkboxes. The "Generate from this
+  week's plan" button pulls every ingredient from the household's
+  planned recipes, de-dupes by exact string, and adds them all.
+- `/recipe/:id` has "Add to meal plan", "Add ingredients to shopping
+  list", and "Print recipe" buttons on the personal sidebar.
+
+## Printable cookbooks (Lulu-ready PDFs)
+
+On `/cookbook/build`, signed-in users can pick recipes from their
+saved cookbook, give the book a title/subtitle/dedication, and generate
+a print-optimized view at `/print/cookbook/:id`. From there, a browser
+"Save as PDF" produces a Lulu-ready file at US Letter size with a
+serif-typography title page, table of contents, and one recipe per
+section. Users upload that PDF to [Lulu.com's print-on-demand
+service](https://www.lulu.com) to order a bound copy.
+
+Later, we can upgrade to direct ordering via the
+[Lulu Print API](https://api.lulu.com/docs/api-reference). That
+requires:
+
+- A Lulu developer account + API credentials (client id/secret)
+- A server-side edge function (`supabase/functions/lulu-order`)
+  that creates a print job with the user's PDF, collects shipping
+  details, and kicks off payment
+- Webhooks to update `cookbook_projects.status` as Lulu moves the
+  order through production
+
+## Weekly digest email
+
+A Supabase edge function at `supabase/functions/weekly-digest/`
+runs once a week and sends opted-in users an email with:
+
+- The week ahead, with liturgical feast days
+- Recipes the user made this time last year (from `cook_log`)
+- Suggested recipes from the library based on the season
+
+The skeleton is complete; to actually send emails you need to pick a
+provider (Resend, Postmark, or SendGrid all work) and fill in the
+`sendEmail()` function inside the edge function. Then schedule it with
+Supabase cron:
+
+```sql
+select cron.schedule(
+  'heritage-kitchen-weekly-digest',
+  '0 22 * * 0',  -- Sundays at 22:00 UTC
+  $$ select net.http_post(
+       url := 'https://<project-ref>.functions.supabase.co/weekly-digest',
+       headers := '{"Authorization":"Bearer <service-role-key>"}'::jsonb
+     ) $$
+);
+```
+
+Users opt in from the `/cookbook` page.
+
+## Monetization
+
+The site is free to use. The paid layer is physical goods and optional
+supporter features:
+
+1. **Lulu-printed family cookbooks (primary).** Users build a book
+   from their saved recipes, we generate the PDF, Lulu prints and
+   ships. Lulu pays a 10% [affiliate commission](https://www.lulu.com/sell/affiliate-program)
+   on books ordered via an affiliate link; we can embed ours in the
+   "Order on Lulu" button once the upload flow is running. Later,
+   once API integration is done, we set a small markup on each book
+   and collect the margin directly.
+2. **Custom heirloom cookbooks.** A white-glove service where you
+   send us your grandmother's recipes on scraps of paper and we
+   transcribe, modernize, and typeset them in the Heritage Kitchen
+   style. One-time fee per book; low volume, high value.
+3. **Liturgical cooking courses.** A paid Lent or Advent
+   meal-planning guide, delivered via email over 40 days with daily
+   recipes, prompts, and historical notes. Sold as a single purchase,
+   not a subscription. Fits the site's ethos.
+4. **Affiliate bookstore.** Curated book recommendations (cookbook
+   history, food theology, farmers' almanacs) via Bookshop.org's
+   ethical affiliate program, which gives a cut to independent
+   bookstores instead of Amazon.
+5. **Household patronage.** A "buy us a season" button that lets
+   supporters drop $20–$50 to underwrite a liturgical season's
+   hosting + email costs. Names optionally listed on the About page.
+6. **Adopt-a-recipe.** Aligned businesses (stone mills, traditional
+   farms, religious goods shops) can sponsor a historical recipe and
+   have a small logo/blurb shown on its page. Not ads in the
+   pop-up-banner sense; closer to a museum donor plaque.
+
+Deliberately **not** doing: banner ads, tracking, paywalled
+recipes, subscriptions for core features.
 
 ## Image generation
 

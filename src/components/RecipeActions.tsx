@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import { authAvailable, useUser } from '../lib/auth';
 import { useCookLog, useIsSaved, useRecipeNote } from '../lib/userData';
+import { addToNextOpenDay } from '../lib/mealPlan';
+import { useShoppingList, ingredientsOf } from '../lib/shoppingList';
+import type { Recipe } from '../lib/types';
 
 /**
  * The personal sidebar for a recipe when you're signed in:
@@ -12,14 +15,18 @@ import { useCookLog, useIsSaved, useRecipeNote } from '../lib/userData';
  * When auth is not available or the user is signed out, only a prompt to
  * sign in is shown.
  */
-export default function RecipeActions({ recipeId }: { recipeId: string }) {
+export default function RecipeActions({ recipe }: { recipe: Recipe }) {
+  const recipeId = recipe.id;
   const user = useUser();
   const { saved, toggle: toggleSave } = useIsSaved(recipeId);
   const { entries: log, logCook, deleteEntry } = useCookLog(recipeId);
   const noteState = useRecipeNote(recipeId);
+  const { addItem: addShoppingItem } = useShoppingList();
   const [rating, setRating] = useState<number | null>(null);
   const [cookNote, setCookNote] = useState('');
   const [busy, setBusy] = useState(false);
+  const [planStatus, setPlanStatus] = useState<string | null>(null);
+  const [listStatus, setListStatus] = useState<string | null>(null);
 
   const memory = useMemo(() => findYearOverYear(log), [log]);
 
@@ -47,10 +54,42 @@ export default function RecipeActions({ recipeId }: { recipeId: string }) {
     setBusy(false);
   }
 
+  async function handleAddToPlan() {
+    if (!user) return;
+    const d = await addToNextOpenDay(
+      user.id,
+      user.user_metadata?.full_name ?? user.email,
+      recipeId,
+    );
+    if (d) {
+      const label = new Intl.DateTimeFormat(undefined, {
+        weekday: 'long',
+        month: 'short',
+        day: 'numeric',
+      }).format(d);
+      setPlanStatus(`Added to ${label}`);
+      setTimeout(() => setPlanStatus(null), 3000);
+    }
+  }
+
+  async function handleAddToShopping() {
+    const ings = ingredientsOf(recipe);
+    if (ings.length === 0) {
+      setListStatus('No ingredient list on this recipe.');
+      setTimeout(() => setListStatus(null), 3000);
+      return;
+    }
+    for (const ing of ings) {
+      await addShoppingItem(ing, recipeId);
+    }
+    setListStatus(`Added ${ings.length} item${ings.length === 1 ? '' : 's'} to the shopping list.`);
+    setTimeout(() => setListStatus(null), 3000);
+  }
+
   return (
     <div className="space-y-4">
-      {/* Save / unsave */}
-      <div className="card p-5">
+      {/* Save / unsave + quick actions */}
+      <div className="card space-y-2 p-5 print:hidden">
         <button
           type="button"
           onClick={() => void toggleSave()}
@@ -59,6 +98,29 @@ export default function RecipeActions({ recipeId }: { recipeId: string }) {
           }`}
         >
           {saved ? 'âœ“ Saved to your cookbook' : 'Save to cookbook'}
+        </button>
+        <button
+          type="button"
+          onClick={() => void handleAddToPlan()}
+          className="btn w-full justify-center"
+        >
+          Add to meal plan
+        </button>
+        {planStatus && <p className="text-center text-xs text-terracotta">{planStatus}</p>}
+        <button
+          type="button"
+          onClick={() => void handleAddToShopping()}
+          className="btn w-full justify-center"
+        >
+          Add ingredients to shopping list
+        </button>
+        {listStatus && <p className="text-center text-xs text-terracotta">{listStatus}</p>}
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="btn w-full justify-center"
+        >
+          Print recipe
         </button>
       </div>
 

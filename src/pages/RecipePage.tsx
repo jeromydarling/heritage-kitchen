@@ -168,7 +168,7 @@ export default function RecipePage() {
               View on Project Gutenberg ↗
             </a>
           </div>
-          <RecipeActions recipeId={recipe.id} />
+          <RecipeActions recipe={recipe} />
 
           {relatedEssays.length > 0 && (
             <div className="card p-5">

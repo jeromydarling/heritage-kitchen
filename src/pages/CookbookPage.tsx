@@ -5,6 +5,8 @@ import { useCookbook, useRecentCooks, type CookLogEntry } from '../lib/userData'
 import { loadAllForIds } from '../lib/recipes';
 import type { Recipe } from '../lib/types';
 import RecipeCard from '../components/RecipeCard';
+import { useHousehold, joinHouseholdByCode } from '../lib/household';
+import { supabase } from '../lib/supabase';
 
 /**
  * The signed-in visitor's home base: saved recipes and recent cook-log
@@ -15,9 +17,49 @@ export default function CookbookPage() {
   const user = useUser();
   const { entries, loading } = useCookbook();
   const { entries: recentCooks } = useRecentCooks(12);
+  const { household, refresh: refreshHousehold } = useHousehold();
 
   const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([]);
   const [recentRecipes, setRecentRecipes] = useState<Record<string, Recipe>>({});
+  const [joinCode, setJoinCode] = useState('');
+  const [joinStatus, setJoinStatus] = useState<string | null>(null);
+  const [digestOn, setDigestOn] = useState(false);
+
+  useEffect(() => {
+    async function loadPrefs() {
+      if (!user || !supabase) return;
+      const { data } = await supabase
+        .from('profiles')
+        .select('weekly_digest_enabled, email')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      setDigestOn(!!data?.weekly_digest_enabled);
+    }
+    void loadPrefs();
+  }, [user]);
+
+  async function setDigestPref(enabled: boolean) {
+    if (!user || !supabase) return;
+    setDigestOn(enabled);
+    await supabase.from('profiles').upsert({
+      user_id: user.id,
+      weekly_digest_enabled: enabled,
+      email: user.email ?? null,
+    });
+  }
+
+  async function handleJoin(e: React.FormEvent) {
+    e.preventDefault();
+    if (!user) return;
+    const res = await joinHouseholdByCode(user.id, joinCode);
+    if (res.ok) {
+      setJoinStatus('Joined.');
+      setJoinCode('');
+      await refreshHousehold();
+    } else {
+      setJoinStatus(res.error ?? 'Could not join');
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -76,6 +118,57 @@ export default function CookbookPage() {
           Everything youâ€™ve saved and everything youâ€™ve cooked, in one place.
         </p>
       </header>
+
+      <section className="grid gap-4 sm:grid-cols-2">
+        <div className="card p-5">
+          <h2 className="font-serif text-lg">Your household</h2>
+          {household ? (
+            <>
+              <p className="mt-2 text-sm text-muted">
+                <em>{household.name}</em>. Share this code with anyone you
+                want cooking from the same plan and shopping list:
+              </p>
+              <p className="mt-3 font-mono text-xl tracking-widest text-terracotta">
+                {household.invite_code}
+              </p>
+            </>
+          ) : (
+            <p className="mt-2 text-sm text-muted">Creating your householdâ€¦</p>
+          )}
+          <form onSubmit={handleJoin} className="mt-4 flex gap-2">
+            <input
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              placeholder="Or enter a code to join"
+              className="flex-1 rounded-full border border-rule bg-cream px-3 py-1.5 text-sm uppercase tracking-widest"
+            />
+            <button type="submit" className="btn">Join</button>
+          </form>
+          {joinStatus && <p className="mt-2 text-xs text-terracotta">{joinStatus}</p>}
+        </div>
+        <div className="card p-5">
+          <h2 className="font-serif text-lg">Sunday digest</h2>
+          <p className="mt-2 text-sm text-muted">
+            Once a week we'll email you the week ahead, the upcoming feasts,
+            and the recipes you made this time last year.
+          </p>
+          <label className="mt-4 flex items-center gap-3 text-sm">
+            <input
+              type="checkbox"
+              checked={digestOn}
+              onChange={(e) => void setDigestPref(e.target.checked)}
+              className="h-4 w-4 rounded border-rule text-terracotta"
+            />
+            <span>Send me the Sunday evening digest</span>
+          </label>
+        </div>
+      </section>
+
+      <section className="flex flex-wrap gap-3">
+        <Link to="/plan" className="btn-primary">Meal plan â†’</Link>
+        <Link to="/shopping" className="btn">Shopping list</Link>
+        <Link to="/cookbook/build" className="btn">Build a printable cookbook</Link>
+      </section>
 
       <section>
         <div className="mb-6 flex items-end justify-between">

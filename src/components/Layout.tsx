@@ -1,12 +1,18 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useLiturgicalKitchen } from '../lib/preferences';
+import { useUser } from '../lib/auth';
 import AuthButton from './AuthButton';
 
 export default function Layout() {
   const navigate = useNavigate();
   const [q, setQ] = useState('');
   const [calendarOn] = useLiturgicalKitchen();
+  const user = useUser();
+  const navClass = ({ isActive }: { isActive: boolean }) =>
+    `rounded-full px-3 py-1.5 !no-underline ${
+      isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
+    }`;
 
   function onSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -40,16 +46,19 @@ export default function Layout() {
               Browse
             </NavLink>
             {calendarOn && (
-              <NavLink
-                to="/calendar"
-                className={({ isActive }) =>
-                  `rounded-full px-3 py-1.5 !no-underline ${
-                    isActive ? 'bg-terracotta !text-cream' : '!text-ink hover:!text-terracotta'
-                  }`
-                }
-              >
+              <NavLink to="/calendar" className={navClass}>
                 Calendar
               </NavLink>
+            )}
+            {user && (
+              <>
+                <NavLink to="/plan" className={navClass}>
+                  Plan
+                </NavLink>
+                <NavLink to="/shopping" className={navClass}>
+                  List
+                </NavLink>
+              </>
             )}
             <NavLink
               to="/search"

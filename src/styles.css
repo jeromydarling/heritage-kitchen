@@ -37,6 +37,38 @@
   .card {
     @apply rounded-2xl border border-rule bg-surface shadow-card;
   }
+  .print-only {
+    display: none;
+  }
+
+  @media print {
+    body {
+      background: white;
+    }
+    header,
+    footer,
+    nav,
+    aside,
+    .no-print {
+      display: none !important;
+    }
+    main {
+      max-width: none !important;
+      padding: 0 !important;
+    }
+    .card {
+      border: none !important;
+      box-shadow: none !important;
+    }
+    a {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+    .print-only {
+      display: block;
+    }
+  }
+
   .paper {
     background-color: #f5eedf;
     background-image:
