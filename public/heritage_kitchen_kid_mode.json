@@ -333,6 +333,337 @@
         "Put out the rolling pin, cookie cutters, and a floured surface to roll on.",
         "Measure the flour and spices into separate small bowls."
       ]
+    },
+    {
+      "id": "mf-hard-sauce",
+      "kid_jobs": [
+        "Measure the powdered sugar.",
+        "Add the vanilla to the butter.",
+        "Spoon the sugar into the butter a little at a time while the grown-up beats."
+      ],
+      "grownup_jobs": [
+        "Separate the egg (we only need the white).",
+        "Beat the egg white to soft peaks.",
+        "Beat the soft butter until it's fluffy."
+      ],
+      "together_jobs": [
+        "Warm the mixing bowl with a little hot water and dry it — a warm bowl helps the butter stay soft.",
+        "Fold the beaten egg white into the butter-sugar mixture with gentle turns of the spatula."
+      ],
+      "teaching_moments": [
+        "Why is it called hard sauce if it's soft when you make it? It gets hard in the fridge. Butter is soft when warm and firm when cold — put the sauce on the counter for a few minutes and it melts into whatever hot pudding you pour it over.",
+        "Why warm the bowl first? Cold metal would chill the butter and make it stiff again. A warm bowl keeps the butter soft enough to whip up light and creamy."
+      ],
+      "prep_ahead": [
+        "Set the butter out an hour before starting so it's really soft.",
+        "Put out the mixing bowl, a hand beater or spoon, and a rubber spatula.",
+        "Separate the egg ahead of time.",
+        "Have a small dish ready to chill the finished sauce in."
+      ]
+    },
+    {
+      "id": "mf-jacket-boiled-potatoes",
+      "kid_jobs": [
+        "Scrub the potatoes under running water with a brush.",
+        "Drop each prepared potato into a bowl of cold water.",
+        "Measure the salt for the cooking water."
+      ],
+      "grownup_jobs": [
+        "Peel a half-inch ring around the middle of each potato with a peeler or paring knife.",
+        "Bring the big pot of water to a boil and lower the potatoes in.",
+        "Drain the cooked potatoes."
+      ],
+      "together_jobs": [
+        "Test a potato with a fork to see if it's done — kid holds the fork, grown-up holds the pot."
+      ],
+      "teaching_moments": [
+        "Why peel only a ring around the middle? The strip of bare potato lets salt and flavor into the inside while the rest of the skin keeps the potato from getting waterlogged. The skin is a natural wrapper.",
+        "Why is it called a 'jacket' potato? The whole skin is like a little coat the potato wears. Leaving it on is called boiling 'in its jacket' — the old word for the whole thing is still around in British English."
+      ],
+      "prep_ahead": [
+        "Put out a scrubbing brush, a big pot, a colander, and the salt.",
+        "Put the stepstool at the sink.",
+        "Pre-peel the ring on each potato (this is a knife job)."
+      ]
+    },
+    {
+      "id": "mf-mashed-potatoes",
+      "kid_jobs": [
+        "Measure the butter, salt, and pepper.",
+        "Pour the warmed milk into the pot when the grown-up says to.",
+        "Beat the potatoes with a masher or big fork until they're creamy."
+      ],
+      "grownup_jobs": [
+        "Boil and drain the potatoes (see the boiled potato recipe).",
+        "Warm the milk in a small saucepan.",
+        "Do the first few hard mashes while the potatoes are still very hot."
+      ],
+      "together_jobs": [
+        "Mash the potatoes in the hot pot — take turns.",
+        "Add the butter, salt, pepper, and warm milk one at a time."
+      ],
+      "teaching_moments": [
+        "Why warm the milk? Cold milk would chill the potatoes and make them stiff. Warm milk slips right in and keeps everything fluffy.",
+        "Why can you over-mash potatoes? Potato starch is like tiny little springs. If you beat them too much, the springs break and release sticky starch — and the mash turns into glue. A few firm mashes is perfect. Many frantic ones is too many."
+      ],
+      "prep_ahead": [
+        "Boil the potatoes ahead.",
+        "Warm the milk in a small saucepan.",
+        "Put out a potato masher or a big sturdy fork.",
+        "Put the stepstool at the counter."
+      ]
+    },
+    {
+      "id": "mf-milk-toast",
+      "kid_jobs": [
+        "Measure the flour and salt.",
+        "Stir the sauce with a wooden spoon while the grown-up watches the heat.",
+        "Arrange the warm toast in a shallow dish."
+      ],
+      "grownup_jobs": [
+        "Make the toast.",
+        "Heat the milk to steaming on the stove.",
+        "Melt the butter and cook it with the flour.",
+        "Pour the hot sauce over the toast."
+      ],
+      "together_jobs": [
+        "Whisk the hot milk slowly into the butter-flour paste, one small ladleful at a time — grown-up pours, kid whisks."
+      ],
+      "teaching_moments": [
+        "What's the butter-and-flour mix called? It's a roux (say it like 'roo'). Cooking flour in fat for a minute before adding liquid is the trick that thickens most warm sauces — the flour coats each little butter speck and then the milk thickens around them instead of clumping.",
+        "Why add the milk slowly instead of all at once? If you dump cold liquid into hot roux, the flour grabs it and turns into lumps. Adding a little at a time, whisking hard, lets the sauce stay smooth all the way through."
+      ],
+      "prep_ahead": [
+        "Make the toast ahead and keep it warm in a low oven.",
+        "Measure the flour, salt, and milk into separate little bowls.",
+        "Put out a whisk, two small saucepans, and a shallow serving dish."
+      ]
+    },
+    {
+      "id": "mf-omelet",
+      "kid_jobs": [
+        "Measure the cold water for the yolks and for the whites.",
+        "Tear a little parsley for the garnish.",
+        "Wait by the pan and watch for the whites to puff up."
+      ],
+      "grownup_jobs": [
+        "Separate the eggs (one yolk and one white per egg, in two bowls).",
+        "Beat the yolks and the whites in their own bowls.",
+        "Melt the butter in the pan over the stove.",
+        "Fold the omelet and slide it onto the platter."
+      ],
+      "together_jobs": [
+        "Pour the beaten yolks into the hot buttered pan.",
+        "Spoon the beaten whites over the yolks and spread them gently."
+      ],
+      "teaching_moments": [
+        "Why beat the whites and yolks separately? Yolks are already soft and flowy, but whites turn into a fluffy cloud when you beat them. Combining them at the end gives the omelet two layers: creamy on the bottom and light as snow on top.",
+        "Why poke a little hole in the middle when the whites go on? Steam builds up inside the thick foam as it cooks. A little hole lets the steam escape instead of puffing the omelet into a balloon that collapses when you cut it."
+      ],
+      "prep_ahead": [
+        "Separate the eggs into two bowls.",
+        "Put out a good non-stick or well-seasoned 8-inch pan, two whisks, and a spatula.",
+        "Wash and dry the parsley."
+      ]
+    },
+    {
+      "id": "mf-pan-broiled-beefsteak",
+      "kid_jobs": [
+        "Pat the steak dry with paper towels.",
+        "Measure the salt and pepper into a little bowl.",
+        "Tear the parsley into tiny pieces with your fingers.",
+        "Squeeze the lemon over the resting steak (grown-up holds the lemon steady)."
+      ],
+      "grownup_jobs": [
+        "Handle the raw meat — kids wash their hands if they touched the meat.",
+        "Heat the heavy pan until it's almost smoking.",
+        "Cook the steak, flipping it with tongs.",
+        "Transfer the hot steak to the resting platter."
+      ],
+      "together_jobs": [
+        "Cover the resting steak with an inverted platter — kid holds the cover, grown-up places it.",
+        "Sprinkle salt, pepper, and parsley over the top before serving."
+      ],
+      "teaching_moments": [
+        "Why dry the steak with a towel before cooking? Water on the surface would turn to steam in the hot pan and keep the meat from getting that delicious brown crust. A dry steak sears, a wet steak steams.",
+        "Why does meat taste better after it rests? The heat of the pan pushes all the juice to the middle of the steak. Resting gives the juice time to spread back out so every bite is tender instead of dry on the outside and wet in the middle."
+      ],
+      "prep_ahead": [
+        "Take the steak out of the fridge 30 minutes before cooking so it comes to room temperature.",
+        "Wash the parsley and lemon and set them out.",
+        "Put the pan on the stove but don't turn the heat on until the kid is safely at their stepstool or at the table watching.",
+        "Handle the raw meat yourself and wash your hands and the counter before the kid helps with anything else."
+      ]
+    },
+    {
+      "id": "mf-pastry",
+      "kid_jobs": [
+        "Measure the flour and salt.",
+        "Sift the dry ingredients into the bowl.",
+        "Press the finished dough into a flat disc.",
+        "Roll the chilled dough out on the floured surface.",
+        "Press the rolled dough into the pie plate."
+      ],
+      "grownup_jobs": [
+        "Cube the cold fat and keep it cold.",
+        "Add the ice water a tablespoon at a time (hands have to stay quick).",
+        "Trim and crimp the edges with a fork or fingertips.",
+        "Blind-bake the shell in the hot oven if the recipe needs one."
+      ],
+      "together_jobs": [
+        "Rub the cold fat into the flour with fingertips until the mixture looks like coarse crumbs — some pieces of fat should still be visible.",
+        "Bring the dough together with a few stirs of a knife, just until it holds."
+      ],
+      "teaching_moments": [
+        "Why keep the fat cold? Little cold chunks of fat stay whole when you mix the dough. In the oven they melt and leave tiny pockets of steam behind — and those steam pockets are what make pastry flaky.",
+        "Why err on the side of less water? Too much water lets the flour form stretchy strands called gluten. Gluten is great in bread, which should be chewy, but terrible in pastry, which should shatter into crumbs. A drier dough stays tender.",
+        "Why chill the dough before rolling? Resting gives the flour time to soak up the water evenly, and keeps the fat from melting when you handle the dough. Cold dough rolls out smoothly and bakes up layered."
+      ],
+      "prep_ahead": [
+        "Put the flour and a mixing bowl in the freezer for 10 minutes so everything is cold.",
+        "Cube the cold fat and keep it in the fridge until the kid arrives.",
+        "Fill a small glass with ice water.",
+        "Put out a knife, a rolling pin, and a floured surface."
+      ]
+    },
+    {
+      "id": "mf-poached-eggs",
+      "kid_jobs": [
+        "Measure the salt and (if using) the vinegar into the water.",
+        "Crack each egg gently into a small ramekin or saucer."
+      ],
+      "grownup_jobs": [
+        "Bring the water to a gentle simmer.",
+        "Swirl the water with a spoon to start a little whirlpool.",
+        "Slide the eggs into the center of the swirling water.",
+        "Lift the cooked eggs out with a slotted spoon."
+      ],
+      "together_jobs": [
+        "Watch the eggs cook — the kid counts to 180 (three minutes) out loud while the grown-up watches the pan."
+      ],
+      "teaching_moments": [
+        "Why swirl the water first? The gentle spiral pulls the egg white around the yolk as it sets. Without a swirl, the white floats out in long wispy strings and the egg looks like a ghost.",
+        "Why add a little vinegar? Vinegar is acidic, and acid makes egg white set faster. It's an old cook's trick for keeping the white tight around the yolk."
+      ],
+      "prep_ahead": [
+        "Boil the water and let it settle to a gentle simmer.",
+        "Put each egg into its own little ramekin or saucer on the counter.",
+        "Put out a slotted spoon, a clean dish towel, and warm buttered toast on a plate."
+      ]
+    },
+    {
+      "id": "mf-potato-soup",
+      "kid_jobs": [
+        "Measure the salt, pepper, and flour.",
+        "Tear the parsley into small pieces.",
+        "Mash the boiled potatoes with a masher or fork (when they've cooled enough to be safe)."
+      ],
+      "grownup_jobs": [
+        "Boil the potatoes ahead of time.",
+        "Heat the milk with the onion slices in a double boiler.",
+        "Make the butter-and-flour roux on the stove.",
+        "Whisk the hot soup back and forth between pans to thicken it."
+      ],
+      "together_jobs": [
+        "Stir the mashed potato into the hot milk and onion.",
+        "Stir the parsley in at the very end just before serving."
+      ],
+      "teaching_moments": [
+        "Why heat the milk with onion first? The onion gives the milk its flavor, then comes out before it can make the soup chunky. It's a little like making a tea — you steep it and then strain it.",
+        "What's a double boiler? A small pot sitting inside a bigger pot of hot water. The water in the bigger pot can't get hotter than the boiling point, so the milk in the smaller pot can't burn. It's the safe way to cook anything that scorches easily."
+      ],
+      "prep_ahead": [
+        "Boil the potatoes ahead.",
+        "Set up the double boiler.",
+        "Slice the onion.",
+        "Wash and set out the parsley.",
+        "Put out a whisk, a ladle, and a fine strainer."
+      ]
+    },
+    {
+      "id": "mf-queen-of-hearts-tarts",
+      "kid_jobs": [
+        "Roll the chilled pastry dough flat on a floured surface.",
+        "Press the heart-shaped cutter straight down to cut each shape.",
+        "Prick the bottom of each tart shell several times with a fork.",
+        "Spoon preserved cherries into each cooled shell."
+      ],
+      "grownup_jobs": [
+        "Preheat the oven to 425°F.",
+        "Make the pastry dough and chill it.",
+        "Put the tart shells in and out of the hot oven.",
+        "Let the shells cool completely before filling."
+      ],
+      "together_jobs": [
+        "Press each cut-out heart gently into its tart pan or mold.",
+        "Trim and crimp the edges together."
+      ],
+      "teaching_moments": [
+        "Why prick the bottoms of the tart shells? As the pastry bakes, steam tries to puff it up into a balloon. Little fork holes let the steam escape so the shells stay flat and crisp.",
+        "Why fill the shells after they cool, not before baking? Filling before baking would make the cherry syrup soak into the pastry and turn it soggy. Cooling gives you a crisp shell and a bright fresh filling."
+      ],
+      "prep_ahead": [
+        "Make the pastry dough and chill it for at least 15 minutes.",
+        "Preheat the oven to 425°F.",
+        "Put out the rolling pin, heart-shaped cutters, a fork, and the tart pans.",
+        "Have the cherries ready in a bowl for filling."
+      ]
+    },
+    {
+      "id": "mf-rice-pudding",
+      "kid_jobs": [
+        "Rinse the rice in a strainer under cold water.",
+        "Measure the sugar and salt.",
+        "Sprinkle grated nutmeg over the top of the pudding.",
+        "Stir in the raisins when the grown-up says it's time."
+      ],
+      "grownup_jobs": [
+        "Preheat the oven to 325°F and butter the baking dish.",
+        "Grate the fresh nutmeg.",
+        "Put the dish in and out of the long bake.",
+        "Stir the pudding once or twice during the first hour."
+      ],
+      "together_jobs": [
+        "Combine the rice, sugar, salt, and milk in the baking dish.",
+        "Add a strip of lemon zest if you're using it."
+      ],
+      "teaching_moments": [
+        "Why does rice pudding take so long to bake? The rice is cooking and the milk is slowly thickening at the same time. Low and slow gives the rice time to drink up the milk and swell up tender without the outside of the pudding burning.",
+        "Why grate nutmeg fresh instead of using the pre-ground jar? Nutmeg is a little hard seed, and most of its flavor sits inside locked-away oils. Grating releases those oils right onto your pudding. Pre-ground nutmeg has lost most of them already and tastes dusty in comparison."
+      ],
+      "prep_ahead": [
+        "Preheat the oven to 325°F.",
+        "Butter the baking dish.",
+        "Measure the milk and put a kettle on for easy cleanup.",
+        "Put out a whole nutmeg and a small grater."
+      ]
+    },
+    {
+      "id": "mf-salad-dressing",
+      "kid_jobs": [
+        "Measure the mustard, sugar, flour, salt, and cayenne into a bowl.",
+        "Whisk the dry ingredients together.",
+        "Pour in the sour cream slowly while the grown-up whisks."
+      ],
+      "grownup_jobs": [
+        "Separate the egg if needed and beat it.",
+        "Set up the double boiler over simmering water.",
+        "Cook and stir the dressing on the heat until it thickens.",
+        "Whisk in the vinegar off the heat."
+      ],
+      "together_jobs": [
+        "Whisk the beaten egg into the dry mix until smooth.",
+        "Stir the butter in at the very end until it melts."
+      ],
+      "teaching_moments": [
+        "Why does this dressing need a double boiler? Egg yolks set at a lower temperature than boiling water. If you cooked this over direct heat, you'd end up with sweet-and-sour scrambled eggs. The double boiler keeps the heat gentle enough for the yolks to thicken slowly and smoothly.",
+        "Why add the vinegar last, off the heat? Vinegar is acidic, and extra heat plus acid can curdle the sauce. Stirring it in once the pan is off the stove gives you tangy flavor without breaking the smooth texture."
+      ],
+      "prep_ahead": [
+        "Set up the double boiler (bigger pot of simmering water, smaller pot that fits inside).",
+        "Measure the vinegar and butter into little dishes.",
+        "Put out a whisk and a heat-safe spatula."
+      ]
     }
   ],
   "lessons": []
