@@ -18,6 +18,7 @@ import {
 } from '../lib/recipeLinker';
 import { loadLessons } from '../lib/lessons';
 import { normalizeFractions } from '../lib/fractions';
+import { resolveRedirect } from '../lib/recipeRedirects';
 import { useKids } from '../lib/kids';
 import {
   classifySteps,
@@ -51,6 +52,13 @@ export default function RecipePage() {
     setRelatedEssays([]);
     setRelatedLessons([]);
     (async () => {
+      // If this id was renamed (e.g. a slur was stripped from an old
+      // title), forward the reader to the new id so bookmarks still work.
+      const newId = await resolveRedirect(id);
+      if (newId) {
+        navigate(`/recipe/${newId}`, { replace: true });
+        return;
+      }
       const r = await getRecipe(id);
       if (r) {
         setRecipe(r);

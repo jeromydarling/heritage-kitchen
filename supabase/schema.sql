@@ -1582,3 +1582,33 @@ on conflict (slug) do update set
   featured = excluded.featured,
   sort_order = excluded.sort_order,
   selector = excluded.selector;
+
+
+-- ==========================================================================
+-- Recipe id migration: renamed recipes from the problematic titles audit.
+-- Updates any existing user data (cookbook_entries, cook_log) that points
+-- at the old slur-containing ids so it resolves to the renamed recipe.
+-- Idempotent — safe to re-run.
+-- ==========================================================================
+
+update cookbook_entries set recipe_id = 'mf-chocolate-fudge'
+  where recipe_id = 'mf-pickaninny-fudge';
+update cook_log set recipe_id = 'mf-chocolate-fudge'
+  where recipe_id = 'mf-pickaninny-fudge';
+update recipe_notes set recipe_id = 'mf-chocolate-fudge'
+  where recipe_id = 'mf-pickaninny-fudge';
+update meal_plan_entries set recipe_id = 'mf-chocolate-fudge'
+  where recipe_id = 'mf-pickaninny-fudge';
+update shopping_list_items set source_recipe_id = 'mf-chocolate-fudge'
+  where source_recipe_id = 'mf-pickaninny-fudge';
+
+update cookbook_entries set recipe_id = 'bcs-curried-tomato-salad'
+  where recipe_id = 'bcs-hindoo-salad';
+update cook_log set recipe_id = 'bcs-curried-tomato-salad'
+  where recipe_id = 'bcs-hindoo-salad';
+update recipe_notes set recipe_id = 'bcs-curried-tomato-salad'
+  where recipe_id = 'bcs-hindoo-salad';
+update meal_plan_entries set recipe_id = 'bcs-curried-tomato-salad'
+  where recipe_id = 'bcs-hindoo-salad';
+update shopping_list_items set source_recipe_id = 'bcs-curried-tomato-salad'
+  where source_recipe_id = 'bcs-hindoo-salad';

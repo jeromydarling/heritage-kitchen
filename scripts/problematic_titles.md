@@ -1,49 +1,17 @@
 # Problematic titles audit
 
 Total recipes scanned: **3485**
-Flagged: **17**
+Flagged: **15**
 
 | Severity | Count | What to do |
 | --- | ---: | --- |
-| HARD | 2 | Must be renamed or removed before rendering anywhere on the site. |
-| SOFT | 1 | Editor's call — rewrite with a modern respectful term, or leave with an editorial note. |
-| CONTEXT | 14 | Eyeball the context to decide — some may be innocent food-name uses. |
+| HARD | 0 | Must be renamed or removed before rendering anywhere on the site. |
+| SOFT | 0 | Editor's call — rewrite with a modern respectful term, or leave with an editorial note. |
+| CONTEXT | 15 | Eyeball the context to decide — some may be innocent food-name uses. |
 
 ## HARD — slurs with no innocent meaning
 
-### Pickaninny Fudge  <sub>`mf-pickaninny-fudge`</sub>
-
-- **Source**: The Mary Frances Cook Book (1912)
-- **Type**: recipe
-
-  - **`pickaninny`** in *title* — racial slur for a Black child; common in pre-WWII white American cookbooks
-    > Pickaninny Fudge
-  - **`pickaninny`** in *original* — racial slur for a Black child; common in pre-WWII white American cookbooks
-    > …NO. 29.--PICKANINNY FUDGE.      2 cups sugar     1 cup milk…
-
-### Rye and Corn Bread  <sub>`wh-rye-and-corn-bread`</sub>
-
-- **Source**: The White House Cookbook (1887)
-- **Type**: recipe
-
-  - **`injun`** in *original* — derogatory term for Indigenous Americans
-    > …above.  This is similar to the "Rye and Injun" of our grandmothers' days, but that wa…
-  - **`injun`** in *modern* — derogatory term for Indigenous Americans
-    > …above. This is similar to the "Rye and Injun" of our grandmothers' days, but that wa…
-
 ## SOFT — once-neutral terms now clinical or dehumanizing
-
-### Hindoo Salad  <sub>`bcs-hindoo-salad`</sub>
-
-- **Source**: The Boston Cooking-School Cook Book (1896)
-- **Type**: recipe
-
-  - **`hindoo`** in *title* — archaic spelling; use "Hindu" or "Indian" per context
-    > Hindoo Salad
-  - **`hindoo`** in *original* — archaic spelling; use "Hindu" or "Indian" per context
-    > …Hindoo Salad Arrange four slices tomato on a b…
-  - **`hindoo`** in *modern* — archaic spelling; use "Hindu" or "Indian" per context
-    > …A classic Victorian recipe for hindoo salad from Fannie Farmer's landmark 189…
 
 ## CONTEXT — eyeball the surrounding text
 
@@ -216,6 +184,18 @@ Flagged: **17**
     > …t for breakfast or a light meal. Note: 'Indian meal' in the original refers to cornmeal. Se…
   - **`indian meal`** in *modern* — historical term for cornmeal; not about Indigenous people as such
     > …recipe for ingredients Make one pint of Indian meal into mush in the usual way. While hot,…
+
+### Rye and Corn Bread  <sub>`wh-rye-and-corn-bread`</sub>
+
+- **Source**: The White House Cookbook (1887)
+- **Type**: recipe
+
+  - **`indian meal`** in *original* — historical term for cornmeal; not about Indigenous people as such
+    > …of rye meal or rye flour, two quarts of Indian meal, scalded (by placing in a pan and pouri…
+  - **`indian meal`** in *modern* — historical term for cornmeal; not about Indigenous people as such
+    > …n of 1880s American home baking. Note: 'Indian meal' in the original refers to cornmeal. On…
+  - **`indian meal`** in *modern* — historical term for cornmeal; not about Indigenous people as such
+    > …of rye meal or rye flour, two quarts of Indian meal, scalded (by placing in a pan and pouri…
 
 ### Steamed Brown Bread  <sub>`wh-steamed-brown-bread`</sub>
 

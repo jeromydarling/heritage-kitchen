@@ -1,105 +1,5 @@
 [
   {
-    "id": "mf-pickaninny-fudge",
-    "title": "Pickaninny Fudge",
-    "source_book": "The Mary Frances Cook Book",
-    "source_year": "1912",
-    "content_type": null,
-    "worst_severity": "HARD",
-    "hits": [
-      {
-        "term": "pickaninny",
-        "severity": "HARD",
-        "reason": "racial slur for a Black child; common in pre-WWII white American cookbooks",
-        "excerpt": "Pickaninny Fudge",
-        "where": "title"
-      },
-      {
-        "term": "pickaninny",
-        "severity": "HARD",
-        "reason": "racial slur for a Black child; common in pre-WWII white American cookbooks",
-        "excerpt": "…NO. 29.--PICKANINNY FUDGE.      2 cups sugar     1 cup milk…",
-        "where": "original"
-      }
-    ]
-  },
-  {
-    "id": "wh-rye-and-corn-bread",
-    "title": "Rye and Corn Bread",
-    "source_book": "The White House Cookbook",
-    "source_year": "1887",
-    "content_type": null,
-    "worst_severity": "HARD",
-    "hits": [
-      {
-        "term": "injun",
-        "severity": "HARD",
-        "reason": "derogatory term for Indigenous Americans",
-        "excerpt": "…above.  This is similar to the \"Rye and Injun\" of our grandmothers' days, but that wa…",
-        "where": "original"
-      },
-      {
-        "term": "indian meal",
-        "severity": "CONTEXT",
-        "reason": "historical term for cornmeal; not about Indigenous people as such",
-        "excerpt": "…of rye meal or rye flour, two quarts of Indian meal, scalded (by placing in a pan and pouri…",
-        "where": "original"
-      },
-      {
-        "term": "injun",
-        "severity": "HARD",
-        "reason": "derogatory term for Indigenous Americans",
-        "excerpt": "…above. This is similar to the \"Rye and Injun\" of our grandmothers' days, but that wa…",
-        "where": "modern"
-      },
-      {
-        "term": "indian meal",
-        "severity": "CONTEXT",
-        "reason": "historical term for cornmeal; not about Indigenous people as such",
-        "excerpt": "…n of 1880s American home baking. Note: 'Indian meal' in the original refers to cornmeal. On…",
-        "where": "modern"
-      },
-      {
-        "term": "indian meal",
-        "severity": "CONTEXT",
-        "reason": "historical term for cornmeal; not about Indigenous people as such",
-        "excerpt": "…of rye meal or rye flour, two quarts of Indian meal, scalded (by placing in a pan and pouri…",
-        "where": "modern"
-      }
-    ]
-  },
-  {
-    "id": "bcs-hindoo-salad",
-    "title": "Hindoo Salad",
-    "source_book": "The Boston Cooking-School Cook Book",
-    "source_year": "1896",
-    "content_type": null,
-    "worst_severity": "SOFT",
-    "hits": [
-      {
-        "term": "hindoo",
-        "severity": "SOFT",
-        "reason": "archaic spelling; use \"Hindu\" or \"Indian\" per context",
-        "excerpt": "Hindoo Salad",
-        "where": "title"
-      },
-      {
-        "term": "hindoo",
-        "severity": "SOFT",
-        "reason": "archaic spelling; use \"Hindu\" or \"Indian\" per context",
-        "excerpt": "…Hindoo Salad Arrange four slices tomato on a b…",
-        "where": "original"
-      },
-      {
-        "term": "hindoo",
-        "severity": "SOFT",
-        "reason": "archaic spelling; use \"Hindu\" or \"Indian\" per context",
-        "excerpt": "…A classic Victorian recipe for hindoo salad from Fannie Farmer's landmark 189…",
-        "where": "modern"
-      }
-    ]
-  },
-  {
     "id": "bcs-indian-bread",
     "title": "Indian Bread",
     "source_book": "The Boston Cooking-School Cook Book",
@@ -558,6 +458,37 @@
         "severity": "CONTEXT",
         "reason": "historical term for cornmeal; not about Indigenous people as such",
         "excerpt": "…recipe for ingredients Make one pint of Indian meal into mush in the usual way. While hot,…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-rye-and-corn-bread",
+    "title": "Rye and Corn Bread",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…of rye meal or rye flour, two quarts of Indian meal, scalded (by placing in a pan and pouri…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…n of 1880s American home baking. Note: 'Indian meal' in the original refers to cornmeal. On…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…of rye meal or rye flour, two quarts of Indian meal, scalded (by placing in a pan and pouri…",
         "where": "modern"
       }
     ]
