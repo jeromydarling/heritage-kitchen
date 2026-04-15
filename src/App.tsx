@@ -27,6 +27,8 @@ import ServicesPage from './pages/ServicesPage';
 import AlmanacPage from './pages/AlmanacPage';
 import LicensingPage from './pages/LicensingPage';
 import AboutPage from './pages/AboutPage';
+import HouseholdPage from './pages/HouseholdPage';
+import KidJournalPage from './pages/KidJournalPage';
 import AdminPage from './pages/AdminPage';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminOverviewPage from './pages/admin/AdminOverviewPage';
@@ -72,6 +74,8 @@ export default function App() {
         <Route path="shopping" element={<ShoppingListPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="about" element={<AboutPage />} />
+        <Route path="household" element={<HouseholdPage />} />
+        <Route path="household/kids/:id" element={<KidJournalPage />} />
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<AdminOverviewPage />} />
           <Route path="editions" element={<EditionsAdminPage />} />

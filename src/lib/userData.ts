@@ -26,6 +26,7 @@ export interface CookLogEntry {
   notes: string | null;
   liturgical_day: string | null;
   liturgical_season: string | null;
+  kid_id: string | null;
   created_at: string;
 }
 
@@ -193,7 +194,12 @@ export function useCookLog(recipeId: string) {
   }, [refresh]);
 
   const logCook = useCallback(
-    async (opts: { rating?: number | null; notes?: string; cookedOn?: Date }) => {
+    async (opts: {
+      rating?: number | null;
+      notes?: string;
+      cookedOn?: Date;
+      kidId?: string | null;
+    }) => {
       if (!user || !supabase) return;
       const when = opts.cookedOn ?? new Date();
       const lit = getLiturgicalDay(when);
@@ -206,6 +212,7 @@ export function useCookLog(recipeId: string) {
         notes: opts.notes ?? null,
         liturgical_day: lit.feast?.name ?? lit.seasonLabel,
         liturgical_season: lit.seasonLabel,
+        kid_id: opts.kidId ?? null,
       });
       setLoading(false);
       await refresh();
@@ -223,6 +230,42 @@ export function useCookLog(recipeId: string) {
   );
 
   return { entries, loading, logCook, deleteEntry, refresh };
+}
+
+/**
+ * Every cook log entry tagged with a specific kid's id, ordered
+ * newest first. Powers the per-kid journal page — the parent's
+ * running record of every dish they've cooked with a kid.
+ */
+export function useKidJournal(kidId: string | null) {
+  const user = useUser();
+  const [entries, setEntries] = useState<CookLogEntry[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!user || !supabase || !kidId) {
+        setEntries([]);
+        return;
+      }
+      setLoading(true);
+      const { data } = await supabase
+        .from('cook_log')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('kid_id', kidId)
+        .order('cooked_on', { ascending: false });
+      setLoading(false);
+      if (!cancelled && data) setEntries(data as CookLogEntry[]);
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, kidId]);
+
+  return { entries, loading };
 }
 
 /** Recent cooks across all recipes, for the /cookbook page. */

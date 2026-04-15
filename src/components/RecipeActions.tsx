@@ -3,6 +3,7 @@ import { authAvailable, useUser } from '../lib/auth';
 import { useCookLog, useIsSaved, useRecipeNote } from '../lib/userData';
 import { addToNextOpenDay } from '../lib/mealPlan';
 import { useShoppingList, ingredientsOf } from '../lib/shoppingList';
+import { useKids } from '../lib/kids';
 import type { Recipe } from '../lib/types';
 
 /**
@@ -22,6 +23,7 @@ export default function RecipeActions({ recipe }: { recipe: Recipe }) {
   const { entries: log, logCook, deleteEntry } = useCookLog(recipeId);
   const noteState = useRecipeNote(recipeId);
   const { addItem: addShoppingItem } = useShoppingList();
+  const { kidModeOn, activeKid } = useKids();
   const [rating, setRating] = useState<number | null>(null);
   const [cookNote, setCookNote] = useState('');
   const [busy, setBusy] = useState(false);
@@ -48,7 +50,13 @@ export default function RecipeActions({ recipe }: { recipe: Recipe }) {
 
   async function handleLog() {
     setBusy(true);
-    await logCook({ rating, notes: cookNote || undefined });
+    await logCook({
+      rating,
+      notes: cookNote || undefined,
+      // Tag the log entry with the active kid when kid mode is on, so
+      // the per-kid journal surfaces it. No-op otherwise.
+      kidId: kidModeOn && activeKid ? activeKid.id : null,
+    });
     setCookNote('');
     setRating(null);
     setBusy(false);
@@ -144,9 +152,13 @@ export default function RecipeActions({ recipe }: { recipe: Recipe }) {
 
       {/* Cook log */}
       <div className="card p-5">
-        <h3 className="font-serif text-lg">I cooked this</h3>
+        <h3 className="font-serif text-lg">
+          {kidModeOn && activeKid ? `${activeKid.name} and I cooked this` : 'I cooked this'}
+        </h3>
         <p className="mt-1 text-xs text-muted">
-          Keep a little record. A year from now, this will mean something.
+          {kidModeOn && activeKid
+            ? `This log entry will save to ${activeKid.name}'s journal.`
+            : 'Keep a little record. A year from now, this will mean something.'}
         </p>
         <div className="mt-3">
           <StarRow value={rating} onChange={setRating} />

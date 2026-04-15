@@ -62,6 +62,9 @@ export default function Layout() {
           <NavLink to="/cookbook" className={className}>
             Cookbook
           </NavLink>
+          <NavLink to="/household" className={className}>
+            Household
+          </NavLink>
         </>
       )}
       <NavLink to="/editions" className={className}>
