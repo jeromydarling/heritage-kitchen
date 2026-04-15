@@ -1,0 +1,634 @@
+[
+  {
+    "id": "mf-pickaninny-fudge",
+    "title": "Pickaninny Fudge",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "content_type": null,
+    "worst_severity": "HARD",
+    "hits": [
+      {
+        "term": "pickaninny",
+        "severity": "HARD",
+        "reason": "racial slur for a Black child; common in pre-WWII white American cookbooks",
+        "excerpt": "Pickaninny Fudge",
+        "where": "title"
+      },
+      {
+        "term": "pickaninny",
+        "severity": "HARD",
+        "reason": "racial slur for a Black child; common in pre-WWII white American cookbooks",
+        "excerpt": "…NO. 29.--PICKANINNY FUDGE.      2 cups sugar     1 cup milk…",
+        "where": "original"
+      }
+    ]
+  },
+  {
+    "id": "wh-rye-and-corn-bread",
+    "title": "Rye and Corn Bread",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "HARD",
+    "hits": [
+      {
+        "term": "injun",
+        "severity": "HARD",
+        "reason": "derogatory term for Indigenous Americans",
+        "excerpt": "…above.  This is similar to the \"Rye and Injun\" of our grandmothers' days, but that wa…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…of rye meal or rye flour, two quarts of Indian meal, scalded (by placing in a pan and pouri…",
+        "where": "original"
+      },
+      {
+        "term": "injun",
+        "severity": "HARD",
+        "reason": "derogatory term for Indigenous Americans",
+        "excerpt": "…above. This is similar to the \"Rye and Injun\" of our grandmothers' days, but that wa…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…n of 1880s American home baking. Note: 'Indian meal' in the original refers to cornmeal. On…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…of rye meal or rye flour, two quarts of Indian meal, scalded (by placing in a pan and pouri…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "bcs-hindoo-salad",
+    "title": "Hindoo Salad",
+    "source_book": "The Boston Cooking-School Cook Book",
+    "source_year": "1896",
+    "content_type": null,
+    "worst_severity": "SOFT",
+    "hits": [
+      {
+        "term": "hindoo",
+        "severity": "SOFT",
+        "reason": "archaic spelling; use \"Hindu\" or \"Indian\" per context",
+        "excerpt": "Hindoo Salad",
+        "where": "title"
+      },
+      {
+        "term": "hindoo",
+        "severity": "SOFT",
+        "reason": "archaic spelling; use \"Hindu\" or \"Indian\" per context",
+        "excerpt": "…Hindoo Salad Arrange four slices tomato on a b…",
+        "where": "original"
+      },
+      {
+        "term": "hindoo",
+        "severity": "SOFT",
+        "reason": "archaic spelling; use \"Hindu\" or \"Indian\" per context",
+        "excerpt": "…A classic Victorian recipe for hindoo salad from Fannie Farmer's landmark 189…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "bcs-indian-bread",
+    "title": "Indian Bread",
+    "source_book": "The Boston Cooking-School Cook Book",
+    "source_year": "1896",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…Indian Bread 1½ cups Graham flour 1 cup Indian meal ½ tablespoon soda 1 teaspoon salt ½ cup…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…Boston Cooking-School Cook Book. Note: 'Indian meal' in the original refers to cornmeal. Or…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…r a century. 1½ cups Graham flour 1 cup Indian meal ½ tablespoon soda 1 teaspoon salt ½ cup…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "bcs-indian-pudding",
+    "title": "Indian Pudding",
+    "source_book": "The Boston Cooking-School Cook Book",
+    "source_year": "1896",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "Indian Pudding",
+        "where": "title"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…Indian Pudding 5 cups scalded milk ⅓ cup Indian meal ½…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…ndian Pudding 5 cups scalded milk ⅓ cup Indian meal ½ cup molasses 1 teaspoon salt 1 teaspo…",
+        "where": "original"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…cornmeal pudding (historically called 'Indian Pudding' after the colonial term for corn). A c…",
+        "where": "modern"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…r corn). A classic Victorian recipe for indian pudding from Fannie Farmer's landmark 1896 Bost…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…oven = 300°F. 5 cups scalded milk ⅓ cup Indian meal ½ cup molasses 1 teaspoon salt 1 teaspo…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "bcs-mock-indian-pudding",
+    "title": "Mock Indian Pudding",
+    "source_book": "The Boston Cooking-School Cook Book",
+    "source_year": "1896",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "Mock Indian Pudding",
+        "where": "title"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…Mock Indian Pudding ½ small loaf baker’s entire wheat bread…",
+        "where": "original"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…cornmeal pudding (historically called 'Indian Pudding' after the colonial term for corn). A c…",
+        "where": "modern"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…n). A classic Victorian recipe for mock indian pudding from Fannie Farmer's landmark 1896 Bost…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "bcs-newton-tapioca",
+    "title": "Newton Tapioca",
+    "source_book": "The Boston Cooking-School Cook Book",
+    "source_year": "1896",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…pioca 4 cups scalded milk 4 tablespoons Indian meal ¾ cup molasses 3 tablespoons butter 1½…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…water to cover. Pour scalded milk over Indian meal, molasses, butter, and salt. Cook in do…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…Boston Cooking-School Cook Book. Note: 'Indian meal' in the original refers to cornmeal. Mo…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…pioca 4 cups scalded milk 4 tablespoons Indian meal ¾ cup molasses 3 tablespoons butter 1½…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…water to cover. Pour scalded milk over Indian meal, molasses, butter, and salt. Cook in do…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "bcs-proteid-fat-starch-mineral-matter-water",
+    "title": "Proteid Fat Starch Mineral matter Water",
+    "source_book": "The Boston Cooking-School Cook Book",
+    "source_year": "1896",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…l starch-grains, salted to give flavor. Indian meal and finely ground preparations should b…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…according to age 45–60 minutes of rice) Indian meal       1 cup             3½ cups…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…Boston Cooking-School Cook Book. Note: 'Indian meal' in the original refers to cornmeal. Or…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…l starch-grains, salted to give flavor. Indian meal and finely ground preparations should b…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…according to age 45–60 minutes of rice) Indian meal       1 cup             3½ cups…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-baked-corn-meal-pudding-with-eggs",
+    "title": "Baked Corn Meal Pudding, with Eggs",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…PUDDING, WITH EGGS  One small cupful of Indian meal, one-half cupful of wheat flour Stirred…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…ple of Victorian dessert tables. Note: 'Indian meal' in the original refers to cornmeal. On…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…refers to cornmeal. One small cupful of Indian meal, one-half cupful of wheat flour Stirred…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-corn-meal-griddle-cakes",
+    "title": "Corn Meal Griddle-cakes",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…e quart of Graham flour, half a pint of Indian meal, one gill of yeast, a teaspoonful of sa…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…uce a delightful Victorian bake. Note: 'Indian meal' in the original refers to cornmeal. So…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…e quart of Graham flour, half a pint of Indian meal, one gill of yeast, a teaspoonful of sa…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-delicate-indian-pudding",
+    "title": "Delicate Indian Pudding",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "Delicate Indian Pudding",
+        "where": "title"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…DELICATE INDIAN PUDDING  One quart milk, two heaping tablespoon…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…art milk, two heaping tablespoonfuls of Indian meal, four of sugar, one of butter, three eg…",
+        "where": "original"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…cornmeal pudding (historically called 'Indian Pudding' after the colonial term for corn). A c…",
+        "where": "modern"
+      },
+      {
+        "term": "indian pudding",
+        "severity": "CONTEXT",
+        "reason": "legitimate New England dish name from \"Indian meal\" = cornmeal",
+        "excerpt": "…l term for corn). A comforting Delicate Indian Pudding in the old-fashioned steamed or baked s…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…art milk, two heaping tablespoonfuls of Indian meal, four of sugar, one of butter, three eg…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-fruit-pudding-corn-meal",
+    "title": "Fruit Pudding, Corn Meal",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…e a pint of hot milk and stir in sifted Indian meal till the batter is stiff; add a teaspoo…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…ple of Victorian dessert tables. Note: 'Indian meal' in the original refers to cornmeal. Se…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…e a pint of hot milk and stir in sifted Indian meal till the batter is stiff; add a teaspoo…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-indian-loaf-cake",
+    "title": "Indian Loaf Cake",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…t off, and scald with it as much yellow Indian meal (previously sifted) as will make it of…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…. The pan must be very well-buttered as Indian meal is apt to stick. Put in the mixture, co…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…uce a delightful Victorian bake. Note: 'Indian meal' in the original refers to cornmeal. Se…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…t off, and scald with it as much yellow Indian meal (previously sifted) as will make it of…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…. The pan must be very well-buttered as Indian meal is apt to stick. Put in the mixture, co…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-johnnie-cake",
+    "title": "Johnnie Cake",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…JOHNNIE CAKE  Sift one quart of Indian meal into a pan; make a hole in the middle a…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…uce a delightful Victorian bake. Note: 'Indian meal' in the original refers to cornmeal. Si…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…l refers to cornmeal. Sift one quart of Indian meal into a pan with a spoon mix the meal an…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-newport-waffles",
+    "title": "Newport Waffles",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…NEWPORT WAFFLES  Make one pint of Indian meal into mush in the usual way. While hot,…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…t for breakfast or a light meal. Note: 'Indian meal' in the original refers to cornmeal. Se…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…recipe for ingredients Make one pint of Indian meal into mush in the usual way. While hot,…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-steamed-brown-bread",
+    "title": "Steamed Brown Bread",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…hite flour, two of Graham flour, two of Indian meal, one teaspoonful of soda, one cup of mo…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…n of 1880s American home baking. Note: 'Indian meal' in the original refers to cornmeal. So…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…hite flour, two of Graham flour, two of Indian meal, one teaspoonful of soda, one cup of mo…",
+        "where": "modern"
+      }
+    ]
+  },
+  {
+    "id": "wh-to-fry-fish",
+    "title": "To Fry Fish",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "content_type": null,
+    "worst_severity": "CONTEXT",
+    "hits": [
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…es; season with salt and pepper. Dip in Indian meal or wheat flour, or in beaten egg, and r…",
+        "where": "original"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…table cookery of the Gilded Age. Note: 'Indian meal' in the original refers to cornmeal. La…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…es; season with salt and pepper. Dip in Indian meal or wheat flour, or in beaten egg, and r…",
+        "where": "modern"
+      },
+      {
+        "term": "indian meal",
+        "severity": "CONTEXT",
+        "reason": "historical term for cornmeal; not about Indigenous people as such",
+        "excerpt": "…es; season with salt and pepper. Dip in Indian meal or wheat flour, or in beaten egg, and r…",
+        "where": "modern"
+      }
+    ]
+  }
+]
