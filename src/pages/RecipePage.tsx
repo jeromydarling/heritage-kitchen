@@ -18,6 +18,14 @@ import {
 } from '../lib/recipeLinker';
 import { loadLessons } from '../lib/lessons';
 import { normalizeFractions } from '../lib/fractions';
+import { useKids } from '../lib/kids';
+import {
+  classifySteps,
+  generatePrepList,
+  TASK_LABELS,
+  TASK_STYLES,
+} from '../lib/kidTasks';
+import KidPrepCard from '../components/KidPrepCard';
 import TabSwitcher from '../components/TabSwitcher';
 import RecipeImage from '../components/RecipeImage';
 import DifficultyBadge from '../components/DifficultyBadge';
@@ -304,6 +312,7 @@ function ModernView({
   lessonIndex: LessonIndex;
 }) {
   const { modern_recipe: m } = recipe;
+  const { kidModeOn, activeKid } = useKids();
   const rawIngredients = Array.isArray(m.ingredients)
     ? m.ingredients
     : m.ingredients
@@ -315,6 +324,10 @@ function ModernView({
     : m.instructions
       ? [m.instructions]
       : [];
+  const kidMode = kidModeOn && !!activeKid;
+  const kidAge = activeKid?.age ?? 8;
+  const classifiedSteps = kidMode ? classifySteps(instructions, kidAge) : null;
+  const prepList = kidMode ? generatePrepList(ingredients, instructions) : [];
 
   // If ingredients look like a single long paragraph rather than a tidy list,
   // render it as prose instead of a broken bullet list.
@@ -326,6 +339,10 @@ function ModernView({
       aria-label="Modern adaptation"
       className="card space-y-8 p-6 sm:p-10"
     >
+      {kidMode && activeKid && prepList.length > 0 && (
+        <KidPrepCard recipeId={recipe.id} kidName={activeKid.name} items={prepList} />
+      )}
+
       <div className="grid grid-cols-2 gap-4 rounded-xl bg-cream p-4 sm:grid-cols-4">
         <Stat label="Prep" value={m.prep_time} />
         <Stat label="Cook" value={m.cook_time} />
@@ -378,16 +395,34 @@ function ModernView({
           <p className="mt-3 text-sm italic text-muted">No modern instructions available yet.</p>
         ) : (
           <ol className="mt-3 space-y-4">
-            {instructions.map((step, i) => (
-              <li key={i} className="flex gap-4">
-                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-terracotta text-sm font-semibold text-cream">
-                  {i + 1}
-                </span>
-                <p className="leading-relaxed">
-                  {formatHistoricalText(step, recipe.id, linkIndex, recipe.source_book, lessonIndex)}
-                </p>
-              </li>
-            ))}
+            {instructions.map((step, i) => {
+              const task = classifiedSteps?.[i];
+              return (
+                <li key={i} className="flex gap-4">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-terracotta text-sm font-semibold text-cream">
+                    {i + 1}
+                  </span>
+                  <div className="flex-1 space-y-1">
+                    {task && (
+                      <span
+                        className={`inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${TASK_STYLES[task.kind]}`}
+                      >
+                        {TASK_LABELS[task.kind]}
+                      </span>
+                    )}
+                    <p className="leading-relaxed">
+                      {formatHistoricalText(
+                        step,
+                        recipe.id,
+                        linkIndex,
+                        recipe.source_book,
+                        lessonIndex,
+                      )}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
           </ol>
         )}
       </div>

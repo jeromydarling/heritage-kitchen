@@ -14,6 +14,15 @@ export default {
         muted: '#7A6B5D',
         rule: '#E8DFD3',
         paper: '#F5EEDF',
+        // Kid-mode avatar palette — gentle, distinguishable, and
+        // all playing nicely with the cream-and-terracotta core.
+        sage: {
+          DEFAULT: '#7A8F6F',
+          dark: '#5A6E50',
+        },
+        butter: '#E8C46B',
+        plum: '#8A4F6D',
+        sky: '#6A8AA8',
       },
       fontFamily: {
         serif: ['"Playfair Display"', 'Lora', 'Georgia', 'serif'],

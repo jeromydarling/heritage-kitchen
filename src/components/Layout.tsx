@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLiturgicalKitchen } from '../lib/preferences';
 import { useUser } from '../lib/auth';
 import AuthButton from './AuthButton';
+import KidModeToggle from './KidModeToggle';
 import OnboardingTour from './OnboardingTour';
 
 export default function Layout() {
@@ -97,14 +98,16 @@ export default function Layout() {
           {/* Desktop nav */}
           <nav className="hidden items-center gap-1 text-sm lg:flex">
             {navLinks(navClass)}
-            <div className="ml-2">
+            <div className="ml-2 flex items-center gap-2">
+              <KidModeToggle />
               <AuthButton />
             </div>
           </nav>
 
           {/* Mobile auth + hamburger */}
           <div className="flex items-center gap-2 lg:hidden">
-            <div className="hidden sm:block">
+            <div className="hidden sm:flex sm:items-center sm:gap-2">
+              <KidModeToggle />
               <AuthButton />
             </div>
             <button
@@ -152,7 +155,8 @@ export default function Layout() {
         {mobileOpen && (
           <nav className="border-t border-rule bg-surface px-4 py-4 lg:hidden">
             <div className="space-y-1">{navLinks(mobileNavClass)}</div>
-            <div className="mt-4 border-t border-rule pt-4 sm:hidden">
+            <div className="mt-4 flex items-center gap-2 border-t border-rule pt-4 sm:hidden">
+              <KidModeToggle />
               <AuthButton />
             </div>
           </nav>
