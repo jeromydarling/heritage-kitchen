@@ -196,6 +196,70 @@ create policy "household_members_write_self" on household_members
   with check (auth.uid() = user_id);
 
 -- ==========================================================================
+-- Kids (per-household profiles for "Cook with kids" mode)
+-- ==========================================================================
+--
+-- A household can have any number of named kid profiles. Each has an age
+-- that drives the kid/grown-up task split, and a color that tints the
+-- kid mode UI when that kid is active. The cook log carries an optional
+-- kid_id so the parent can look back and see "here is every recipe we
+-- cooked with Maeve this year" — the feature that makes the site cry-
+-- inducing for a grandparent twenty years from now.
+
+create table if not exists kids (
+  id uuid primary key default gen_random_uuid(),
+  household_id uuid not null references households (id) on delete cascade,
+  name text not null,
+  age smallint not null check (age >= 2 and age <= 17),
+  avatar_color text not null default 'terracotta' check (
+    avatar_color in ('terracotta','sage','cream','ink','butter','plum','sky')
+  ),
+  created_at timestamptz default now()
+);
+
+create index if not exists idx_kids_household
+  on kids (household_id);
+
+alter table kids enable row level security;
+
+drop policy if exists "kids_read" on kids;
+create policy "kids_read" on kids
+  for select using (
+    exists (
+      select 1 from household_members hm
+      where hm.household_id = kids.household_id
+        and hm.user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "kids_write" on kids;
+create policy "kids_write" on kids
+  for all using (
+    exists (
+      select 1 from household_members hm
+      where hm.household_id = kids.household_id
+        and hm.user_id = auth.uid()
+    )
+  )
+  with check (
+    exists (
+      select 1 from household_members hm
+      where hm.household_id = kids.household_id
+        and hm.user_id = auth.uid()
+    )
+  );
+
+-- Cook log gets an optional kid_id so a log entry can be attributed to
+-- "the day we cooked this with Jonah". Nullable — most entries are
+-- grown-up-only cooking.
+alter table cook_log add column if not exists kid_id uuid
+  references kids (id) on delete set null;
+
+create index if not exists idx_cook_log_kid
+  on cook_log (kid_id)
+  where kid_id is not null;
+
+-- ==========================================================================
 -- Meal plan
 -- ==========================================================================
 
