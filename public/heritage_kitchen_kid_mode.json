@@ -664,6 +664,263 @@
         "Measure the vinegar and butter into little dishes.",
         "Put out a whisk and a heat-safe spatula."
       ]
+    },
+    {
+      "id": "mf-chocolate-fudge",
+      "kid_jobs": [
+        "Butter the platter or baking pan ahead of time so the fudge has somewhere to land.",
+        "Measure the sugar, milk, and vanilla.",
+        "Count the drops of vanilla when the grown-up adds them."
+      ],
+      "grownup_jobs": [
+        "Cook the sugar, milk, butter, and chocolate on the stove — hot sugar syrup is one of the most dangerous things in a kitchen.",
+        "Watch the candy thermometer or run the cold-water test for soft-ball stage.",
+        "Beat the warm fudge vigorously until it thickens and loses its shine.",
+        "Pour the thickened fudge onto the buttered platter — the pot is very hot."
+      ],
+      "together_jobs": [
+        "Cut the slightly cooled fudge into squares with a buttered knife — grown-up holds the knife, kid marks where each cut should go."
+      ],
+      "teaching_moments": [
+        "What's 'soft-ball stage'? When sugar syrup gets hot enough, a little drop in cold water forms a soft ball you can flatten with your fingers. That's 234°F. Any colder and the fudge won't set; any hotter and it turns hard. The ball test is how cooks checked candy for hundreds of years before thermometers existed.",
+        "Why wait five minutes without stirring after you take it off the heat? The syrup is full of sugar ready to form crystals. If you stir too soon, you get big gritty crystals. Letting it rest lets the sugar calm down, and then beating later makes tiny smooth crystals instead.",
+        "Why does the fudge lose its shine when it's beaten? The shiny liquid turns into millions of tiny sugar crystals, and the light scatters off them instead of reflecting straight. Loss of shine is your sign it's ready to pour."
+      ],
+      "prep_ahead": [
+        "Butter the pan or platter generously.",
+        "Measure everything into little bowls so nothing has to be weighed mid-cook.",
+        "Set the candy thermometer on the pot, or fill a small glass with cold water for the ball test.",
+        "Put the kid on the stepstool at a safe distance — close enough to see, far enough that the hot pot can't reach them.",
+        "Have a buttered knife ready for cutting squares."
+      ]
+    },
+    {
+      "id": "mf-soft-custard",
+      "kid_jobs": [
+        "Crack the egg into a bowl.",
+        "Measure the sugar and the pinch of salt.",
+        "Beat the egg with the sugar until it's pale and a little frothy.",
+        "Sprinkle grated nutmeg over the finished custard."
+      ],
+      "grownup_jobs": [
+        "Heat the milk on the stove until it's steaming.",
+        "Set up the double boiler.",
+        "Stir the custard over gentle heat until it coats a spoon — and pull it off the second it's ready."
+      ],
+      "together_jobs": [
+        "Pour the hot milk slowly into the egg mixture while the other person whisks — grown-up pours in a thin stream, kid whisks fast."
+      ],
+      "teaching_moments": [
+        "Why add the hot milk slowly instead of all at once? Eggs start to cook at a lower temperature than boiling water. If you dump hot milk straight onto a beaten egg, you get little scrambled bits. Pouring slowly while whisking warms the egg up gently so it thickens instead of curdling. This is called 'tempering' the egg.",
+        "Why use a double boiler? The water in the outer pot can't get hotter than boiling, so the custard in the inner pot can't overcook. It's the safest way to cook anything with eggs in it.",
+        "When do you stop cooking the custard? When it coats the back of a spoon and a finger-drawn line stays clean. Any longer and the egg proteins tighten up and squeeze water out — the custard curdles and separates."
+      ],
+      "prep_ahead": [
+        "Set the milk out to warm up slightly.",
+        "Set up the double boiler with hot water in the bottom pot.",
+        "Grate the nutmeg fresh and put it in a small dish.",
+        "Put out a fine-mesh strainer in case you need to rescue the custard."
+      ]
+    },
+    {
+      "id": "mf-sponge-cake",
+      "kid_jobs": [
+        "Measure the sugar, flour, baking powder, and salt.",
+        "Sift the dry ingredients twice.",
+        "Add vanilla to the batter when it's time.",
+        "Pour the finished batter into the prepared pan."
+      ],
+      "grownup_jobs": [
+        "Preheat the oven to 350°F and prepare the pan.",
+        "Separate the eggs (yolks in one bowl, whites in another).",
+        "Pour the boiling water slowly into the yolks (kids shouldn't handle boiling liquid).",
+        "Put the cake in and out of the hot oven."
+      ],
+      "together_jobs": [
+        "Beat the egg yolks with sugar until they turn thick and pale.",
+        "Beat the egg whites to stiff peaks.",
+        "Fold the whites gently into the batter — slow turns of the spatula, all the way around the bowl."
+      ],
+      "teaching_moments": [
+        "Why does sponge cake have no butter in it? The lift comes almost entirely from beaten egg whites instead of from butter or baking powder. That's what gives sponge cake its airy, bouncy texture — it's held up by bubbles, not fat.",
+        "Why pour boiling water into the yolks? The heat cooks the yolks just enough to make them thicken up, so the batter has structure even before the flour goes in. It's an old trick for cakes that need to hold their shape without much flour.",
+        "Why does the cake shrink away from the sides of the pan when it's done? As the cake bakes, the bubbles at the edges cool and contract first. When you see the edge pulling away, the center is finally set too."
+      ],
+      "prep_ahead": [
+        "Preheat the oven to 350°F.",
+        "Grease and flour the cake pan.",
+        "Separate the eggs.",
+        "Pre-measure the dry ingredients into separate bowls.",
+        "Put a kettle on for the boiling water step.",
+        "Put out the sifter and a rubber spatula."
+      ]
+    },
+    {
+      "id": "mf-steamed-rice",
+      "kid_jobs": [
+        "Rinse the rice in a strainer until the water runs clear.",
+        "Measure the salt.",
+        "Stir the raisins in at the very end (if using)."
+      ],
+      "grownup_jobs": [
+        "Set up the double boiler.",
+        "Pour the boiling water over the rice.",
+        "Check and refill the bottom pot of the double boiler as it cooks."
+      ],
+      "together_jobs": [
+        "Cover the rice and note the start time — kid watches the clock, grown-up watches the pot."
+      ],
+      "teaching_moments": [
+        "Why does steamed rice take so much longer than boiled rice? In a double boiler, the rice never gets hotter than 212°F. It's a slow, gentle cook, and the rice drinks up the water a little at a time. The result is softer and fluffier than rice cooked hard on direct heat.",
+        "Why rinse rice in a strainer first? Rice grains come coated with loose starch from being milled. Rinsing washes the loose starch off so the grains stay separate instead of gluing themselves together into a clump."
+      ],
+      "prep_ahead": [
+        "Set up the double boiler with boiling water in the bottom pot.",
+        "Measure the rice and the salt.",
+        "Put out the raisins if using.",
+        "Boil extra water for topping off the bottom pot."
+      ]
+    },
+    {
+      "id": "mf-stuffed-eggs",
+      "kid_jobs": [
+        "Peel the cooled hard-boiled eggs.",
+        "Mash the yolks with the back of a spoon until smooth.",
+        "Measure the salt, mustard, and a dash of cayenne.",
+        "Roll the yolk mixture into little balls about the size of the original yolks.",
+        "Fit one ball into each egg white half.",
+        "Sprinkle paprika over the finished eggs."
+      ],
+      "grownup_jobs": [
+        "Hard-boil the eggs and cool them in cold water.",
+        "Cut each egg in half lengthwise with a sharp knife."
+      ],
+      "together_jobs": [
+        "Match each yolk ball with its own white — every stuffed egg gets the yolk that came out of it."
+      ],
+      "teaching_moments": [
+        "Why cool the eggs in cold water after boiling? Cold water stops the cooking and shrinks the egg slightly away from the shell. That's the trick to a clean peel — warm eggs stick, cold eggs slide right out.",
+        "Why mash the yolks so smooth before mixing in the oil? Lumpy yolks would give you bumpy filling. Mashing them to a powder first means everything blends into one creamy paste.",
+        "Why a dash of cayenne instead of a big spoonful? Cayenne is a tiny pepper with enormous heat. A dash is enough to wake up your tongue; more would drown out the egg."
+      ],
+      "prep_ahead": [
+        "Hard-boil the eggs ahead of time and cool them completely.",
+        "Set out mustard, olive oil, salt, cayenne, and paprika in little dishes.",
+        "Put out a sharp knife (grown-up use only), a mixing bowl, a fork, and a serving platter."
+      ]
+    },
+    {
+      "id": "mf-thimble-biscuits",
+      "kid_jobs": [
+        "Measure the flour, baking powder, and salt.",
+        "Sift the dry ingredients three times (this is the fun part).",
+        "Pat or roll the dough to a quarter inch thick.",
+        "Cut out rounds with a thimble, a small cutter, or the mouth of a tiny bottle.",
+        "Place each biscuit on the baking sheet."
+      ],
+      "grownup_jobs": [
+        "Preheat the oven to 450°F and grease the baking sheet.",
+        "Put the biscuits in and out of the hot oven (they only bake four to six minutes — don't wander off).",
+        "Cube the cold butter."
+      ],
+      "together_jobs": [
+        "Cut the cold butter into the flour with fingertips until the mixture looks like coarse crumbs.",
+        "Add the milk a little at a time and stir gently with a fork until a soft dough comes together."
+      ],
+      "teaching_moments": [
+        "Why are they called thimble biscuits? Because the cutter was a sewing thimble — the little metal cap a seamstress wore to push a needle. Back then every kitchen had thimbles, and a child could use one to cut tiny biscuits the size of a quarter.",
+        "Why cut the rounds so close together? Every scrap you re-roll gets a little tougher because the flour develops more gluten each time you handle it. Cutting close wastes less dough and gives you tender biscuits on the first pass.",
+        "Why are these tiny biscuits so fast to bake? Small pieces cook through before they can dry out. Four to six minutes is all it takes — blink and you miss them."
+      ],
+      "prep_ahead": [
+        "Preheat the oven to 450°F.",
+        "Grease the baking sheet.",
+        "Cube the butter and keep it cold in the fridge.",
+        "Measure the dry ingredients into separate small bowls.",
+        "Put out a sifter, a rolling pin, and a thimble or small round cutter."
+      ]
+    },
+    {
+      "id": "mf-walnut-kisses",
+      "kid_jobs": [
+        "Butter the baking sheet or the piece of parchment.",
+        "Measure both sugars into the saucepan.",
+        "Place a walnut half gently on top of each kiss once the grown-up has dropped the mounds."
+      ],
+      "grownup_jobs": [
+        "Cook the sugar syrup on the stove to soft-ball stage — another job where hot syrup makes this adult-only.",
+        "Pour the hot syrup slowly into the beaten egg whites in a thin stream.",
+        "Drop the meringue mounds onto the prepared sheet quickly before the mixture stiffens."
+      ],
+      "together_jobs": [
+        "Beat the egg white to stiff peaks — kid presses the mixer button, grown-up holds the bowl and times it.",
+        "Beat the mixture as the syrup goes in — kid runs the mixer, grown-up pours."
+      ],
+      "teaching_moments": [
+        "Why are they called kisses? They're little soft mounds the size of a kiss. Nineteenth-century Americans named a whole family of meringue candies 'kisses' long before Hershey's claimed the word for chocolate.",
+        "Why pour the hot syrup in a thin stream? If you dump it in all at once, the heat shocks the egg whites and they collapse. A thin stream cooks the whites gently as you go — it's an Italian meringue trick that's been used for centuries.",
+        "Why does the mixture get shiny as it cools? When the egg white proteins hold hands tightly around millions of little air bubbles, the surface looks glossy. That's your sign the meringue is stable and won't deflate."
+      ],
+      "prep_ahead": [
+        "Butter the baking sheet or lay out parchment paper.",
+        "Separate the egg white and put it in a clean, grease-free bowl.",
+        "Set out the walnut halves in a small dish so they're easy to grab.",
+        "Put out the candy thermometer or a glass of cold water for the ball test.",
+        "Keep the kid at a safe distance from the hot syrup pot."
+      ]
+    },
+    {
+      "id": "mf-white-sauce",
+      "kid_jobs": [
+        "Measure the butter, flour, milk, salt, and pepper into little bowls.",
+        "Stir the finished sauce when it's cool enough to keep a spoon moving safely."
+      ],
+      "grownup_jobs": [
+        "Melt the butter on the stove.",
+        "Cook the butter and flour together for a minute to make the roux.",
+        "Whisk the milk in a little at a time over the heat — this needs a steady hand and constant attention so it doesn't lump or scorch."
+      ],
+      "together_jobs": [
+        "Warm the milk ahead of time — kid holds the saucepan steady while grown-up pours.",
+        "Taste the finished sauce together and decide if it needs more salt."
+      ],
+      "teaching_moments": [
+        "What's a roux? Butter and flour cooked together for a minute. It sounds simple but it's the secret behind most warm creamy sauces — gravies, mac and cheese sauce, cream of mushroom soup. Once you know a roux, you know a hundred sauces.",
+        "Why cook the flour for a minute before adding milk? Raw flour tastes chalky. Cooking it briefly in the butter turns off that raw taste and makes the finished sauce taste smooth.",
+        "Why does white sauce sometimes get lumpy? Cold liquid hitting hot roux can seize the flour into little balls. The trick is to add the milk slowly, whisking hard the whole time — or to warm the milk first so the temperature shock is smaller."
+      ],
+      "prep_ahead": [
+        "Warm the milk in a separate small saucepan.",
+        "Measure the butter and flour into little bowls.",
+        "Put out a small saucepan, a whisk, and a wooden spoon."
+      ]
+    },
+    {
+      "id": "mf-tea",
+      "kid_jobs": [
+        "Measure the loose tea leaves into the warmed pot.",
+        "Start a timer for the steep.",
+        "Pour the finished tea into cups through a strainer (for older kids with steady hands)."
+      ],
+      "grownup_jobs": [
+        "Boil the water.",
+        "Rinse the teapot with boiling water to warm it.",
+        "Pour the boiling water over the tea leaves."
+      ],
+      "together_jobs": [
+        "Cover the pot and watch the clock — grown-up holds the kettle, kid counts the minutes out loud."
+      ],
+      "teaching_moments": [
+        "Why warm the pot first with boiling water? A cold pot would cool the water the moment you poured it in, and the tea wouldn't steep at the right temperature. Warming the pot keeps the heat steady for a better brew.",
+        "Why four to five minutes and not longer? Black tea releases its good flavor first and then starts releasing bitter compounds called tannins. Five minutes is the sweet spot: full flavor, not too bitter. Leave it in longer and the tea turns harsh.",
+        "Why use freshly boiling water? Water that's been boiled for a long time has lost its dissolved oxygen, and tea brewed in flat water tastes flat too. Fresh hot water brings out the best in the leaves."
+      ],
+      "prep_ahead": [
+        "Boil the water.",
+        "Warm the teapot.",
+        "Set out the tea, a strainer, cups, and honey or milk for serving.",
+        "Set a timer within reach."
+      ]
     }
   ],
   "lessons": []
