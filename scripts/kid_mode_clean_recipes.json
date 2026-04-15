@@ -1,0 +1,1524 @@
+[
+  {
+    "id": "mf-apple-snow",
+    "title": "Apple Snow",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "dessert",
+      "fruit",
+      "elegant",
+      "no-bake"
+    ],
+    "original_recipe": "NO. 27.--APPLE SNOW.\n\n      1. Pare and slice apples, dropping into cold water.\n\n      2. Cook slowly until soft.\n\n      3. Mash well and measure.\n\n      4. To every cupful, allow\n\n    1/4 cup powdered sugar,\n    white of 1 egg, well beaten.\n\n      5. Add a spoonful of each to apples until used,\n      stirring in lightly each time.\n\n      6. Add 1 drop vanilla for each cup of apples.\n\n      7. Serve with cream.",
+    "modern_ingredients": [
+      "4 medium apples (tart varieties like Granny Smith work best), peeled and sliced",
+      "For every cup of cooked apple purée: 1/4 cup powdered sugar and 1 egg white, beaten stiff",
+      "1 drop vanilla extract per cup of purée",
+      "Heavy cream for serving"
+    ],
+    "modern_instructions": [
+      "Peel, core, and slice apples. Drop into cold water as you work to prevent browning.",
+      "Drain and cook apples in a saucepan over low heat with just a splash of water, stirring occasionally, until completely soft, about 15–20 minutes.",
+      "Mash apples until smooth. Measure the purée.",
+      "Beat the egg whites to stiff peaks. Do not add sugar until stiff.",
+      "Gently fold alternating spoonfuls of powdered sugar and beaten egg whites into the warm apple purée, one spoonful at a time, until all are incorporated.",
+      "Add one drop of vanilla per cup of purée and fold in gently.",
+      "Spoon into individual glasses or a serving bowl. Chill briefly.",
+      "Serve with a pour of cold heavy cream."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-baked-apples",
+    "title": "Baked Apples",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "desserts",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "dessert",
+      "fruit",
+      "budget",
+      "comfort-food"
+    ],
+    "original_recipe": "NO. 15.--BAKED APPLES.\n\n      1. Wipe large apples.\n\n      2. Take out cores with apple corer or sharp knife.\n\n      3. Place in earthen or enamel dish.\n\n      4. Fill center of each apple with sugar.\n\n      5. Pour water into dish, allowing 2 tablespoons to\n      each apple.\n\n      6. Bake in a hot oven one half hour, or until soft.",
+    "modern_ingredients": [
+      "4 large baking apples (Granny Smith, Honeycrisp, or Rome)",
+      "4 tablespoons granulated or brown sugar",
+      "8 tablespoons water (2 per apple)",
+      "Optional: cinnamon, raisins, butter, or maple syrup to fill"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 375°F (190°C).",
+      "Wipe apples clean. Core each apple from the top, leaving the bottom intact (use an apple corer or paring knife), creating a cavity about 3/4 inch wide.",
+      "Place apples upright in a baking dish.",
+      "Fill each cavity with 1 tablespoon of sugar (or a mix of brown sugar and cinnamon).",
+      "Add 2 tablespoons of water around each apple.",
+      "Bake 30–40 minutes until the apples are completely soft when pierced with a fork and the skins are starting to burst.",
+      "Serve warm with cream, ice cream, or custard."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-baked-potatoes",
+    "title": "Baked Potatoes",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "kids-in-the-kitchen",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "budget",
+      "beginner",
+      "sides",
+      "comfort-food"
+    ],
+    "original_recipe": "NO. 5.--BAKED POTATOES.\n\n      1. Choose potatoes of the same size--rather large.\n\n      2. Scrub well, and wipe.\n\n      3. Bake in a hot oven from 30 to 45 minutes, or until\n      soft when pressed between thumb and fingers.\n\n      4. Roll each between the fingers: this makes them\n      mealy.\n\n      5. Serve on a napkin.",
+    "modern_ingredients": [
+      "4 large russet potatoes, uniform in size",
+      "Optional: butter, sour cream, salt for serving"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 425°F (220°C).",
+      "Scrub potatoes thoroughly and pat dry.",
+      "Prick each potato several times with a fork (modern practice to prevent bursting).",
+      "Place directly on the oven rack or on a baking sheet.",
+      "Bake 45–60 minutes, until very soft when squeezed gently with a towel-protected hand.",
+      "Remove from oven and roll each potato back and forth briefly between your palms — this helps create a fluffy, mealy interior.",
+      "Serve on a folded napkin or cloth."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-baking-powder-biscuits",
+    "title": "Baking Powder Biscuits",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "breads",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "baking",
+      "breakfast",
+      "beginner"
+    ],
+    "original_recipe": "NO. 17.--BAKING POWDER BISCUITS.\n\n      1. Make exactly the same as Thimble Biscuits (No. 16),\n      only pat the dough out about three-quarters of an inch\n      thick. Prick with a fork.\n\n      2. Cut with a biscuit cutter, and place in pan, a\n      little distance apart.\n\n      3. Bake in a quick oven from 12 to 14 minutes.",
+    "modern_ingredients": [
+      "1 cup all-purpose flour",
+      "2 teaspoons baking powder",
+      "1/4 teaspoon salt",
+      "1 tablespoon cold unsalted butter",
+      "Scant 1/2 cup whole milk"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 450°F (230°C). Grease a baking sheet.",
+      "Sift together flour, baking powder, and salt three times.",
+      "Rub in the cold butter with fingertips until the mixture resembles coarse crumbs.",
+      "Add milk gradually, mixing with a knife just until a soft dough forms.",
+      "Turn onto a floured surface and pat or roll to 3/4 inch thickness.",
+      "Prick the surface with a fork.",
+      "Cut with a 2-inch round biscuit cutter. Place on prepared pan a little distance apart.",
+      "Bake 12–14 minutes until risen and golden on top."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-blackberry-or-whortleberry-pudding",
+    "title": "Blackberry or Whortleberry Pudding",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "easy",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "BLACKBERRY OR WHORTLEBERRY PUDDING\n\nThree cupfuls of flour, one cupful of molasses, half a cupful of milk,\na teaspoonful of salt, a little cloves and cinnamon, a teaspoonful of\nsoda dissolved in a little of the milk. Stir in a quart of\nhuckleberries, floured. Boil in a well-buttered mold two hours. Serve\nwith brandy sauce.",
+    "modern_ingredients": [
+      "Three cupfuls of flour",
+      "one cupful of molasses",
+      "half a cupful of milk",
+      "a teaspoonful of salt",
+      "a little cloves and cinnamon",
+      "a teaspoonful of",
+      "soda dissolved in a little of the milk. Stir in a quart of",
+      "huckleberries",
+      "floured. Boil in a well-buttered mold two hours. Serve\nwith brandy sauce"
+    ],
+    "modern_instructions": [
+      "Three cupfuls of flour, one cupful of molasses, half a cupful of milk,\na teaspoonful of salt, a little cloves and cinnamon, a teaspoonful of\nsoda dissolved in a little of the milk.",
+      "Stir in a quart of\nhuckleberries, floured. Boil in a well-buttered mold two hours. Serve\nwith brandy sauce."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-boiled-mutton",
+    "title": "Boiled Mutton",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "main-dishes",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "main-dish",
+      "comfort-food",
+      "adventurous"
+    ],
+    "original_recipe": "NO. 25.--BOILED MUTTON.\n\n      About 3 pounds rack of mutton or \"yearling.\"\n\n      1. Wipe with a damp cloth.\n\n      2. Pour 3 cups boiling water into a large pot.\n\n      3. Throw in 2 peeled onions.\n\n      4. Put in the meat. Cover.\n\n      5. Boil 10 minutes.\n\n      6. Draw pot to back of stove where it will simmer, or\n      just bubble, until meat is tender when tried with a\n      fork, which will be in about 1-1/2 hours.\n\n      7. Take out the meat.\n\n      8. Skim off the fat from the surface of the liquor; or\n      if there is time, cool, and remove the hardened fat.",
+    "modern_ingredients": [
+      "3 pounds bone-in lamb shoulder, rack of lamb, or lamb chops (mutton is difficult to find today",
+      "young lamb is the best substitute)",
+      "3 cups boiling water",
+      "2 medium onions, peeled",
+      "Salt and pepper to taste"
+    ],
+    "modern_instructions": [
+      "Wipe the meat with a damp cloth.",
+      "Bring 3 cups of water to a boil in a large heavy pot. Add the peeled onions.",
+      "Add the meat to the pot. Cover.",
+      "Boil hard for 10 minutes.",
+      "Reduce heat to a very gentle simmer (barely bubbling). Cover and cook 1.5 hours, or until the meat is very tender when pierced with a fork.",
+      "Remove the meat from the pot and keep warm.",
+      "Skim fat from the surface of the cooking liquid, or refrigerate the liquid to solidify and remove the fat layer before reheating.",
+      "Use the defatted liquid to make Parsley Gravy (No. 26)."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-boiled-potatoes",
+    "title": "Boiled Potatoes",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "kids-in-the-kitchen",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "budget",
+      "beginner",
+      "sides"
+    ],
+    "original_recipe": "NO. 6.--BOILED POTATOES.\n\n      1. Wash potatoes.\n\n      2. Pare, throwing into cold water.\n\n      3. Drain; cover with boiling water, allowing 1\n      tablespoon salt to every twelve potatoes.\n\n      4. Let boil 1/2 hour, or until the largest is soft\n      when pierced with a fork.\n\n      5. Drain off all the water.\n\n      6. Shake over fire, or place on back of stove to dry\n      off the potatoes.",
+    "modern_ingredients": [
+      "4–6 medium potatoes, peeled",
+      "1 tablespoon salt",
+      "Water to cover"
+    ],
+    "modern_instructions": [
+      "Wash and peel potatoes. Drop into cold water as you peel to prevent browning.",
+      "Drain and place in a saucepan. Cover with cold or boiling water and add the salt.",
+      "Bring to a boil, then cook at a steady boil for 25–30 minutes, until the largest potato is easily pierced with a fork.",
+      "Drain completely.",
+      "Return the pot to low heat briefly and shake gently, or leave uncovered in a warm spot, to steam off excess moisture.",
+      "Serve plain or use in other recipes."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-boiled-rice",
+    "title": "Boiled Rice",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "sides-and-vegetables",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "budget",
+      "beginner",
+      "sides",
+      "gluten-free"
+    ],
+    "original_recipe": "NO. 22.--BOILED RICE.\n\n      Use a plain boiler and a large quantity of salted\n      boiling water.\n\n    1/2 cup rice\n    5 cups boiling water\n    1/2 teaspoon salt\n\n      1. Wash rice by putting it in a strainer and shaking\n      in a pan of water.\n\n      2. Drop a few grains at a time into boiling water,\n      stirring well to prevent sticking.\n\n      3. Boil rapidly 25 minutes, or until soft when pressed\n      between the fingers.\n\n      4. Drain through a colander. Pour over it 2 cups\n      boiling water.\n\n      5. Set in a warm place to dry off, until ready to\n      serve.",
+    "modern_ingredients": [
+      "1/2 cup long-grain white rice",
+      "5 cups water",
+      "1/2 teaspoon salt"
+    ],
+    "modern_instructions": [
+      "Rinse rice in a strainer under cold water until the water runs clear.",
+      "Bring 5 cups of water to a rolling boil in a large saucepan. Add salt.",
+      "Add rice a little at a time, stirring well after each addition.",
+      "Boil rapidly, uncovered, for 20–25 minutes until grains are completely soft when pressed between fingers.",
+      "Drain through a colander. Pour 2 cups of fresh boiling water over the rice in the colander to rinse.",
+      "Return to the warm pot or spread on a warm dish to dry off before serving."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-bread-pudding",
+    "title": "Bread Pudding",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "desserts",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "dessert",
+      "comfort-food",
+      "budget"
+    ],
+    "original_recipe": "NO. 37.--BREAD PUDDING.\n\n      1. Cut slices of stale bread into squares of about one\n      half inch.\n\n      2. For 2 cups bread, allow\n\n    1 pint milk (2 cups)\n    2 tablespoons sugar\n    2 eggs\n    1/4 teaspoon vanilla\n\n      3. Moisten bread with hot water.\n\n      4. Butter pudding dish.\n\n      5. Put into it the moistened bread.\n\n      6. Beat yolks of eggs; add sugar; add milk.\n\n      7. Pour this over the bread.\n\n      8. Beat whites of eggs. Add 2 tablespoons powdered\n      sugar. Beat well.\n\n      9. Spread this over top of pudding.\n\n      10. Bake in moderate oven one half hour.\n\n      11. Serve with Hard Sauce or cream.",
+    "modern_ingredients": [
+      "2 cups stale bread, cut into 1/2-inch cubes",
+      "2 cups whole milk",
+      "2 large eggs, separated",
+      "2 tablespoons granulated sugar",
+      "1/4 teaspoon vanilla extract",
+      "2 tablespoons powdered sugar (for meringue)",
+      "Hot water (to moisten bread)",
+      "Butter (for greasing dish)"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 350°F (175°C). Butter a 1.5-quart baking dish.",
+      "Cut stale bread into 1/2-inch squares.",
+      "Pour a small amount of hot water over the bread cubes to moisten them slightly. Drain any excess.",
+      "Arrange the moistened bread in the buttered dish.",
+      "Beat egg yolks with granulated sugar. Add milk and vanilla, mixing well.",
+      "Pour the custard mixture over the bread.",
+      "Beat egg whites to soft peaks. Add powdered sugar and beat to stiff, glossy peaks.",
+      "Spread the meringue over the top of the pudding.",
+      "Bake 30 minutes until the custard is set and the meringue is golden.",
+      "Serve warm with Hard Sauce (No. 39) or cream."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-buttered-toast",
+    "title": "Buttered Toast",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "kids-in-the-kitchen",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "quick",
+      "vegetarian",
+      "beginner",
+      "breakfast",
+      "comfort-food"
+    ],
+    "original_recipe": "NO. 2.--BUTTERED TOAST.\n\n      1. Spread toasted bread evenly with butter.\n\n      2. Pile one slice on top of the other, and cover with\n      a bowl.\n\n      3. Place in oven.",
+    "modern_ingredients": [
+      "2 slices Plain Toast (see No. 1)",
+      "1–2 tablespoons unsalted butter, softened"
+    ],
+    "modern_instructions": [
+      "Make Plain Toast (No. 1).",
+      "While still hot, spread each slice evenly with butter.",
+      "Stack the slices on top of each other and cover with an oven-safe bowl or lid.",
+      "Place in a warm oven (about 200°F / 95°C) for a minute or two to keep warm until ready to serve."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-cocoa",
+    "title": "Cocoa",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "beverages",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "beverage",
+      "chocolate",
+      "comfort-food",
+      "quick"
+    ],
+    "original_recipe": "NO. 18.--COCOA.\n\n      For each cup:\n\n    1 tablespoon cocoa\n    1 tablespoon sugar\n    1/2 cup boiling water\n    1/2 cup milk\n\n      1. Heat milk.\n\n      2. Mix cocoa and sugar.\n\n      3. Pour boiling water on them gradually, making a\n      smooth paste.\n\n      4. Add the milk, and cook a half minute.\n\n      5. Beat with an egg beater.",
+    "modern_ingredients": [
+      "1 tablespoon unsweetened cocoa powder",
+      "1 tablespoon granulated sugar",
+      "1/2 cup boiling water",
+      "1/2 cup whole milk"
+    ],
+    "modern_instructions": [
+      "Heat the milk in a small saucepan until steaming. Do not boil.",
+      "In a mug or small bowl, mix together the cocoa powder and sugar.",
+      "Gradually pour the boiling water over the cocoa-sugar mixture, stirring constantly to make a smooth paste, then a liquid.",
+      "Add the warm milk and stir well.",
+      "Pour into a small saucepan and heat over medium heat for about 30 seconds.",
+      "Beat briefly with a small whisk or hand frother until slightly frothy. Serve hot."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-coffee",
+    "title": "Coffee",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "beverages",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "quick",
+      "breakfast",
+      "beverage"
+    ],
+    "original_recipe": "NO. 11.--COFFEE.\n\n      1. Put into coffee pot 1 rounded tablespoon ground\n      coffee for each cup needed.\n\n      2. Pour on boiling water, allowing 1 cup to every\n      tablespoon coffee used.\n\n      3. Let come to a boil three times, stirring down each\n      time.\n\n      4. Draw off the fire. Pour in 1 tablespoon cold water\n      for each cup.\n\n      5. Let stand in a warm place 3 minutes to settle\n      grounds. Serve.\n\n      If not used immediately, strain into another warmed\n      pot.",
+    "modern_ingredients": [
+      "4 rounded tablespoons coarse-ground coffee",
+      "4 cups cold water",
+      "4 tablespoons cold water (for settling)"
+    ],
+    "modern_instructions": [
+      "Place ground coffee in a stovetop coffee pot or medium saucepan.",
+      "Pour 4 cups of cold water over the grounds and bring to a boil over medium heat.",
+      "Each time it comes to a boil, stir it down and let it come to a boil again — repeat 3 times.",
+      "Remove from heat. Add 4 tablespoons cold water (1 per cup) to help settle the grounds to the bottom.",
+      "Let stand in a warm place for 3 minutes.",
+      "Pour slowly through a fine mesh strainer into warmed cups or a pre-warmed pot."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-cream-cake",
+    "title": "Cream Cake",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "easy",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "CREAM CAKE\n\nFour eggs, whites and yolks beaten separately, two teacups of sugar,\none cup of sweet cream, two heaping cupfuls of flour, one teaspoonful\nof soda, mix two teaspoonfuls of cream of tartar in the flour before\nsifting. Add the whites the last thing before the flour and stir that\nin gently without beating.",
+    "modern_ingredients": [
+      "Four eggs",
+      "whites and yolks beaten separately",
+      "two teacups of sugar",
+      "one cup of sweet cream",
+      "two heaping cupfuls of flour",
+      "one teaspoonful\nof soda"
+    ],
+    "modern_instructions": [
+      "Four eggs, whites and yolks beaten separately, two teacups of sugar,\none cup of sweet cream, two heaping cupfuls of flour, one teaspoonful\nof soda, mix two teaspoonfuls of cream of tartar in the flour before\nsifting.",
+      "Add the whites the last thing before the flour and stir that\nin gently without beating."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-creamed-new-cabbage",
+    "title": "Creamed New Cabbage",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "sides-and-vegetables",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "sides",
+      "budget",
+      "comfort-food"
+    ],
+    "original_recipe": "NO. 36.--CREAMED NEW CABBAGE.\n\n      1. Cut in half and wash well a young green cabbage.\n\n      2. Cut out and throw away the hard stem part.\n\n      3. Make ready a kettle of boiling water. Put in\n      cabbage. Leave uncovered.\n\n      4. When the water boils, throw in 1 teaspoon salt and\n      1/4 teaspoon baking soda (or bicarbonate of soda).\n\n      5. Boil gently about half hour, or until it begins to\n      lose its bright green color. Lift out with skimmer.\n\n      6. Pour over it White Sauce just before serving.",
+    "modern_ingredients": [
+      "1 small young green cabbage (or half a large head)",
+      "1 teaspoon salt",
+      "1/4 teaspoon baking soda",
+      "1 cup White Sauce (No. 14)"
+    ],
+    "modern_instructions": [
+      "Cut cabbage in half. Wash well under running water. Remove and discard the hard core.",
+      "Bring a large pot of water to a rolling boil. Add the cabbage, uncovered.",
+      "When the water returns to a boil, add salt and baking soda.",
+      "Boil gently, uncovered, for 20–30 minutes until the cabbage is tender and has begun to lose its bright green color.",
+      "Lift cabbage out with a slotted spoon or skimmer. Drain well.",
+      "Make White Sauce (No. 14) and pour over the cabbage just before serving."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-dream-cake",
+    "title": "Dream Cake",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "baking",
+      "dessert",
+      "party"
+    ],
+    "original_recipe": "NO. 32.--DREAM CAKE.\n\n    4 tablespoons butter\n    1 cup sugar\n    2 eggs\n    1/2 cup milk\n    1-1/4 cups flour\n    2 teaspoons baking powder\n    1/8 teaspoon ground mace\n    dash of salt\n    1 teaspoon vanilla\n\n      1. Put butter in a bowl; add sugar. \"Cream\" or rub\n      thoroughly together.\n\n      2. Beat yolks of eggs. Add to butter and sugar,\n      stirring well.\n\n      3. Mix and sift twice flour, baking powder, mace and\n      salt.\n\n      4. Add one-third of the milk to the yolks, butter and\n      sugar.\n\n      5. Sift in one-third of the flour. Do this until all\n      the milk and flour are used, beating well each time.\n\n      6. Add vanilla. Beat well.\n\n      7. Beat white of eggs light. Fold them into the cake.\n\n      8. Grease shallow pan as in No. 31. Pour in the cake.\n\n      9. Bake in moderate oven about 35 minutes, or until it\n      shrinks from the pan.",
+    "modern_ingredients": [
+      "4 tablespoons (1/2 stick) unsalted butter, softened",
+      "1 cup granulated sugar",
+      "2 large eggs, separated",
+      "1/2 cup whole milk",
+      "1 1/4 cups all-purpose flour",
+      "2 teaspoons baking powder",
+      "1/8 teaspoon ground mace (or substitute nutmeg)",
+      "Dash of salt",
+      "1 teaspoon vanilla extract"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 350°F (175°C). Grease and flour a 9-inch round pan.",
+      "Cream the softened butter and sugar together until light and fluffy, 3–5 minutes.",
+      "Beat egg yolks and add to butter-sugar mixture, stirring well.",
+      "Sift together flour, baking powder, mace, and salt twice.",
+      "Add the milk and flour mixture to the batter alternately in three additions each, beginning and ending with flour. Beat well after each addition.",
+      "Add vanilla and beat well.",
+      "In a separate bowl, beat egg whites to stiff peaks. Gently fold into the batter.",
+      "Pour into prepared pan and smooth the top.",
+      "Bake 35 minutes or until the cake shrinks from the sides and a toothpick comes out clean.",
+      "Cool in pan 10 minutes, then turn out onto a wire rack."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-favorite-cookies",
+    "title": "Favorite Cookies",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "easy",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "FAVORITE COOKIES\n\nOne cup of butter, one and a half cups of sugar, one-half cup of sour\nmilk one level teaspoonful of soda, a teaspoonful of grated nutmeg\nFlour enough to roll; make quite soft. Put a tablespoonful of fine\nsugar on a plate and dip the tops of each as you cut them out. Place\non buttered tins and bake in a quick oven a light brown.",
+    "modern_ingredients": [
+      "One cup of butter, one and a half cups of sugar, one-half cup of sour",
+      "milk one level teaspoonful of soda, a teaspoonful of grated nutmeg",
+      "Flour enough to roll; make quite soft. Put a tablespoonful of fine",
+      "sugar on a plate and dip the tops of each as you cut them out. Place",
+      "on buttered tins and bake in a 400-425°F (200-220°C) oven a light brown"
+    ],
+    "modern_instructions": [
+      "One cup of butter, one and a half cups of sugar, one-half cup of sour\nmilk one level teaspoonful of soda, a teaspoonful of grated nutmeg\nFlour enough to roll; make quite soft.",
+      "Put a tablespoonful of fine\nsugar on a plate and dip the tops of each as you cut them out. Place\non buttered tins and bake in a 400-425°F (200-220°C) oven a light brown."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-feather-cake",
+    "title": "Feather Cake",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "FEATHER CAKE\n\nOne egg, one cup of sugar, one tablespoonful of cold butter, half a\ncup of milk, one and one-half cups of flour, one teaspoonful of cream\nof tartar, half a teaspoonful of soda. A nice plain cake--to be eaten\nwhile it is fresh. A spoonful of dried apple sauce or of peach sauce,\na spoonful of jelly, the same of lemon extract, nutmeg, cinnamon,\ncloves and spice--ground--or half a cupful of raisins might be added\nfor a change.",
+    "modern_ingredients": [
+      "One egg",
+      "one cup of sugar",
+      "one tablespoonful of cold butter",
+      "half a\ncup of milk",
+      "one and one-half cups of flour",
+      "one teaspoonful of cream\nof tartar",
+      "half a teaspoonful of soda. A nice plain cake--to be eaten",
+      "while it is fresh. A spoonful of dried apple sauce or of peach sauce",
+      "a spoonful of jelly",
+      "the same of lemon extract",
+      "nutmeg",
+      "cinnamon",
+      "cloves and spice--ground--or half a cupful of raisins might be added",
+      "for a change"
+    ],
+    "modern_instructions": [
+      "One egg, one cup of sugar, one tablespoonful of cold butter, half a\ncup of milk, one and one-half cups of flour, one teaspoonful of cream\nof tartar, half a teaspoonful of soda.",
+      "A nice plain cake--to be eaten\nwhile it is fresh. A spoonful of dried apple sauce or of peach sauce,\na spoonful of jelly, the same of lemon extract, nutmeg, cinnamon,\ncloves and spice--ground--or half a cupful of raisins might be added\nfor a change."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-fruit-cookies",
+    "title": "Fruit Cookies",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "FRUIT COOKIES\n\nOne cupful and a half of sugar, one cupful of butter, one-half cup of\nsweet milk, one egg, two teaspoonfuls of baking powder, a teaspoonful\nof grated nutmeg, three tablespoonfuls of English currants or chopped\nraisins. Mix soft and roll out, using just enough flour to stiffen\nsufficiently. Cut out with a large cutter, wet the tops with milk and\nsprinkle sugar over them. Bake on buttered tins in a quick oven.\n\nCRISP COOKIES. (Very Nice.)\n\nOne cup of butter, two cups of sugar, three eggs well beaten, a\nteaspoonful of soda and two of cream of tartar, spoonful of milk, one\nteaspoonful of nutmeg and one of cinnamon. Flour enough to make a soft\ndough just stiff enough to roll out. Try a pint of sifted flour to\nbegin with, working it in gradually. Spread a little sweet milk over\neach and sprinkle with sugar. Bake in a quick oven a light brown.",
+    "modern_ingredients": [
+      "One cupful and a half of sugar",
+      "one cupful of butter",
+      "one-half cup of\nsweet milk",
+      "one egg",
+      "two teaspoonfuls of baking powder",
+      "a teaspoonful\nof grated nutmeg",
+      "three tablespoonfuls of English currants or chopped",
+      "raisins. Mix soft and roll out",
+      "using just enough flour to stiffen\nsufficiently. Cut out with a large cutter",
+      "wet the tops with milk and",
+      "sprinkle sugar over them. Bake on buttered tins in a 400-425°F (200-220°C) oven"
+    ],
+    "modern_instructions": [
+      "CRISP COOKIES. (Very Nice.)",
+      "One cup of butter, two cups of sugar, three eggs well beaten, a\nteaspoonful of soda and two of cream of tartar, spoonful of milk, one\nteaspoonful of nutmeg and one of cinnamon.",
+      "Flour enough to make a soft\ndough just stiff enough to roll out. Try a pint of sifted flour to\nbegin with, working it in gradually.",
+      "Spread a little sweet milk over\neach and sprinkle with sugar. Bake in a 400-425°F (200-220°C) oven a light brown."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-gingerbread-cookies",
+    "title": "Gingerbread Cookies",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "kids-in-the-kitchen",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "baking",
+      "holiday",
+      "spiced",
+      "dessert",
+      "fun"
+    ],
+    "original_recipe": "NO. 19.--GINGERBREAD COOKIES.\n\n    1/2 cup molasses\n    2 tablespoons butter\n    2 tablespoons lard flour\n    1/2 tablespoon ginger\n    1/2 teaspoon salt\n    1/2 teaspoon baking soda\n    1 tablespoon warm water\n\n      1. Warm the molasses.\n\n      2. Put the butter and lard in a bowl. Pour over them\n      the molasses.\n\n      3. Dissolve soda in the warm water. Add to the\n      molasses.\n\n      4. Sift ginger, salt and 1/2 cup flour together.\n\n      5. Sift into the molasses, beating well. If necessary,\n      add more flour to make a soft dough.\n\n      6. Grease a shallow pan.\n\n      7. Roll the dough out 1/3 inch thick.\n\n      8. Cut out with a little round cutter, dipping it into\n      flour each time.\n\n      Place cookies some distance apart on the pan. Bake\n      about 10 minutes.\n\n      NOTE.--Instead of rolling out, little spoonfuls may be\n      dropped far apart on the pan and flattened with the\n      bottom of a round tin cup.",
+    "modern_ingredients": [
+      "1/2 cup molasses",
+      "2 tablespoons unsalted butter",
+      "2 tablespoons vegetable shortening (substitute for lard)",
+      "1/2 teaspoon baking soda dissolved in 1 tablespoon warm water",
+      "1/2 tablespoon ground ginger",
+      "1/2 teaspoon salt",
+      "1/2 to 1 cup all-purpose flour (enough to make a soft dough)"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 375°F (190°C). Grease a baking sheet.",
+      "Warm the molasses gently in a small saucepan.",
+      "Put butter and shortening in a bowl. Pour the warm molasses over them and stir to melt.",
+      "Dissolve baking soda in warm water and add to the molasses mixture.",
+      "Sift together ginger, salt, and 1/2 cup flour. Sift into the molasses, beating well. Add more flour as needed to make a soft, rollable dough.",
+      "Roll out on a floured surface to 1/3 inch thick. Cut with a round cutter (or drop by spoonfuls and flatten).",
+      "Place well apart on the greased baking sheet.",
+      "Bake about 10 minutes until set. Cool on a wire rack."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-gooseberry-trifle",
+    "title": "Gooseberry Trifle",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "presidential",
+      "kid-friendly"
+    ],
+    "original_recipe": "GOOSEBERRY TRIFLE\n\nOne quart of gooseberries, sugar to taste, one pint of custard, a\nplateful of whipped cream.\n\nPut the gooseberries into a jar, with sufficient moist sugar to\nsweeten them, and boil them until reduced to a pulp. Put this pulp at\nthe bottom of a trifle dish; pour over it a pint of custard, and, when\ncold, cover with whipped cream. The cream should be whipped the day\nbefore it is wanted for table, as it will then be so much firmer and\nmore solid. This dish may be garnished as fancy dictates.",
+    "modern_ingredients": [
+      "One quart of gooseberries",
+      "sugar to taste",
+      "one pint of custard",
+      "a\nplateful of whipped cream"
+    ],
+    "modern_instructions": [
+      "Put the gooseberries into a jar, with sufficient moist sugar to\nsweeten them, and boil them until reduced to a pulp. Put this pulp at\nthe bottom of a trifle dish; pour over it a pint of custard, and, when\ncold, cover with whipped cream.",
+      "The cream should be whipped the day\nbefore it is wanted for table, as it will then be so much firmer and\nmore solid. This dish may be garnished as fancy dictates."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-hard-sauce",
+    "title": "Hard Sauce",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "sauces-and-condiments",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "sauce",
+      "dessert",
+      "holiday"
+    ],
+    "original_recipe": "NO. 39.--HARD SAUCE.\n\n    4 tablespoons soft butter\n    3/4 cup powdered sugar\n    1/2 teaspoon vanilla\n    beaten white of 1 egg\n\n      1. Make bowl and spoon hot with boiling water.\n\n      2. \"Cream\" or rub butter and sugar together, adding\n      sugar by spoonfuls.\n\n      3. Add vanilla.\n\n      4. Beat in the white of egg.\n\n      5. Put in a cool place until needed.",
+    "modern_ingredients": [
+      "4 tablespoons unsalted butter, very soft",
+      "3/4 cup powdered sugar",
+      "1/2 teaspoon vanilla extract",
+      "1 large egg white"
+    ],
+    "modern_instructions": [
+      "Warm the mixing bowl and spoon briefly with hot water, then dry.",
+      "Beat the soft butter until fluffy.",
+      "Add powdered sugar a spoonful at a time, beating well after each addition, until the mixture is light and creamy.",
+      "Add vanilla and mix.",
+      "Beat the egg white to soft peaks in a separate bowl. Fold into the butter-sugar mixture.",
+      "Transfer to a small dish and refrigerate until needed. The sauce will firm up when chilled."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-jacket-boiled-potatoes",
+    "title": "Jacket-Boiled Potatoes",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "kids-in-the-kitchen",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "budget",
+      "beginner",
+      "sides"
+    ],
+    "original_recipe": "NO. 4.--JACKET-BOILED POTATOES.\n\n      1. Scrub rather small potatoes well.\n\n      2. Pare a ring around each the long way; drop into\n      cold water.\n\n      3. Drain; cover with boiling water; add 1 tablespoon\n      salt.\n\n      4. Let boil about 35 minutes, or until a fork will\n      easily pierce the largest.\n\n      5. Drain off all the water, and set pan at back of\n      stove to dry off the potatoes.\n\n      6. Serve in their jackets.",
+    "modern_ingredients": [
+      "8–12 small potatoes (red or Yukon Gold work well)",
+      "1 tablespoon salt",
+      "Water to cover"
+    ],
+    "modern_instructions": [
+      "Scrub potatoes well under running water.",
+      "Using a vegetable peeler or paring knife, peel a 1/2-inch wide ring around the middle of each potato (around the equator), leaving the rest of the skin on. Drop into cold water as you work.",
+      "Drain the potatoes. Place in a pot and cover with boiling water. Add 1 tablespoon salt.",
+      "Bring to a boil, then reduce to a steady boil and cook about 35 minutes, or until a fork pierces the largest potato easily.",
+      "Drain completely. Return pot to low heat for a minute to dry out the potatoes, or leave uncovered in a warm spot.",
+      "Serve in their skins."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-lemon-cake",
+    "title": "Lemon Cake",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "easy",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "LEMON CAKE\n\nThree teacupfuls of sugar, one cupful of butter, five eggs, a level\nteaspoonful of soda dissolved in a cup of sweet milk, four full cups\nof sifted flour and lastly the grated peel and juice of a lemon, the\njuice to be added the very last. Bake in two shallow tins. When cold\nice with lemon icing and cut into squares.",
+    "modern_ingredients": [
+      "Three teacupfuls of sugar",
+      "one cupful of butter",
+      "five eggs",
+      "a level\nteaspoonful of soda dissolved in a cup of sweet milk",
+      "four full cups\nof sifted flour and lastly the grated peel and juice of a lemon",
+      "the",
+      "juice to be added the very last. Bake in two shallow tins. When cold",
+      "ice with lemon icing and cut into squares"
+    ],
+    "modern_instructions": [
+      "Three teacupfuls of sugar, one cupful of butter, five eggs, a level\nteaspoonful of soda dissolved in a cup of sweet milk, four full cups\nof sifted flour and lastly the grated peel and juice of a lemon, the\njuice to be added the very last.",
+      "Bake in two shallow tins. When cold\nice with lemon icing and cut into squares."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-lemon-cookies",
+    "title": "Lemon Cookies",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "easy",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "LEMON COOKIES\n\nFour cups of sifted flour, or enough for a stiff dough, one teacupful\nof butter, two cups of sugar, the juice of one lemon and the grated\npeel from the outside, three eggs whipped very light. Beat thoroughly\neach ingredient, adding, after all is in, a half teaspoonful of soda\ndissolved in a tablespoonful of milk. Roll out as any cookies and bake\na light brown. Use no other wetting.",
+    "modern_ingredients": [
+      "Four cups of sifted flour",
+      "or enough for a stiff dough",
+      "one teacupful\nof butter",
+      "two cups of sugar",
+      "the juice of one lemon and the grated\npeel from the outside",
+      "three eggs whipped very light. Beat thoroughly\neach ingredient",
+      "after all is in",
+      "a half teaspoonful of soda",
+      "dissolved in a tablespoonful of milk. Roll out as any cookies and bake",
+      "a light brown. Use no other wetting"
+    ],
+    "modern_instructions": [
+      "Four cups of sifted flour, or enough for a stiff dough, one teacupful\nof butter, two cups of sugar, the juice of one lemon and the grated\npeel from the outside, three eggs whipped very light.",
+      "Beat thoroughly\neach ingredient, adding, after all is in, a half teaspoonful of soda\ndissolved in a tablespoonful of milk.",
+      "Roll out as any cookies and bake\na light brown. Use no other wetting."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-marble-cake",
+    "title": "Marble Cake",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "MARBLE CAKE\n\n_White Part._--Whites of four eggs, one cup of white sugar, half a cup\nof butter, half a cup of sweet milk, two teaspoonfuls of baking\npowder, one teaspoonful of vanilla or lemon and two and a half cups of\nsifted flour.\n\n_Dark Part._--Yolks of four eggs, one cup of brown sugar, half a cup\nof cooking molasses, half a cup of butter, half a cup of sour milk,\none teaspoonful of ground cloves, one teaspoonful of cinnamon, one\nteaspoonful of mace, one nutmeg grated, one teaspoonful of soda, the\nsoda to be dissolved in a little milk and added after part of the\nflour is stirred in, one and a half cups of sifted flour.\n\nDrop a spoonful of each kind in a well-buttered cake-dish, first the\nlight part, then the dark, alternately. Try to drop it so that the\ncake shall be well-streaked through, so that it has the appearance of\nmarble.",
+    "modern_ingredients": [
+      "_White Part._--Whites of four eggs",
+      "one cup of white sugar",
+      "half a cup\nof butter",
+      "half a cup of sweet milk",
+      "two teaspoonfuls of baking\npowder",
+      "one teaspoonful of vanilla or lemon and two and a half cups of\nsifted flour"
+    ],
+    "modern_instructions": [
+      "_Dark Part._--Yolks of four eggs, one cup of brown sugar, half a cup\nof cooking molasses, half a cup of butter, half a cup of sour milk,\none teaspoonful of ground cloves, one teaspoonful of cinnamon, one\nteaspoonful of mace, one nutmeg grated, one teaspoonful of soda, the\nsoda to be dissolved in a little milk and added after part of the\nflour is stirred in, one and a half cups of sifted flour.",
+      "Drop a spoonful of each kind in a well-buttered cake-dish, first the\nlight part, then the dark, alternately. Try to drop it so that the\ncake shall be well-streaked through, so that it has the appearance of\nmarble."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-mashed-potatoes",
+    "title": "Mashed Potatoes",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "kids-in-the-kitchen",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "comfort-food",
+      "budget",
+      "sides"
+    ],
+    "original_recipe": "NO. 7.--MASHED POTATOES.\n\n      1. Boil potatoes. Drain; dry off.\n\n      2. Mash in pan in which they were cooked.\n\n      3. For every cupful, add\n\n    1 dash pepper,\n    1 saltspoon salt,\n    1/2 tablespoon butter (scant).\n\n      4. For every cupful, heat 2 tablespoons milk.\n\n      5. Throw the heated milk on potatoes.\n\n      6. Beat with a wire fork until creamy.\n\n      7. Pile lightly on a hot dish. Serve uncovered.\n\n      NOTE.--Remember that all measurements are level or\n      even with the top. To divide a spoonful, cut it\n      through the middle lengthwise, for a half; and across\n      that, for one-quarter of a spoonful.",
+    "modern_ingredients": [
+      "4 medium potatoes, peeled and boiled (see No. 6)",
+      "2 tablespoons unsalted butter",
+      "1/2 cup whole milk, warmed",
+      "1/2 teaspoon salt (or to taste)",
+      "Dash of black pepper"
+    ],
+    "modern_instructions": [
+      "Boil and drain potatoes following No. 6. Shake dry over low heat.",
+      "Mash the potatoes in the pot while still very hot.",
+      "Add butter, salt, and pepper.",
+      "Pour in the warmed milk.",
+      "Beat vigorously with a fork, hand mixer, or potato masher until creamy and fluffy — do not overbeat or they will become gluey.",
+      "Pile lightly onto a warmed serving dish and serve immediately, uncovered."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-milk-toast",
+    "title": "Milk Toast",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "kids-in-the-kitchen",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "comfort-food",
+      "vegetarian",
+      "beginner",
+      "breakfast",
+      "sick-day"
+    ],
+    "original_recipe": "NO. 3.--MILK TOAST.\n\n    1 tablespoon butter\n    1 tablespoon flour\n    1 cup milk\n    1/4 teaspoon salt\n    3 slices toast\n\n      1. Make ready the toast.\n\n      2. Heat the milk until smoking hot.\n\n      3. Melt the butter in a small saucepan.\n\n      4. Throw the flour into the butter. Cook until it\n      bubbles a little, stirring all the time. Take from the\n      fire.\n\n      5. Pour 1/3 the milk upon the butter and flour, a\n      little at a time, stirring with the back of a spoon to\n      press out the lumps.\n\n      6. Place over fire, and gradually stir in the\n      remaining milk.\n\n      7. Add the salt. Let boil a minute.\n\n      8. Put slices of toast in a heated dish; pour the\n      sauce over and serve hot.\n\n      All measures are made level with the top of cup or\n      spoon. To measure level spoonful:\n\n      Fill spoon heaping full, and level it off with the\n      back of a knife.\n\n      For half spoonful, cut through lengthwise.\n\n      For quarter spoonful, divide a half spoonful across.\n\n      A saltspoon is 1/8 teaspoon.",
+    "modern_ingredients": [
+      "3 slices bread, toasted",
+      "1 tablespoon unsalted butter",
+      "1 tablespoon all-purpose flour",
+      "1 cup whole milk",
+      "1/4 teaspoon salt"
+    ],
+    "modern_instructions": [
+      "Make 3 slices of toast and keep warm.",
+      "Heat the milk in a small saucepan over medium heat until steaming but not boiling. Remove from heat.",
+      "In a separate small saucepan, melt the butter over medium heat.",
+      "Add the flour to the butter and stir constantly until it bubbles slightly, about 1 minute. Remove from heat.",
+      "Slowly pour about 1/3 of the hot milk into the butter-flour mixture, stirring vigorously with the back of a spoon to work out any lumps.",
+      "Return to medium heat and gradually stir in the remaining milk.",
+      "Add the salt. Let the sauce boil gently for 1 minute, stirring constantly, until thickened.",
+      "Arrange toast in a warm, shallow dish. Pour the hot sauce over the toast and serve immediately."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-omelet",
+    "title": "Omelet",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "breakfast-and-bakes",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "breakfast",
+      "quick"
+    ],
+    "original_recipe": "NO. 13.--OMELET.\n\n      Two eggs to each person.\n\n      1. Separate yolks and whites, putting them into\n      different bowls.\n\n      2. Add dash of salt to whites, and dash of salt and\n      white pepper to yolks.\n\n      3. Add cold water to whites, allowing 1 teaspoon to\n      each.\n\n      4. Add cold water to yolks, allowing 1 tablespoon to\n      each.\n\n      5. Beat both very light.\n\n      6. Melt 1 tablespoon butter in a smooth frying pan.\n\n      7. Pour in yolks. Let cook a moment.\n\n      8. Spread whites over yolks, making a little hole in\n      the center for steam to escape.\n\n      9. Cook slowly for 5 minutes, or until the puffed up\n      whites look dry.\n\n      10. Fold one half over the other.\n\n      11. Turn out on a warm platter.\n\n      12. Trim with parsley and serve at once.",
+    "modern_ingredients": [
+      "2 large eggs, separated",
+      "1 teaspoon cold water (for whites)",
+      "1 tablespoon cold water (for yolks)",
+      "Dash of salt (for both)",
+      "Dash of white pepper (for yolks)",
+      "1 tablespoon unsalted butter",
+      "Fresh parsley for garnish"
+    ],
+    "modern_instructions": [
+      "Separate yolks and whites into two bowls.",
+      "Add a dash of salt and 1 tablespoon cold water to the yolks; beat until light and slightly thickened.",
+      "Add a dash of salt and 1 teaspoon cold water to the whites; beat until stiff peaks form.",
+      "Melt butter in a smooth 8-inch frying pan over medium-low heat.",
+      "Pour in the beaten yolks and let cook undisturbed for 1 minute.",
+      "Spoon the beaten whites over the yolks, spreading evenly. Make a small hole in the center for steam to escape.",
+      "Cover loosely and cook slowly for 4–5 minutes until the whites look dry and set.",
+      "Fold one half over the other with a spatula.",
+      "Slide onto a warmed platter. Garnish with fresh parsley and serve at once."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-pan-broiled-beefsteak",
+    "title": "Pan-Broiled Beefsteak",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "main-dishes",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "main-dish",
+      "quick",
+      "comfort-food"
+    ],
+    "original_recipe": "NO. 40.--PAN-BROILED BEEFSTEAK.\n\n      1. Heat an empty frying pan to blue heat, or until it\n      smokes. _No greasing is necessary._\n\n      2. Put in the steak.\n\n      3. Cook half minute.\n\n      4. Turn on other side.\n\n      5. Cook about 4 minutes.\n\n      6. Turn, and cook about 5 minutes longer.\n\n      7. Place on a hot platter, and spread with butter.\n\n      8. Sprinkle with a little pepper and salt, and 1\n      tablespoon finely chopped parsley.\n\n      9. Squeeze over it a little lemon juice.\n\n      10. Cover with another platter.\n\n      11. Remove top platter just before serving.\n\n      NOTE.--Mutton or Lamb Chops are pan-broiled in the\n      same way.",
+    "modern_ingredients": [
+      "1 beefsteak (sirloin, ribeye, or NY strip, about 3/4 to 1 inch thick)",
+      "1 tablespoon unsalted butter",
+      "Salt and black pepper to taste",
+      "1 tablespoon fresh parsley, finely chopped",
+      "Juice of 1/4 lemon"
+    ],
+    "modern_instructions": [
+      "Pat the steak dry with paper towels (moisture prevents proper searing).",
+      "Heat a heavy cast-iron or stainless steel skillet over high heat until it begins to smoke — 'blue heat' in the original recipe.",
+      "Add the steak to the dry, ungreased pan.",
+      "Cook undisturbed for 30 seconds.",
+      "Flip and cook 3–4 minutes.",
+      "Flip again and cook 4–5 minutes more (total 8–10 minutes for medium — adjust for your thickness and preference).",
+      "Transfer to a warm platter. Spread butter over the top while it rests.",
+      "Sprinkle with salt, pepper, and chopped parsley.",
+      "Squeeze lemon juice over the top.",
+      "Cover with an inverted platter for 2 minutes. Remove the top platter at the table before serving."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-pastry",
+    "title": "Pastry",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "breads",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "baking",
+      "pastry"
+    ],
+    "original_recipe": "NO. 34.--PASTRY.\n\n    1 cup flour\n    1/4 teaspoon salt\n    1/3 cup lard\n    1/3 cup cold water\n\n      (Use as little water as possible.)\n\n      1. Sift salt and flour into a bowl.\n\n      2. Rub lard into flour with finger tips until like\n      coarse powder.\n\n      3. Add half the cold water, stirring with a knife to\n      form a stiff ball. Keep this on one side of the bowl.\n\n      4. Stir in more water until the remaining flour forms\n      a ball. Press these balls together.\n\n      5. Roll out. Fit to pie plate. Trim off overhanging\n      edges.\n\n      6. Bake in a hot oven.",
+    "modern_ingredients": [
+      "1 cup all-purpose flour",
+      "1/4 teaspoon salt",
+      "1/3 cup cold lard (or cold vegetable shortening; cold butter also works)",
+      "2–4 tablespoons ice-cold water"
+    ],
+    "modern_instructions": [
+      "Sift flour and salt into a bowl.",
+      "Add cold lard in small pieces. Rub into the flour with fingertips until the mixture resembles coarse, uneven crumbs — some pieces of fat should still be visible.",
+      "Add cold water a tablespoon at a time, stirring with a knife after each addition. Use only enough water to bring the dough together into a ball — err on the side of less water.",
+      "Press the dough into a flat disc, wrap in plastic wrap, and refrigerate for at least 15 minutes.",
+      "Roll out on a lightly floured surface to 1/8 inch thickness.",
+      "Fit into a pie plate or tart pans. Trim edges and crimp.",
+      "For a blind-baked shell: prick with a fork, line with parchment and weights, and bake at 425°F (220°C) for 12–15 minutes."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-peppermint-drops",
+    "title": "Peppermint Drops",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "main-dishes",
+    "difficulty": "moderate",
+    "tags": [
+      "presidential",
+      "kid-friendly"
+    ],
+    "original_recipe": "PEPPERMINT DROPS\n\nOne cupful of sugar crushed fine, and just moistened with boiling\nwater, then boiled five minutes; then take from the fire and add cream\nof tartar the size of a pea; mix well and add four or five drops of\noil of peppermint. Beat briskly until the mixture whitens, then drop\nquickly upon white paper. Have the cream of tartar and oil of\npeppermint measured while the sugar is boiling. If it sugars before it\nis all dropped, add a little water and boil a minute or two.",
+    "modern_ingredients": [
+      "One cupful of sugar crushed fine, and just moistened with boiling",
+      "water, then boiled five minutes",
+      "then take from the fire and add cream\nof tartar the size of a pea"
+    ],
+    "modern_instructions": [
+      "One cupful of sugar crushed fine, and just moistened with boiling\nwater, then boiled five minutes; then take from the fire and add cream\nof tartar the size of a pea; mix well and add four or five drops of\noil of peppermint.",
+      "Beat briskly until the mixture whitens, then drop\nquickly upon white paper. Have the cream of tartar and oil of\npeppermint measured while the sugar is boiling.",
+      "If it sugars before it\nis all dropped, add a little water and boil a minute or two."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-pickaninny-fudge",
+    "title": "Pickaninny Fudge",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "candy-and-confections",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "chocolate",
+      "candy",
+      "party",
+      "no-bake",
+      "holiday"
+    ],
+    "original_recipe": "NO. 29.--PICKANINNY FUDGE.\n\n    2 cups sugar\n    1 cup milk\n    2 tablespoons butter\n    4 squares chocolate (4 ounces)\n    5 drops vanilla\n\n      1. Put sugar, milk, chocolate and butter together in a\n      pan.\n\n      2. Boil until a few drops harden when dropped into\n      cold water.\n\n      3. Butter a platter.\n\n      4. Add Vanilla to candy and stir while it cools.\n\n      5. Cut into squares with a buttered knife while still\n      soft.",
+    "modern_ingredients": [
+      "2 cups granulated sugar",
+      "1 cup whole milk",
+      "2 tablespoons unsalted butter",
+      "4 ounces (4 squares) unsweetened baking chocolate, broken up",
+      "5 drops vanilla extract"
+    ],
+    "modern_instructions": [
+      "Butter a platter or an 8x8-inch baking pan and set aside.",
+      "Combine sugar, milk, butter, and chocolate in a heavy-bottomed saucepan.",
+      "Cook over medium heat, stirring until the sugar dissolves and the chocolate melts.",
+      "Boil, stirring occasionally, until the mixture reaches 234–238°F (soft-ball stage) on a candy thermometer, or until a small amount dropped into cold water forms a soft ball you can flatten with your fingers.",
+      "Remove from heat. Add vanilla but do not stir yet — let cool undisturbed for 5 minutes.",
+      "Beat vigorously with a wooden spoon or hand mixer until the fudge thickens and loses its gloss.",
+      "Quickly pour onto the buttered platter or pan.",
+      "While still slightly warm and soft, cut into squares with a buttered knife."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-poached-eggs",
+    "title": "Poached Eggs",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "breakfast-and-bakes",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "breakfast",
+      "quick"
+    ],
+    "original_recipe": "NO. 23.--POACHED EGGS.\n\n      1. Put a pint (2 cups) boiling water into a shallow\n      pan. Add 1/2 teaspoon salt.\n\n      2. Break egg in a saucer.\n\n      3. Whirl the water 'round and 'round with a spoon, and\n      draw pan back on stove where it will simmer, but not\n      boil hard.\n\n      4. Slide the egg from the saucer into the water.\n\n      5. Let stand where the water will not boil hard.\n\n      6. Cook until the white is set and the yolk filmed\n      over.\n\n      7. Lift out with a skimmer. Drain on a cloth and\n      serve on toast.",
+    "modern_ingredients": [
+      "2 large fresh eggs",
+      "2 cups water",
+      "1/2 teaspoon salt",
+      "Optional: 1 tablespoon white vinegar (helps whites set)",
+      "Toast for serving"
+    ],
+    "modern_instructions": [
+      "Fill a shallow pan with 2 cups of water. Add salt (and vinegar if using). Bring to a gentle simmer.",
+      "Crack each egg into a small ramekin or saucer.",
+      "Gently swirl the simmering water with a spoon to create a gentle spiral.",
+      "Slide one egg at a time from the saucer into the center of the swirling water.",
+      "Reduce heat so the water barely simmers — it should not boil hard.",
+      "Cook 3–4 minutes until the whites are completely set and the yolks are still soft.",
+      "Lift out with a slotted spoon and drain on a clean cloth or paper towel.",
+      "Serve immediately on buttered toast."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-potato-soup",
+    "title": "Potato Soup",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "soups-and-stews",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "budget",
+      "comfort-food",
+      "soups"
+    ],
+    "original_recipe": "NO. 8.--POTATO SOUP.\n\n      Place on the table:\n\n    3 freshly boiled potatoes\n    1 onion\n    butter\n    parsley\n    flour dredger\n    pepper\n    salt\n    1 pint milk (2 cups)\n\n      1. Put the milk in the upper part of a double boiler,\n      half filling the under part with boiling water.\n\n      2. Throw in 2 slices of onion, and put double boiler\n      on the stove for 10 minutes.\n\n      3. Mash potatoes and add to the hot milk.\n\n      4. Add 1 teaspoon salt and a dash of pepper.\n\n      5. Put through a wire strainer, rubbing the potatoes\n      through with a spoon.\n\n      6. Put into double boiler and place on stove.\n\n      7. Melt 1 tablespoon butter in a little pan.\n\n      8. Throw into it 1/2 tablespoon flour. Stir well.\n\n      9. Dip a little of the hot milk on this, stirring\n      well, then pour into the soup.\n\n      10. Let boil 10 minutes.\n\n      11. Add 1 tablespoon chopped parsley. If too thick,\n      add hot water or milk.\n\n      12. Serve very hot.",
+    "modern_ingredients": [
+      "3 medium potatoes, freshly boiled",
+      "2 cups (1 pint) whole milk",
+      "2 slices onion",
+      "1 tablespoon unsalted butter",
+      "1/2 tablespoon all-purpose flour",
+      "1 teaspoon salt",
+      "Dash of black pepper",
+      "1 tablespoon fresh parsley, finely chopped"
+    ],
+    "modern_instructions": [
+      "Heat the milk in a double boiler or in a saucepan set over a pot of simmering water. Add the onion slices and heat for 10 minutes.",
+      "Remove onion slices. Mash the boiled potatoes and stir them into the hot milk.",
+      "Add salt and pepper.",
+      "Press the mixture through a wire mesh strainer (or use a blender for a smoother result), then return to the double boiler.",
+      "In a small pan, melt butter over medium heat. Add flour and stir for 1 minute.",
+      "Ladle a little of the hot soup into the flour mixture, stir smooth, then pour back into the soup pot.",
+      "Cook for 10 minutes over gentle heat. If too thick, add hot water or milk.",
+      "Stir in fresh parsley and serve piping hot."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-queen-of-hearts-tarts",
+    "title": "Queen of Hearts Tarts",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "dessert",
+      "baking",
+      "party",
+      "elegant",
+      "fun"
+    ],
+    "original_recipe": "NO. 33.--QUEEN OF HEARTS TARTS.\n\n      Spread cooked heart-shaped pastry shells with\n      preserved cherries. See No. 34.",
+    "modern_ingredients": [
+      "1 batch Pastry dough (No. 34)",
+      "1/2 cup preserved or jarred cherries (sour cherries in syrup work beautifully)",
+      "Optional: whipped cream for serving"
+    ],
+    "modern_instructions": [
+      "Make Pastry dough (No. 34) and chill 15 minutes.",
+      "Preheat oven to 425°F (220°C).",
+      "Roll pastry out on a floured surface to 1/8 inch thickness.",
+      "Cut into heart shapes using a heart-shaped cookie cutter (about 4 inches across), or use any small tart pan.",
+      "Press each heart shape into a small tart pan or heart-shaped mold. Trim edges neatly and press down with a fork to create a decorative border.",
+      "Prick the bottoms several times with a fork.",
+      "Bake 12–15 minutes until pale golden.",
+      "Cool completely, then fill each shell with preserved cherries.",
+      "Serve as is, or with a small dollop of whipped cream."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-rice-pudding",
+    "title": "Rice Pudding",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "desserts",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "dessert",
+      "comfort-food",
+      "budget"
+    ],
+    "original_recipe": "NO. 24.--RICE PUDDING.\n\n    3 tablespoons rice\n    1/4 cup sugar\n    1/8 teaspoon salt\n    sprinkling nutmeg\n    4 cups milk, or 3 cups milk and 1 cup water\n\n      1. Pick over the rice, and wash by putting in a\n      strainer and shaking in a pan of water.\n\n      2. Butter the baking dish.\n\n      3. Stir rice, sugar and salt into the milk.\n\n      4. Pour into the baking dish.\n\n      5. Sprinkle with nutmeg.\n\n      6. Cover with a lid, and bake slowly 2 hours.\n\n      7. Uncover and brown 1/2 hour.\n\n      NOTE.--Seeded raisins may be added before browning. If\n      desired, a thin narrow shaving of the outside rind of\n      a lemon may be used as flavoring. Put this in the milk\n      with the rice.",
+    "modern_ingredients": [
+      "3 tablespoons short-grain or long-grain white rice",
+      "1/4 cup granulated sugar",
+      "1/8 teaspoon salt",
+      "4 cups whole milk (or 3 cups milk + 1 cup water)",
+      "Freshly grated nutmeg",
+      "1 tablespoon unsalted butter (for greasing dish)",
+      "Optional: 1/4 cup raisins, strip of lemon zest"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 325°F (165°C). Butter a 1.5-quart baking dish.",
+      "Rinse rice in a strainer and shake dry.",
+      "Combine rice, sugar, salt, and milk in the baking dish and stir.",
+      "Sprinkle the surface generously with freshly grated nutmeg.",
+      "If using lemon zest, add one strip to the milk.",
+      "Cover with a lid or foil and bake for 2 hours, stirring once or twice during the first hour.",
+      "Remove lid/foil. If adding raisins, stir them in now.",
+      "Bake uncovered for 30 more minutes until the top is golden brown.",
+      "Serve warm or cold."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-salad-dressing",
+    "title": "Salad Dressing",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "sauces-and-condiments",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "sauce",
+      "salad"
+    ],
+    "original_recipe": "NO. 35.--SALAD DRESSING.\n\n    1 teaspoon salt\n    3/4 teaspoon mustard\n    1-1/2 tablespoons sugar\n    2 teaspoons flour\n    3/4 cup sour cream (or milk)\n    1 egg\n    1 tablespoon vinegar\n    1 teaspoon butter\n    A few grains of red pepper.\n\n      1. Beat egg.\n\n      2. Mix mustard, sugar, flour, salt and pepper.\n\n      3. Add egg slowly, beating well at the same time.\n\n      4. Add milk. Beat.\n\n      5. Cook in a sauce pan placed in boiling water.\n\n      6. Stir until it thickens like cream. Remove from heat\n      at once.\n\n      7. Add vinegar very slowly, beating all the while.\n\n      8. Stir in the butter.\n\n      Serve cold on lettuce or sliced tomatoes.",
+    "modern_ingredients": [
+      "1 large egg, beaten",
+      "3/4 teaspoon dry mustard",
+      "1 1/2 tablespoons granulated sugar",
+      "2 teaspoons all-purpose flour",
+      "1 teaspoon salt",
+      "A few grains of cayenne pepper",
+      "3/4 cup sour cream (or whole milk)",
+      "1 tablespoon white wine vinegar",
+      "1 teaspoon unsalted butter"
+    ],
+    "modern_instructions": [
+      "In a bowl, mix mustard, sugar, flour, salt, and cayenne.",
+      "Add the beaten egg slowly, whisking well.",
+      "Stir in the sour cream (or milk). Whisk until smooth.",
+      "Pour into a small saucepan set in a larger pan of boiling water (double-boiler method).",
+      "Cook, stirring constantly, until the dressing thickens like a thin cream sauce. Remove from heat immediately.",
+      "Slowly whisk in the vinegar.",
+      "Stir in the butter until melted.",
+      "Cool completely before serving over lettuce or sliced tomatoes."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-sauce-for-boiled-mutton",
+    "title": "Sauce or Gravy for Boiled Mutton",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "sauces-and-condiments",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "sauce",
+      "beginner",
+      "adventurous"
+    ],
+    "original_recipe": "NO. 26.--SAUCE OR GRAVY FOR BOILED MUTTON.\n\n      1. After cooling and skimming off the fat, measure the\n      water in which the meat was boiled.\n\n      2. To each cupful, allow\n\n      1 tablespoon flour, 1/4 teaspoon salt, 1/2 teaspoon\n      vinegar.\n\n      3. Moisten these with a little cold water.\n\n      4. Stir them into the boiling gravy.\n\n      5. Add 1 tablespoon finely minced parsley.",
+    "modern_ingredients": [
+      "2 cups cooking liquid from Boiled Mutton (No. 25), defatted",
+      "2 tablespoons all-purpose flour",
+      "1/2 teaspoon salt",
+      "1 teaspoon white wine vinegar",
+      "2 tablespoons finely minced fresh parsley",
+      "Small amount of cold water to make a paste"
+    ],
+    "modern_instructions": [
+      "Cool and degrease the cooking liquid from No. 25 (either by skimming or refrigerating and removing the solidified fat).",
+      "Bring the defatted cooking liquid to a boil in a saucepan.",
+      "In a small bowl, mix flour, salt, and vinegar with just enough cold water to make a thin paste.",
+      "Whisk the flour paste into the boiling gravy gradually, stirring constantly.",
+      "Boil gently for 2–3 minutes until the gravy thickens slightly.",
+      "Stir in minced parsley. Taste for seasoning and serve hot over the meat."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-soft-custard",
+    "title": "Soft Custard",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "dessert",
+      "comfort-food",
+      "sick-day"
+    ],
+    "original_recipe": "NO. 20.--SOFT CUSTARD.\n\n    1 cup milk\n    1 egg\n    2 tablespoons sugar\n    dash of salt\n    nutmeg\n\n      1. Heat the milk smoking hot.\n\n      2. Beat egg. Add sugar and salt.\n\n      3. Pour the hot milk on, beating well.\n\n      4. Pour into upper part of double boiler, or set pan\n      in boiling water.\n\n      5. Cook until it thickens, or until a coating will be\n      formed on a clean spoon when dipped into the custard.\n\n      6. Sprinkle with a few gratings of nutmeg.\n\n      7. Serve cold.",
+    "modern_ingredients": [
+      "1 cup whole milk",
+      "1 large egg",
+      "2 tablespoons granulated sugar",
+      "Dash of salt",
+      "Freshly grated nutmeg"
+    ],
+    "modern_instructions": [
+      "Heat milk in a small saucepan over medium heat until steaming (just below a boil). Remove from heat.",
+      "In a bowl, beat the egg with sugar and salt until slightly pale.",
+      "Slowly pour the hot milk into the egg mixture, beating constantly to prevent curdling.",
+      "Pour the mixture into the top of a double boiler (or set bowl over a pot of simmering water).",
+      "Cook over medium-low heat, stirring constantly, until the custard thickens enough to coat a clean spoon — about 8–12 minutes. Do not let it boil.",
+      "Remove from heat immediately. Strain through a fine sieve if desired.",
+      "Sprinkle lightly with grated nutmeg.",
+      "Refrigerate and serve cold, or serve warm over rice or fruit."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-sponge-cake",
+    "title": "Sponge Cake",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "desserts",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "baking",
+      "dessert",
+      "party"
+    ],
+    "original_recipe": "NO. 31.--SPONGE CAKE.\n\n    2 eggs\n    1 cup sugar\n    1/3 cup boiling water\n    1/2 teaspoon vanilla (or lemon extract)\n    1 cup flour\n    1-1/2 teaspoon baking powder\n    dash of salt\n\n      1. Separate yolks of eggs and beat in a large bowl.\n\n      2. Add gradually half the sugar, stirring well.\n\n      3. Add the boiling water slowly.\n\n      4. Add remaining sugar, and the flavoring.\n\n      5. Sift together twice flour, baking powder and salt.\n\n      6. Sift by small quantities into the mixture, beating\n      well each time.\n\n      7. Beat whites of eggs and fold them into the cake.\n\n      8. Grease pan. Toss around in it 1/4 cup flour. Throw\n      out. This prevents sticking.\n\n      9. Pour in the cake.\n\n      10. Bake in a moderate oven about 35 minutes.",
+    "modern_ingredients": [
+      "2 large eggs, separated",
+      "1 cup granulated sugar, divided",
+      "1/3 cup boiling water",
+      "1/2 teaspoon vanilla extract (or lemon extract)",
+      "1 cup all-purpose flour",
+      "1 1/2 teaspoons baking powder",
+      "Dash of salt"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 350°F (175°C). Grease a 9-inch round cake pan, dust with flour, and shake out the excess.",
+      "Beat egg yolks in a large bowl. Gradually add half the sugar, beating until thick and pale.",
+      "Slowly add the boiling water, beating constantly.",
+      "Add remaining sugar and vanilla. Beat well.",
+      "Sift together flour, baking powder, and salt twice. Add to the egg mixture in small batches, beating well after each addition.",
+      "In a separate bowl, beat egg whites to stiff peaks. Gently fold into the batter.",
+      "Pour batter into prepared pan.",
+      "Bake 30–35 minutes until the cake shrinks slightly from the sides and a toothpick inserted in the center comes out clean.",
+      "Cool in pan 10 minutes, then turn out onto a wire rack."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "wh-squash-pie",
+    "title": "Squash Pie",
+    "source_book": "The White House Cookbook",
+    "source_year": "1887",
+    "category": "sides-and-vegetables",
+    "difficulty": "easy",
+    "tags": [
+      "presidential",
+      "vegetarian",
+      "kid-friendly"
+    ],
+    "original_recipe": "SQUASH PIE\n\nOne pint of boiled dry squash, one cupful of brown sugar, three eggs,\ntwo tablespoonfuls of molasses, one tablespoonful of melted butter one\ntablespoonful of ginger, one teaspoonful of cinnamon, a pinch of salt\nand one pint of milk. This makes two pies, or one large deep one.",
+    "modern_ingredients": [
+      "One pint of boiled dry squash",
+      "one cupful of brown sugar",
+      "three eggs",
+      "two tablespoonfuls of molasses",
+      "one tablespoonful of melted butter one\ntablespoonful of ginger",
+      "one teaspoonful of cinnamon",
+      "a pinch of salt\nand one pint of milk. This makes two pies",
+      "or one large deep one"
+    ],
+    "modern_instructions": [
+      "One pint of boiled dry squash, one cupful of brown sugar, three eggs,\ntwo tablespoonfuls of molasses, one tablespoonful of melted butter one\ntablespoonful of ginger, one teaspoonful of cinnamon, a pinch of salt\nand one pint of milk.",
+      "This makes two pies, or one large deep one."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-steamed-rice",
+    "title": "Steamed Rice",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "sides-and-vegetables",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "budget",
+      "sides",
+      "gluten-free"
+    ],
+    "original_recipe": "NO. 21.--STEAMED RICE.\n\n    1/2 cup rice\n    2 cups boiling water\n    1/2 teaspoon salt\n\n      1. Wash rice. This may be easily done by putting in a\n      strainer and shaking in a pan of cold water.\n\n      2. Put with the salt and boiling water, into the upper\n      part of a double boiler.\n\n      3. Pour boiling water into lower part, and cook 1\n      hour.\n\n      4. To test whether it is done, press several grains\n      between the fingers. If not perfectly soft, cook\n      longer.\n\n      5. If it becomes hard and dry, add a little boiling\n      water from time to time.\n\n      6. A few raisins are sometimes cooked with the rice.\n      Add these during the last fifteen minutes of cooking\n      to prevent discoloring.\n\n      7. Serve with soft custard or cream and sugar. Plain\n      cooked rice may be served as a vegetable.",
+    "modern_ingredients": [
+      "1/2 cup long-grain white rice",
+      "2 cups boiling water",
+      "1/2 teaspoon salt",
+      "Optional: 1/4 cup raisins (added in last 15 minutes)"
+    ],
+    "modern_instructions": [
+      "Rinse rice in a strainer under cold running water until the water runs clear.",
+      "Combine rice, boiling water, and salt in the top of a double boiler.",
+      "Fill the bottom of the double boiler with boiling water and place over medium heat.",
+      "Cover and steam for 45–60 minutes, checking occasionally and adding boiling water to the bottom pot as needed.",
+      "Test for doneness by pressing a few grains between fingers — they should be completely soft throughout.",
+      "If adding raisins, stir them in during the last 15 minutes.",
+      "Serve as a side vegetable, or top with soft custard, cream, and sugar as a dessert."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-stuffed-eggs",
+    "title": "Stuffed Eggs",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "salads",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "picnic",
+      "party",
+      "appetizer"
+    ],
+    "original_recipe": "NO. 28.--STUFFED EGGS.\n\n      1. Hard-boil eggs.\n\n      2. Drop into cold water. Remove shells.\n\n      3. Cut each in half lengthwise.\n\n      4. Turn out yolks into a bowl.\n\n      5. Carefully place whites together in pairs.\n\n      6. Mash yolks with back of a spoon.\n\n      7. For every 6 yolks, put into the bowl\n\n    1 tablespoon olive oil or melted butter\n    1/2 teaspoon mustard (the kind prepared for table)\n    1/2 teaspoon salt\n    dash cayenne pepper\n\n      8. Rub these together thoroughly with the yolks.\n\n      9. Make little balls of this paste, the size of the\n      yolks.\n\n      10. Fit one ball into each pair whites.\n\n      NOTE.--If used for table, serve with White Sauce\n      poured around them. If used for picnic, wrap waxed\n      paper around each until needed.",
+    "modern_ingredients": [
+      "6 large hard-boiled eggs, peeled",
+      "1 tablespoon olive oil or melted butter",
+      "1/2 teaspoon prepared yellow mustard",
+      "1/2 teaspoon salt",
+      "Dash of cayenne pepper",
+      "Optional: paprika for garnish"
+    ],
+    "modern_instructions": [
+      "Hard-boil eggs (No. 10). Cool in cold water, then peel.",
+      "Cut each egg in half lengthwise. Remove yolks into a bowl; set whites aside in matching pairs.",
+      "Mash yolks thoroughly with the back of a spoon until smooth.",
+      "Add olive oil (or butter), mustard, salt, and cayenne. Mix until completely smooth.",
+      "Roll the yolk mixture into small balls roughly the size of the original yolks.",
+      "Fit one ball into each egg white half.",
+      "For a party: serve on a platter with White Sauce (No. 14) poured around them, or garnish with a dash of paprika.",
+      "For a picnic: wrap each stuffed egg in wax paper to keep until serving."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-tea",
+    "title": "Tea",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "beverages",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "quick",
+      "vegetarian",
+      "beverage",
+      "afternoon-tea"
+    ],
+    "original_recipe": "NO. 12.--TEA.\n\n      1. Half fill the teapot with boiling water. Let stand\n      until thoroughly hot. Pour out.\n\n      2. Put into it 1 teaspoon tea for each cup needed.\n\n      3. Pour in freshly boiling water, allowing 1 cup to\n      every teaspoon tea.\n\n      4. Let stand for 5 minutes in a very warm place, but\n      do not let it boil. Stir, and serve.\n\n      If not used immediately, strain into another heated\n      pot.",
+    "modern_ingredients": [
+      "4 teaspoons loose-leaf black tea (or 4 tea bags)",
+      "4 cups freshly boiling water, plus extra to warm the pot"
+    ],
+    "modern_instructions": [
+      "Pour boiling water into the teapot to warm it. Let stand 1 minute, then discard the water.",
+      "Add 1 teaspoon loose-leaf tea per cup to the warmed pot.",
+      "Pour freshly boiling water over the tea — 1 cup per teaspoon of tea.",
+      "Cover and let steep 4–5 minutes in a warm spot. Do not let it boil.",
+      "Stir, then strain into cups or a warmed second pot if not serving immediately."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-thimble-biscuits",
+    "title": "Thimble Biscuits",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "kids-in-the-kitchen",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "party",
+      "baking",
+      "quick",
+      "fun"
+    ],
+    "original_recipe": "NO. 16.--THIMBLE BISCUITS.\n\n      (Nice for Dolls' Tea Party.)\n\n    1 cup flour\n    2 teaspoons baking powder\n    1 tablespoon butter\n    1/2 cup milk (scant)\n    1/4 teaspoon salt\n\n      1. A hot oven and a greased pan.\n\n      2. Sift flour, baking powder and salt three times.\n\n      3. Rub butter lightly into the flour.\n\n      4. Pour the milk on gradually, mixing all the while\n      with a knife, until a soft dough is formed.\n\n      (Perhaps not all the milk will be needed.)\n\n      5. Turn the dough on a well-floured board.\n\n      6. Pat it with the rolling pin until 1/4 inch thick.\n\n      7. Use a large thimble as a cutter, and cut biscuits\n      as close to each other as possible.\n\n      8. Place in pan a little distance apart.\n\n      9. Bake about 5 minutes.",
+    "modern_ingredients": [
+      "1 cup all-purpose flour",
+      "2 teaspoons baking powder",
+      "1/4 teaspoon salt",
+      "1 tablespoon cold unsalted butter",
+      "Scant 1/2 cup whole milk (a little less than 1/2 cup)"
+    ],
+    "modern_instructions": [
+      "Preheat oven to 450°F (230°C). Grease a baking sheet.",
+      "Sift together flour, baking powder, and salt three times.",
+      "Cut in the cold butter using fingertips or a pastry cutter until the mixture resembles coarse crumbs.",
+      "Add milk gradually, mixing gently with a knife or fork just until a soft dough forms. Use only as much milk as needed.",
+      "Turn dough onto a well-floured surface.",
+      "Pat or roll to 1/4 inch thickness.",
+      "Cut out rounds using a large thimble, a 1-inch round cutter, or the mouth of a small bottle. Cut pieces close together to minimize waste.",
+      "Place on prepared pan a little apart.",
+      "Bake 4–6 minutes until just golden."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-walnut-kisses",
+    "title": "Walnut Kisses",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "candy-and-confections",
+    "difficulty": "moderate",
+    "tags": [
+      "kid-friendly",
+      "candy",
+      "party",
+      "no-bake",
+      "nut"
+    ],
+    "original_recipe": "NO. 30.--WALNUT KISSES.\n\n    1 cup brown sugar\n    1/2 cup granulated sugar\n    1/4 cup cold water\n    white 1 egg\n\n      1. Boil sugars and water together until a few drops\n      harden when dropped into cold water.\n\n      2. Beat white of egg stiff.\n\n      3. Pour the sugar syrup very slowly upon the white of\n      egg, beating all the time.\n\n      4. Butter a platter.\n\n      5. Drop by tablespoonfuls on the platter.\n\n      6. Put a half walnut on each little mound or \"kiss.\"",
+    "modern_ingredients": [
+      "1 cup light brown sugar, packed",
+      "1/2 cup granulated sugar",
+      "1/4 cup cold water",
+      "1 large egg white",
+      "18–20 walnut halves"
+    ],
+    "modern_instructions": [
+      "Butter a baking sheet or piece of parchment paper and set aside.",
+      "Combine both sugars and the water in a small saucepan. Cook over medium heat, stirring until dissolved, then boil without stirring until the mixture reaches 240°F (soft-ball stage), or until a few drops dropped into cold water form a firm but pliable ball.",
+      "While the sugar is cooking, beat the egg white to stiff peaks in a large bowl.",
+      "When the sugar syrup is ready, pour it very slowly in a thin stream onto the beaten egg white, beating constantly with a hand mixer at high speed.",
+      "Continue beating until the mixture holds stiff, glossy peaks and is slightly cooled.",
+      "Quickly drop by tablespoonfuls onto the prepared surface.",
+      "Press a walnut half firmly into the center of each mound.",
+      "Let stand until set, about 30 minutes."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  },
+  {
+    "id": "mf-white-sauce",
+    "title": "White Sauce",
+    "source_book": "The Mary Frances Cook Book",
+    "source_year": "1912",
+    "category": "sauces-and-condiments",
+    "difficulty": "easy",
+    "tags": [
+      "kid-friendly",
+      "vegetarian",
+      "beginner",
+      "sauce"
+    ],
+    "original_recipe": "NO. 14.--WHITE SAUCE.\n\n    2 tablespoons butter\n    2 tablespoons flour\n    1 cup hot milk\n    1/4 teaspoon salt\n    dash of pepper\n\n      1. Melt butter in a sauce pan.\n\n      2. Mix pepper and salt with flour.\n\n      3. Throw into the butter, stirring thoroughly. Cook\n      until it bubbles a little.\n\n      4. Pour 1/3 of the milk very slowly on this, stirring\n      and beating well.\n\n      5. Place over fire and stir in the rest of the milk a\n      little at a time.\n\n      6. Let boil a minute.",
+    "modern_ingredients": [
+      "2 tablespoons unsalted butter",
+      "2 tablespoons all-purpose flour",
+      "1 cup whole milk, warmed",
+      "1/4 teaspoon salt",
+      "Dash of white or black pepper"
+    ],
+    "modern_instructions": [
+      "Melt butter in a small saucepan over medium heat.",
+      "Mix salt and pepper with the flour. Add to the melted butter all at once and stir constantly for 1–2 minutes until bubbling (this is the roux).",
+      "Remove from heat. Pour about 1/3 of the warm milk in very slowly, stirring vigorously to prevent lumps.",
+      "Return to medium heat and stir in the remaining milk a little at a time.",
+      "Continue stirring until the sauce reaches a boil and thickens, about 1 minute.",
+      "Use immediately over vegetables, toast, or as a base for other dishes."
+    ],
+    "prompt": "You are helping a parent cook with a young child (ages 5-10). Read this historical American recipe and its modern adaptation, then split its instructions into three categories:\n\n  - kid_jobs: things a child this age can do safely by themselves (washing, stirring, pouring, measuring dry ingredients, pressing dough, shaping cookies, cracking eggs, buttering a pan).\n  - grownup_jobs: things that require adult hands (hot stove, sharp knives, raw meat, oven in/out, boiling liquids, broiling, frying in hot fat, reducing sauces).\n  - together_jobs: things where parent and kid work side by side (kneading dough, rolling out pastry, decorating cookies, assembling a pie, filling muffin tins).\n\nAlso generate:\n  - teaching_moments: 2-4 short 'why does this happen?' explainers written for a 3rd-grade reader (e.g. 'Yeast is a tiny living thing that eats sugar and burps gas — the gas gets trapped in the dough and that's what makes bread rise').\n  - prep_ahead: a checklist of things the grown-up should do BEFORE calling the kid into the kitchen — preheating, pre-measuring, setting out the stepstool, doing any knife work alone.\n\nKeep the kid's voice: second person, warm, short sentences. Never condescend. Return strict JSON with exactly those five keys, no prose outside the JSON."
+  }
+]
