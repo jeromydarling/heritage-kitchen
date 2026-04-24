@@ -1,0 +1,4 @@
+project_id = "heritage-kitchen"
+
+[functions.health]
+verify_jwt = false
