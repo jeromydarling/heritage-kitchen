@@ -1,7 +1,29 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <!-- Watchtower error reporter (inline, zero-dep, safe to ship in <head>) -->
+<script>
+(function(){
+  var ENDPOINT = "https://mgtbbveeqnpbesfmtkng.supabase.co/functions/v1/ingest-error";
+  var SLUG = "heritage-kitchen";
+  var seen = {}; var DEDUP_MS = 60000;
+  function send(msg, stack){
+    if(!msg) return;
+    var fp = (msg + "|" + (stack||"").slice(0,500)).slice(0,600);
+    var now = Date.now();
+    if(seen[fp] && now - seen[fp] < DEDUP_MS) return;
+    seen[fp] = now;
+    var body = JSON.stringify({slug:SLUG, message:String(msg).slice(0,2000), stack:stack||null, url:location.href, user_agent:navigator.userAgent});
+    try{
+      if(navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, new Blob([body], {type:"application/json"}));
+      else fetch(ENDPOINT, {method:"POST", headers:{"content-type":"application/json"}, body:body, keepalive:true});
+    }catch(e){}
+  }
+  window.addEventListener("error", function(e){ send(e.message, e.error && e.error.stack); });
+  window.addEventListener("unhandledrejection", function(e){ var r=e.reason; send(r && r.message || String(r), r && r.stack); });
+})();
+</script>
+<!-- /Watchtower -->    <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Heritage Kitchen — Your inheritance, on the table</title>
