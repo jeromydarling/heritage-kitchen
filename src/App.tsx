@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import { GlobalEffects } from './components/GlobalEffects';
 import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import RecipePage from './pages/RecipePage';
@@ -45,7 +46,9 @@ import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <GlobalEffects sourceApp="heritage-kitchen" />
+      <Routes>
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="category/:slug" element={<CategoryPage />} />
@@ -91,6 +94,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
-    </Routes>
+      </Routes>
+    </>
   );
 }
