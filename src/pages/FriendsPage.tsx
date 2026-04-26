@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSponsors, TIER_LABELS, type Sponsor } from '../lib/sponsors';
+import { CrosLeadForm } from '../components/CrosLeadForm';
 
 /**
  * The "Friends of Heritage Kitchen" page â€” annual sponsorship credits
@@ -141,14 +142,52 @@ export default function FriendsPage() {
             </div>
           </dl>
           <p className="mt-4">
-            To discuss sponsorship, write to{' '}
+            To discuss sponsorship, fill in the note below or write to{' '}
             <a href="mailto:friends@heritagekitchen.app">
               friends@heritagekitchen.app
             </a>
             . We read every note.
           </p>
         </div>
+
+        <SponsorInquiryForm />
       </section>
+    </div>
+  );
+}
+
+function SponsorInquiryForm() {
+  const [done, setDone] = useState(false);
+
+  if (done) {
+    return (
+      <div className="mt-6 rounded-2xl border border-rule bg-paper p-5 text-sm leading-relaxed text-muted">
+        <p className="font-serif text-base text-ink">Thank you.</p>
+        <p className="mt-2">
+          Your note is on its way to us. We answer every sponsorship
+          inquiry personally, usually within a week.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 rounded-2xl border border-rule bg-paper p-5">
+      <p className="mb-3 font-serif text-base text-ink">
+        Tell us about your work
+      </p>
+      <CrosLeadForm
+        sourceApp="heritage-kitchen"
+        leadKind="partner"
+        formVariant="friends-sponsor"
+        fields={['name', 'email', 'organization', 'message']}
+        submitLabel="Send sponsor note"
+        onSuccess={() => setDone(true)}
+      />
+      <p className="mt-3 text-xs text-muted">
+        In your note, tell us what you make, your website, and which tier
+        feels right (Patron / Supporter / Friend).
+      </p>
     </div>
   );
 }
