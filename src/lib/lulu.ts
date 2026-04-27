@@ -78,25 +78,25 @@ export async function uploadInteriorPdf(
   // Generate the matching cover. We ask lulu-cover-dimensions for the exact
   // geometry (spine width, wrap, safe zone) and pass it into the cover
   // generator so the cover fits the Lulu template exactly.
-  let coverPath: string | null = null;
-  try {
-    const dims = await fetchCoverDimensions(pageCount);
-    if (dims) {
-      const coverBlob = await generateCoverPdf(project, dims);
-      coverPath = `${userId}/${projectId}-cover.pdf`;
-      await supabase.storage
-        .from('cookbook-pdfs')
-        .upload(coverPath, coverBlob, {
-          contentType: 'application/pdf',
-          upsert: true,
-        });
-    }
-  } catch (err) {
-    // Cover generation is best-effort in v1 -- if it fails (e.g. Lulu
-    // sandbox is down) we still upload the interior and let the webhook
-    // fall back to the stub cover. The order is not blocked.
-    console.warn('Cover generation failed, continuing with interior only:', err);
+  // Cover is REQUIRED for hardcover casewrap. If we can't fetch the cover
+  // dimensions or upload the cover, we hard-fail here so the buyer sees an
+  // error before they pay -- the webhook used to silently submit the
+  // interior PDF as the cover, which Lulu would print as a blank book.
+  const dims = await fetchCoverDimensions(pageCount);
+  if (!dims) {
+    throw new Error(
+      'Could not fetch cover dimensions from Lulu. Please try again in a moment.',
+    );
   }
+  const coverBlob = await generateCoverPdf(project, dims);
+  const coverPath = `${userId}/${projectId}-cover.pdf`;
+  const { error: coverErr } = await supabase.storage
+    .from('cookbook-pdfs')
+    .upload(coverPath, coverBlob, {
+      contentType: 'application/pdf',
+      upsert: true,
+    });
+  if (coverErr) throw coverErr;
 
   await supabase
     .from('cookbook_projects')
@@ -113,8 +113,11 @@ export async function uploadInteriorPdf(
 
 /**
  * Asks the lulu-cover-dimensions edge function for the exact cover
- * geometry for a given page count. Returns null on failure so callers
- * can degrade gracefully.
+ * geometry for a given page count. The edge function uses its own
+ * server-side POD package id -- the browser does not get to choose the
+ * SKU (otherwise a malicious client could request a cheaper paperback
+ * geometry, get a quote at the wrong price, and we'd ship the wrong
+ * format). Returns null only if Supabase isn't configured.
  */
 async function fetchCoverDimensions(pageCount: number): Promise<{
   width_in: number;
@@ -124,15 +127,10 @@ async function fetchCoverDimensions(pageCount: number): Promise<{
   safe_zone_in: number;
 } | null> {
   if (!supabase) return null;
-  // POD package id is configurable server-side via env. We send a placeholder
-  // string that the edge function swaps for its configured default.
   const { data, error } = await supabase.functions.invoke('lulu-cover-dimensions', {
-    body: {
-      pod_package_id: (import.meta.env.VITE_LULU_POD_PACKAGE_ID as string) ?? '0600X0900BWSTDPB060UW444MXX',
-      page_count: pageCount,
-    },
+    body: { page_count: pageCount },
   });
-  if (error) return null;
+  if (error) throw error;
   return data as {
     width_in: number;
     height_in: number;

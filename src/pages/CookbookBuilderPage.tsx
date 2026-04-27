@@ -63,8 +63,16 @@ export default function CookbookBuilderPage() {
     });
   }
 
+  // Lulu rejects hardcover print jobs under 24 pages of interior. With
+  // our front matter (title, copyright, foreword, TOC) plus back matter
+  // (index, bibliography, about, colophon) we fill ~10 pages without any
+  // recipes; a real cookbook needs at least about 6 recipes for the page
+  // count to clear that floor reliably. We require 6 here so the buyer
+  // sees a friendly message instead of a Lulu rejection after payment.
+  const MIN_RECIPES = 6;
+
   async function saveDraftAndContinueToOrder() {
-    if (!user || !supabase || pickedList.length === 0) return;
+    if (!user || !supabase || pickedList.length < MIN_RECIPES) return;
     setSaving(true);
     const { data, error } = await supabase
       .from('cookbook_projects')
@@ -85,6 +93,9 @@ export default function CookbookBuilderPage() {
 
   async function previewOnly() {
     if (!user || !supabase || pickedList.length === 0) return;
+    // Preview is allowed at any count -- only the print order is gated.
+    // Intentionally no MIN_RECIPES check here.
+
     setSaving(true);
     const { data, error } = await supabase
       .from('cookbook_projects')
@@ -209,10 +220,10 @@ export default function CookbookBuilderPage() {
         )}
       </section>
 
-      <section className="flex flex-wrap gap-3">
+      <section className="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          disabled={pickedList.length === 0 || saving}
+          disabled={pickedList.length < MIN_RECIPES || saving}
           onClick={() => void saveDraftAndContinueToOrder()}
           className="btn-primary"
         >
@@ -226,6 +237,12 @@ export default function CookbookBuilderPage() {
         >
           Preview in the browser
         </button>
+        {pickedList.length < MIN_RECIPES && (
+          <p className="text-xs text-muted">
+            Add at least {MIN_RECIPES} recipes to order a printed copy.
+            You currently have {pickedList.length}.
+          </p>
+        )}
       </section>
 
       <section className="card space-y-3 bg-paper p-6 text-sm leading-relaxed text-muted">

@@ -2,43 +2,37 @@
 /**
  * Supabase Edge Function: lulu-quote
  *
- * Called from the browser once a cookbook project has a PDF uploaded to
- * the cookbook-pdfs storage bucket. Returns a Lulu price quote plus the
- * markup we're charging the customer.
+ * Returns a Lulu price quote + customer-facing total for a cookbook
+ * project that has its PDF uploaded.
  *
  * Body: {
  *   project_id: string,
- *   shipping_address: {
- *     name, street1, street2?, city, state_code, postcode,
- *     country_code, phone_number, email
- *   }
+ *   shipping_address: { name, street1, ..., country_code, phone_number, email },
+ *   shipping_level?: 'MAIL' | 'PRIORITY_MAIL' | 'GROUND_HD' | 'EXPEDITED' | 'EXPRESS',
  * }
  *
- * Environment variables:
- *   LULU_CLIENT_KEY      - from developers.lulu.com
- *   LULU_CLIENT_SECRET   - from developers.lulu.com
- *   LULU_ENV             - "sandbox" | "production" (defaults to sandbox)
- *   LULU_POD_PACKAGE_ID  - the print spec, e.g. 0600X0900BWSTDPB060UW444MXX
- *                         (6x9 B&W paperback 60lb uncoated white matte)
- *   BOOK_MARKUP_USD      - flat markup added on top of Lulu's cost (e.g. "15.00")
- *   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+ * Changes from the previous version (qa-reports/heritage-kitchen.md):
+ *   - HIGH 7: now uses the shared luluClient with module-scoped OAuth caching
+ *   - HIGH 10: shipping_level is parameterised (default falls back to env var
+ *              LULU_DEFAULT_SHIPPING_LEVEL → 'GROUND_HD' for sane US delivery)
+ *   - HIGH 13: pod_package_id is read from server env via the shared client,
+ *              never from a client param, so the cover dimensions and the
+ *              print job stay consistent
+ *   - LOW 27: server re-derives page_count from the project row (cheap
+ *              integrity check vs trusting the browser's claim)
  */
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.4';
+import { POD_PACKAGE_ID, luluFetch } from '../_shared/luluClient.ts';
 
-const LULU_CLIENT_KEY = Deno.env.get('LULU_CLIENT_KEY')!;
-const LULU_CLIENT_SECRET = Deno.env.get('LULU_CLIENT_SECRET')!;
-const LULU_ENV = Deno.env.get('LULU_ENV') ?? 'sandbox';
-const LULU_POD_PACKAGE_ID =
-  Deno.env.get('LULU_POD_PACKAGE_ID') ?? '0600X0900BWSTDPB060UW444MXX';
 const BOOK_MARKUP_USD = parseFloat(Deno.env.get('BOOK_MARKUP_USD') ?? '15');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const DEFAULT_SHIPPING_LEVEL = Deno.env.get('LULU_DEFAULT_SHIPPING_LEVEL') ?? 'GROUND_HD';
 
-const LULU_BASE =
-  LULU_ENV === 'production'
-    ? 'https://api.lulu.com'
-    : 'https://api.sandbox.lulu.com';
+const ALLOWED_SHIPPING = new Set([
+  'MAIL', 'PRIORITY_MAIL', 'GROUND_HD', 'EXPEDITED', 'EXPRESS',
+]);
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -49,33 +43,36 @@ const CORS = {
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   try {
-    const { project_id, shipping_address } = await req.json();
+    const { project_id, shipping_address, shipping_level } = await req.json();
     if (!project_id || !shipping_address) {
       return json({ error: 'project_id and shipping_address are required' }, 400);
     }
 
+    const ship = ALLOWED_SHIPPING.has(String(shipping_level))
+      ? String(shipping_level)
+      : DEFAULT_SHIPPING_LEVEL;
+
     const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-    // Verify the project exists and belongs to a real user
     const { data: project, error: projErr } = await supabase
       .from('cookbook_projects')
-      .select('*')
+      .select('id, page_count, pdf_interior_path')
       .eq('id', project_id)
       .single();
-    if (projErr || !project) {
-      return json({ error: 'project not found' }, 404);
-    }
-    if (!project.page_count) {
+    if (projErr || !project) return json({ error: 'project not found' }, 404);
+    if (!project.page_count || !project.pdf_interior_path) {
       return json({ error: 'project has no pdf yet' }, 400);
     }
-
-    const token = await getLuluToken();
+    if (project.page_count < 24) {
+      // Lulu hardcover minimum (matches pdfGen.ts pad-up behaviour).
+      return json({ error: 'page_count below Lulu minimum (24)' }, 400);
+    }
 
     const quoteBody = {
       line_items: [
         {
           page_count: project.page_count,
-          pod_package_id: LULU_POD_PACKAGE_ID,
+          pod_package_id: POD_PACKAGE_ID,
           quantity: 1,
         },
       ],
@@ -89,20 +86,16 @@ serve(async (req) => {
         street1: shipping_address.street1,
         ...(shipping_address.street2 ? { street2: shipping_address.street2 } : {}),
       },
-      shipping_level: 'MAIL',
+      shipping_level: ship,
     };
 
-    const res = await fetch(`${LULU_BASE}/print-job-cost-calculations/`, {
+    const res = await luluFetch('/print-job-cost-calculations/', {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(quoteBody),
     });
     if (!res.ok) {
       const errBody = await res.text();
-      return json({ error: 'lulu cost calc failed', detail: errBody }, 502);
+      return json({ error: 'lulu cost calc failed', detail: errBody.slice(0, 800) }, 502);
     }
     const quote = await res.json();
     const luluTotal = parseFloat(quote.total_cost_incl_tax ?? quote.total_cost ?? '0');
@@ -111,10 +104,12 @@ serve(async (req) => {
     return json({
       project_id,
       page_count: project.page_count,
+      pod_package_id: POD_PACKAGE_ID,
       lulu_cost: luluTotal.toFixed(2),
       markup: BOOK_MARKUP_USD.toFixed(2),
       customer_total: customerTotal.toFixed(2),
       currency: quote.currency ?? 'USD',
+      shipping_level: ship,
       shipping_cost: quote.shipping_cost?.total_cost_incl_tax ?? null,
       estimated_ship_date: quote.estimated_shipping_dates?.dispatch ?? null,
     });
@@ -122,24 +117,6 @@ serve(async (req) => {
     return json({ error: (err as Error).message }, 500);
   }
 });
-
-async function getLuluToken(): Promise<string> {
-  const basic = btoa(`${LULU_CLIENT_KEY}:${LULU_CLIENT_SECRET}`);
-  const res = await fetch(
-    `${LULU_BASE}/auth/realms/glasstree/protocol/openid-connect/token`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${basic}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'grant_type=client_credentials',
-    },
-  );
-  if (!res.ok) throw new Error('lulu auth failed: ' + (await res.text()));
-  const body = await res.json();
-  return body.access_token as string;
-}
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {

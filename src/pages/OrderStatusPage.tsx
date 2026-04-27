@@ -34,6 +34,19 @@ export default function OrderStatusPage() {
 
   useEffect(() => {
     let cancelled = false;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    // Lulu lifecycle terminal states. Once the order reaches one of
+    // these, polling can stop -- there will be no more updates.
+    const TERMINAL_LULU_STATUSES = new Set([
+      'SHIPPED',
+      'CANCELED',
+      'CANCELLED',
+      'REJECTED',
+      'ERROR',
+    ]);
+    const TERMINAL_LOCAL_STATUSES = new Set(['shipped', 'failed', 'canceled']);
+
     async function load() {
       if (!user || !supabase) {
         setLoading(false);
@@ -47,16 +60,26 @@ export default function OrderStatusPage() {
         .eq('id', id)
         .eq('user_id', user.id)
         .maybeSingle();
-      if (!cancelled) {
-        setProject((data as OrderProject) ?? null);
-        setLoading(false);
+      if (cancelled) return;
+      const next = (data as OrderProject) ?? null;
+      setProject(next);
+      setLoading(false);
+      if (
+        next &&
+        timer != null &&
+        ((next.lulu_status &&
+          TERMINAL_LULU_STATUSES.has(next.lulu_status.toUpperCase())) ||
+          (next.status && TERMINAL_LOCAL_STATUSES.has(next.status)))
+      ) {
+        clearInterval(timer);
+        timer = null;
       }
     }
     void load();
-    const timer = setInterval(load, 10000);
+    timer = setInterval(load, 10000);
     return () => {
       cancelled = true;
-      clearInterval(timer);
+      if (timer != null) clearInterval(timer);
     };
   }, [id, user]);
 

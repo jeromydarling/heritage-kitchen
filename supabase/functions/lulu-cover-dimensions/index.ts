@@ -2,32 +2,31 @@
 /**
  * Supabase Edge Function: lulu-cover-dimensions
  *
- * Asks Lulu's Print API for the exact cover template dimensions (width,
- * height, spine width, safe zone) for a given POD package and page count.
- * This is the source of truth for our cover generator's geometry â€” we
- * never compute spine width ourselves because Lulu's paper stock changes
- * and they publish the numbers.
+ * Asks Lulu's Print API for the cover template dimensions (width, height,
+ * spine, safe zone) for the configured POD package and a given page count.
  *
- * Body: { pod_package_id: string, page_count: number }
+ * Changes from the previous version (qa-reports/heritage-kitchen.md):
+ *   - HIGH 13: pod_package_id is now read from server env (POD_PACKAGE_ID
+ *              in luluClient). Client param is ignored. The cover geometry
+ *              and the print-job SKU are guaranteed identical.
+ *   - HIGH 7:  shared luluFetch caches the OAuth token per env.
+ *   - LOW 25:  if any core dimension is missing from Lulu's response we
+ *              now fail loudly instead of silently falling back to 0.625"
+ *              wrap and 0.5" safe-zone defaults that could be wildly off.
+ *
+ * Body: { page_count: number }
  *
  * Returns: {
- *   width_in: number,       // total cover width including wrap
- *   height_in: number,      // total cover height including wrap
- *   spine_in: number,       // just the spine width
- *   wrap_in: number,        // wrap size on the leading/trailing edge
- *   safe_zone_in: number    // recommended safe zone inside the trim
+ *   pod_package_id: string,    // echoed for caller to verify
+ *   width_in: number,
+ *   height_in: number,
+ *   spine_in: number,
+ *   wrap_in: number,
+ *   safe_zone_in: number,
  * }
  */
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
-
-const LULU_CLIENT_KEY = Deno.env.get('LULU_CLIENT_KEY')!;
-const LULU_CLIENT_SECRET = Deno.env.get('LULU_CLIENT_SECRET')!;
-const LULU_ENV = Deno.env.get('LULU_ENV') ?? 'sandbox';
-
-const LULU_BASE =
-  LULU_ENV === 'production'
-    ? 'https://api.lulu.com'
-    : 'https://api.sandbox.lulu.com';
+import { POD_PACKAGE_ID, luluFetch } from '../_shared/luluClient.ts';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -38,42 +37,37 @@ const CORS = {
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   try {
-    const { pod_package_id, page_count } = await req.json();
-    if (!pod_package_id || !page_count) {
-      return json({ error: 'pod_package_id and page_count are required' }, 400);
+    const { page_count } = await req.json();
+    if (!page_count || typeof page_count !== 'number' || page_count < 4) {
+      return json({ error: 'page_count must be a number ≥ 4' }, 400);
     }
 
-    const token = await getLuluToken();
-
-    // Lulu's cover-dimensions endpoint. This is the published route in
-    // their Print API; the JSON shape may vary slightly between sandbox
-    // and production â€” we extract the fields we care about by looking
-    // for them under a few likely paths.
-    const res = await fetch(`${LULU_BASE}/cover-dimensions/`, {
+    const res = await luluFetch('/cover-dimensions/', {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
-        pod_package_id,
+        pod_package_id: POD_PACKAGE_ID,
         interior_page_count: page_count,
         unit: 'inch',
       }),
     });
 
     if (!res.ok) {
-      const errText = await res.text();
-      return json({ error: 'lulu cover-dimensions failed', detail: errText }, 502);
+      return json({ error: 'lulu cover-dimensions failed', detail: (await res.text()).slice(0, 600) }, 502);
     }
     const body = await res.json();
 
-    // Best-effort extraction. Lulu's response fields are stable but
-    // sometimes wrapped differently in sandbox vs prod.
     const dims = extractDimensions(body);
-    if (!dims) return json({ error: 'could not parse lulu response', body }, 502);
+    if (!dims) {
+      // HIGH 25: refuse to fabricate defaults — the cover would be the
+      // wrong size and Lulu would reject the print job (or worse, accept
+      // a misregistered cover and ship a defective book).
+      return json({
+        error: 'lulu cover-dimensions response missing required fields',
+        raw: body,
+      }, 502);
+    }
 
-    return json(dims);
+    return json({ pod_package_id: POD_PACKAGE_ID, ...dims });
   } catch (err) {
     return json({ error: (err as Error).message }, 500);
   }
@@ -91,27 +85,13 @@ function extractDimensions(body: Record<string, unknown>) {
   const width_in = findNum(['total_document_width_in', 'width_in', 'total_width_inches', 'width']);
   const height_in = findNum(['total_document_height_in', 'height_in', 'total_height_inches', 'height']);
   const spine_in = findNum(['spine_width_in', 'spine_width_inches', 'spine_width']);
-  const wrap_in = findNum(['wrap_size_in', 'wrap_size_inches', 'bleed_in', 'bleed']) ?? 0.625;
-  const safe_zone_in = findNum(['safe_zone_in', 'safe_zone_inches']) ?? 0.5;
-  if (width_in == null || height_in == null || spine_in == null) return null;
+  const wrap_in = findNum(['wrap_size_in', 'wrap_size_inches', 'bleed_in', 'bleed']);
+  const safe_zone_in = findNum(['safe_zone_in', 'safe_zone_inches']);
+  // Treat ANY missing core field as a hard failure. Wrap and safe-zone
+  // are also required: a wrong wrap means the cover bleeds wrong.
+  if (width_in == null || height_in == null || spine_in == null
+      || wrap_in == null || safe_zone_in == null) return null;
   return { width_in, height_in, spine_in, wrap_in, safe_zone_in };
-}
-
-async function getLuluToken(): Promise<string> {
-  const basic = btoa(`${LULU_CLIENT_KEY}:${LULU_CLIENT_SECRET}`);
-  const res = await fetch(
-    `${LULU_BASE}/auth/realms/glasstree/protocol/openid-connect/token`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${basic}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'grant_type=client_credentials',
-    },
-  );
-  if (!res.ok) throw new Error('lulu auth failed: ' + (await res.text()));
-  return (await res.json()).access_token;
 }
 
 function json(body: unknown, status = 200) {

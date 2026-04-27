@@ -32,7 +32,17 @@ export interface Edition {
  * pipeline that powers user-built cookbooks. Signed-in and anonymous
  * visitors can both browse and buy; the order flow itself collects
  * email and shipping address on the Stripe Checkout page.
+ *
+ * IMPORTANT: never SELECT * from editions in client code. The table
+ * also stores the unsigned interior_pdf_url and pdf_storage_path,
+ * which would let anyone bypass payment and pull the PDF directly.
+ * The Postgres column-grant in 20260427220000_print_pipeline_fixes.sql
+ * already revokes those columns from anon/authenticated, but we keep
+ * the explicit safe-column list here as a second line of defense and
+ * to keep the TypeScript type narrow.
  */
+const EDITION_PUBLIC_COLS =
+  'slug, title, subtitle, description, cover_image_url, intro_text, recipe_ids, lesson_ids, selector, price_usd, price_pdf_usd, format, page_count, published, featured, sort_order';
 
 export function useEditions(opts: { publishedOnly?: boolean } = { publishedOnly: true }) {
   const [editions, setEditions] = useState<Edition[]>([]);
@@ -46,7 +56,10 @@ export function useEditions(opts: { publishedOnly?: boolean } = { publishedOnly:
         setLoading(false);
         return;
       }
-      let query = supabase.from('editions').select('*').order('sort_order');
+      let query = supabase
+        .from('editions')
+        .select(EDITION_PUBLIC_COLS)
+        .order('sort_order');
       if (opts.publishedOnly) query = query.eq('published', true);
       const { data } = await query;
       if (!cancelled) {
@@ -77,7 +90,7 @@ export function useEdition(slug: string) {
       }
       const { data } = await supabase
         .from('editions')
-        .select('*')
+        .select(EDITION_PUBLIC_COLS)
         .eq('slug', slug)
         .maybeSingle();
       if (!cancelled) {
@@ -122,15 +135,22 @@ export interface EditionOrderDownload {
 /**
  * Fetches an edition order by its Stripe checkout session id. Used on the
  * download success page to show the signed PDF URL after payment.
+ *
+ * Anonymous PDF buyers cannot read their own edition_orders row directly
+ * (RLS would reject it -- they have no auth.uid() to match). Instead we
+ * route through the edition-order-by-session edge function, which uses
+ * the Stripe API itself as the trust anchor: only callers who hold the
+ * session_id (a 66-char opaque token issued by Stripe at checkout
+ * creation) AND whose session is `paid` get the signed download URL.
  */
 export async function fetchEditionOrderBySession(
   sessionId: string,
 ): Promise<EditionOrderDownload | null> {
   if (!supabase) return null;
-  const { data } = await supabase
-    .from('edition_orders')
-    .select('edition_slug, pdf_download_url, pdf_download_expires_at, status')
-    .eq('stripe_session_id', sessionId)
-    .maybeSingle();
-  return (data as EditionOrderDownload) ?? null;
+  const { data, error } = await supabase.functions.invoke(
+    'edition-order-by-session',
+    { body: { session_id: sessionId } },
+  );
+  if (error) return null;
+  return (data as EditionOrderDownload | null) ?? null;
 }

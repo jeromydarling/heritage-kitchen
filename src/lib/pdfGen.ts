@@ -73,14 +73,19 @@ function applyFonts(doc: jsPDF, assets: FontAssets) {
 /**
  * Client-side PDF generator for the Heritage Kitchen cookbook builder.
  *
- * Produces a text-based (crisp) PDF at 6x9 inches trim, which is the size
- * Lulu offers for a "Premium Color Hardcover" family cookbook. Uses built-in
- * jsPDF fonts (Times for body, Helvetica for small-caps headers) to keep
- * the download small â€” no web fonts are embedded.
+ * Produces a text-based (crisp) PDF at 7x10 inches trim, matching the
+ * Lulu "Premium Color Hardcover" casewrap SKU we ship --
+ * 0700X1000FCSTDCW080CW444GXX (7x10, full-color, casewrap, 80lb coated
+ * white, gloss). The marketing copy on the storefront promises a color
+ * hardcover with photos; this PDF must therefore (a) be sized 7x10 so
+ * Lulu accepts it without rejecting the print job, and (b) embed each
+ * recipe's hero photo when one is available. If image_url is missing
+ * we fall through to a no-photo layout so the page still reads well.
  *
- * The layout intentionally mirrors the on-screen print view: serif title
- * page with an Augustine epigraph, table of contents, and one recipe per
- * section with its ingredients and numbered instructions.
+ * The layout mirrors the on-screen print view: serif title page with an
+ * Augustine epigraph, table of contents, optional category dividers,
+ * and one recipe per section with photo (when available), ingredients,
+ * and numbered instructions.
  */
 
 export interface CookbookProject {
@@ -98,17 +103,62 @@ export interface CookbookProject {
   lessons?: Lesson[];
 }
 
-// Page dimensions â€” 6x9 inches in points (1 inch = 72 points).
-const PAGE_W = 432;
-const PAGE_H = 648;
-const MARGIN_X = 54; // 3/4 inch
+// Page dimensions -- 7x10 inches in points (1 inch = 72 points).
+// Matches Lulu POD package id 0700X1000FCSTDCW080CW444GXX.
+const PAGE_W = 504;
+const PAGE_H = 720;
+const MARGIN_X = 60; // ~5/6 inch
 const MARGIN_TOP = 72; // 1 inch
 const MARGIN_BOTTOM = 72;
 const CONTENT_W = PAGE_W - MARGIN_X * 2;
+// Recipe hero photo block (drawn just below the title).
+const PHOTO_W = CONTENT_W;
+const PHOTO_H = 240;
+// Permitted image formats for jsPDF.addImage. JPEG is the safe default;
+// PNG also works. Anything else (WebP/AVIF/SVG) we skip rather than ship
+// a broken page to Lulu.
+type JspdfImageFormat = 'JPEG' | 'PNG';
 
 interface Cursor {
   y: number;
   page: number;
+  /** Pre-fetched image data keyed by recipe id, populated by
+   *  prefetchRecipePhotos() so drawRecipe() stays synchronous. */
+  embeddedPhotos?: Map<string, { dataUrl: string; format: JspdfImageFormat }>;
+}
+
+/**
+ * Fetch and decode each recipe's hero image into a base64 data URL so we
+ * can embed it synchronously inside drawRecipe(). Anything that fails to
+ * load (404, CORS, unsupported format) is simply omitted -- the recipe
+ * still prints, just without its photo.
+ */
+async function prefetchRecipePhotos(
+  recipes: Recipe[],
+): Promise<Map<string, { dataUrl: string; format: JspdfImageFormat }>> {
+  const out = new Map<string, { dataUrl: string; format: JspdfImageFormat }>();
+  await Promise.all(
+    recipes.map(async (r) => {
+      const url = (r as { image_url?: string | null }).image_url;
+      if (!url) return;
+      try {
+        const res = await fetch(url, { mode: 'cors' });
+        if (!res.ok) return;
+        const ct = (res.headers.get('content-type') ?? '').toLowerCase();
+        let format: JspdfImageFormat | null = null;
+        if (ct.includes('jpeg') || ct.includes('jpg')) format = 'JPEG';
+        else if (ct.includes('png')) format = 'PNG';
+        else return;
+        const buf = await res.arrayBuffer();
+        const b64 = arrayBufferToBase64(buf);
+        const dataUrl = `data:${ct};base64,${b64}`;
+        out.set(r.id, { dataUrl, format });
+      } catch (_err) {
+        // Image fetch failed; skip silently.
+      }
+    }),
+  );
+  return out;
 }
 
 export async function generateCookbookPdf(project: CookbookProject): Promise<Blob> {
@@ -118,18 +168,30 @@ export async function generateCookbookPdf(project: CookbookProject): Promise<Blo
     compress: true,
   });
 
+  const fonts = await loadFonts();
+  applyFonts(doc, fonts);
+  const photos = await prefetchRecipePhotos(project.recipes);
+
   // -------- Title page --------
   drawTitlePage(doc, project);
 
   // -------- Table of contents --------
   doc.addPage();
-  const tocCursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+  const tocCursor: Cursor = {
+    y: MARGIN_TOP,
+    page: doc.getNumberOfPages(),
+    embeddedPhotos: photos,
+  };
   drawTableOfContents(doc, project.recipes, tocCursor);
 
   // -------- Recipes --------
   for (const recipe of project.recipes) {
     doc.addPage();
-    const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+    const cursor: Cursor = {
+      y: MARGIN_TOP,
+      page: doc.getNumberOfPages(),
+      embeddedPhotos: photos,
+    };
     drawRecipe(doc, recipe, cursor);
   }
 
@@ -243,6 +305,30 @@ function drawRecipe(doc: jsPDF, recipe: Recipe, c: Cursor) {
     needRoom(doc, c, 26);
     doc.text(line, MARGIN_X, c.y);
     c.y += 26;
+  }
+
+  // Hero photo (if available). Embedded inline above the description so
+  // the printed page reads photo → description → ingredients →
+  // instructions, just like the on-screen recipe view. If embedding
+  // fails for any reason we silently skip and let the layout flow.
+  const photoCache = c.embeddedPhotos?.get(recipe.id);
+  if (photoCache) {
+    needRoom(doc, c, PHOTO_H + 16);
+    try {
+      doc.addImage(
+        photoCache.dataUrl,
+        photoCache.format,
+        MARGIN_X,
+        c.y,
+        PHOTO_W,
+        PHOTO_H,
+        undefined,
+        'FAST',
+      );
+      c.y += PHOTO_H + 12;
+    } catch (_err) {
+      /* fall through to no-image layout */
+    }
   }
 
   // Description
@@ -786,6 +872,7 @@ export async function generateCookbookPdfWithMeta(
 
   const fonts = await loadFonts();
   applyFonts(doc, fonts);
+  const photos = await prefetchRecipePhotos(project.recipes);
 
   // -------- Front matter --------
   drawTitlePage(doc, project);
@@ -797,7 +884,11 @@ export async function generateCookbookPdfWithMeta(
   drawForeword(doc, project);
 
   doc.addPage();
-  const tocCursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+  const tocCursor: Cursor = {
+    y: MARGIN_TOP,
+    page: doc.getNumberOfPages(),
+    embeddedPhotos: photos,
+  };
   drawTableOfContents(doc, project.recipes, tocCursor);
 
   // -------- Recipes (optionally grouped by category) --------
@@ -817,14 +908,22 @@ export async function generateCookbookPdfWithMeta(
       drawCategoryDivider(doc, cat);
       for (const recipe of buckets.get(cat)!) {
         doc.addPage();
-        const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+        const cursor: Cursor = {
+          y: MARGIN_TOP,
+          page: doc.getNumberOfPages(),
+          embeddedPhotos: photos,
+        };
         drawRecipe(doc, recipe, cursor);
       }
     }
   } else {
     for (const recipe of project.recipes) {
       doc.addPage();
-      const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+      const cursor: Cursor = {
+        y: MARGIN_TOP,
+        page: doc.getNumberOfPages(),
+        embeddedPhotos: photos,
+      };
       drawRecipe(doc, recipe, cursor);
     }
   }
@@ -852,7 +951,11 @@ export async function generateCookbookPdfWithMeta(
 
     for (const lesson of project.lessons) {
       doc.addPage();
-      const cursor: Cursor = { y: MARGIN_TOP, page: doc.getNumberOfPages() };
+      const cursor: Cursor = {
+        y: MARGIN_TOP,
+        page: doc.getNumberOfPages(),
+        embeddedPhotos: photos,
+      };
       drawLesson(doc, lesson, cursor);
     }
   }
