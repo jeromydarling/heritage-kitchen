@@ -37,7 +37,31 @@ alter table recipes
 create index if not exists idx_recipes_fts on recipes using gin (fts);
 
 -- Row-level security: world-readable, admin-writable.
--- Replace <ADMIN_USER_ID> with the uuid of the admin auth.users row.
+-- Admin identity is determined by membership in public.admin_users via the
+-- is_admin(uuid) helper defined below. To grant admin access:
+--   insert into public.admin_users (user_id, email)
+--   values ('<auth-uid>', 'admin@heritagekitchen.app');
+-- (No '<ADMIN_USER_ID>' placeholder substitution required anymore.)
+create table if not exists public.admin_users (
+  user_id    uuid primary key references auth.users(id) on delete cascade,
+  email      text,
+  notes      text,
+  created_at timestamptz not null default now()
+);
+alter table public.admin_users enable row level security;
+drop policy if exists "admin_users_service_only" on public.admin_users;
+create policy "admin_users_service_only" on public.admin_users
+  for all using (false) with check (false);
+
+create or replace function public.is_admin(uid uuid default auth.uid())
+returns boolean
+language sql stable security definer
+set search_path = public, pg_temp
+as $$
+  select exists (select 1 from public.admin_users where user_id = uid);
+$$;
+grant execute on function public.is_admin(uuid) to authenticated, anon;
+
 alter table recipes enable row level security;
 
 drop policy if exists "Public read" on recipes;
@@ -46,8 +70,8 @@ create policy "Public read" on recipes
 
 drop policy if exists "Admin write" on recipes;
 create policy "Admin write" on recipes
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- Storage bucket for AI-generated illustrations.
 insert into storage.buckets (id, name, public)
@@ -437,8 +461,8 @@ create policy "lessons_public_read" on lessons
 
 drop policy if exists "lessons_admin_write" on lessons;
 create policy "lessons_admin_write" on lessons
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- ==========================================================================
 -- Editions: Heritage Kitchen editorial cookbooks for sale
@@ -497,8 +521,8 @@ create policy "editions_public_read" on editions
 
 drop policy if exists "editions_admin_write" on editions;
 create policy "editions_admin_write" on editions
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- Orders of editions (separate from cookbook_projects so we can track
 -- bulk orders of the same edition across customers).
@@ -539,13 +563,13 @@ drop policy if exists "edition_orders_self" on edition_orders;
 create policy "edition_orders_self" on edition_orders
   for select using (
     auth.jwt() ->> 'email' = customer_email
-    or auth.uid() = '<ADMIN_USER_ID>'::uuid
+    or public.is_admin()
   );
 
 drop policy if exists "edition_orders_admin_write" on edition_orders;
 create policy "edition_orders_admin_write" on edition_orders
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- ==========================================================================
 -- Seed: one example edition so the /editions page isn't empty on first
@@ -610,11 +634,11 @@ create policy "service_enquiries_public_insert" on service_enquiries
 
 drop policy if exists "service_enquiries_admin_read" on service_enquiries;
 create policy "service_enquiries_admin_read" on service_enquiries
-  for select using (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for select using (public.is_admin());
 
 drop policy if exists "service_enquiries_admin_write" on service_enquiries;
 create policy "service_enquiries_admin_write" on service_enquiries
-  for update using (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for update using (public.is_admin());
 
 -- ==========================================================================
 -- Sponsorships: "Friends of Heritage Kitchen" and adopt-a-recipe
@@ -651,8 +675,8 @@ create policy "sponsors_public_read" on sponsors
 
 drop policy if exists "sponsors_admin_write" on sponsors;
 create policy "sponsors_admin_write" on sponsors
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 create table if not exists recipe_adoptions (
   id uuid primary key default gen_random_uuid(),
@@ -676,8 +700,8 @@ create policy "recipe_adoptions_public_read" on recipe_adoptions
 
 drop policy if exists "recipe_adoptions_admin_write" on recipe_adoptions;
 create policy "recipe_adoptions_admin_write" on recipe_adoptions
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- ==========================================================================
 -- Monasteries: a directory of contemplative communities whose food sales
@@ -734,8 +758,8 @@ create policy "monasteries_public_read" on monasteries
 
 drop policy if exists "monasteries_admin_write" on monasteries;
 create policy "monasteries_admin_write" on monasteries
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- Verified roster (research date 2026-04-14). Editorial entries written
 -- in the Heritage Kitchen voice; never overwrite an admin's hand-tuned
@@ -1035,8 +1059,8 @@ create policy "store_items_public_read" on store_items
 
 drop policy if exists "store_items_admin_write" on store_items;
 create policy "store_items_admin_write" on store_items
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- Seed a starter store from the verified partner research (2026-04-14).
 -- Affiliate URLs are the vendor affiliate landing pages; replace with
@@ -1421,8 +1445,8 @@ create policy "courses_public_read" on courses
 
 drop policy if exists "courses_admin_write" on courses;
 create policy "courses_admin_write" on courses
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- The individual day-by-day lessons. Authored in markdown, rendered to
 -- HTML by the mailer edge function at send time.
@@ -1445,13 +1469,13 @@ create policy "course_lessons_read_if_enrolled" on course_lessons
       where ce.course_slug = course_lessons.course_slug
         and (ce.user_id = auth.uid() or ce.email = (auth.jwt() ->> 'email'))
     )
-    or auth.uid() = '<ADMIN_USER_ID>'::uuid
+    or public.is_admin()
   );
 
 drop policy if exists "course_lessons_admin_write" on course_lessons;
 create policy "course_lessons_admin_write" on course_lessons
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- Enrollments: one row per (customer, course) pair. The mailer walks
 -- active enrollments every day and sends the next lesson.
@@ -1484,13 +1508,13 @@ create policy "course_enrollments_self_read" on course_enrollments
   for select using (
     auth.uid() = user_id
     or (auth.jwt() ->> 'email') = email
-    or auth.uid() = '<ADMIN_USER_ID>'::uuid
+    or public.is_admin()
   );
 
 drop policy if exists "course_enrollments_admin_write" on course_enrollments;
 create policy "course_enrollments_admin_write" on course_enrollments
-  for all using (auth.uid() = '<ADMIN_USER_ID>'::uuid)
-  with check (auth.uid() = '<ADMIN_USER_ID>'::uuid);
+  for all using (public.is_admin())
+  with check (public.is_admin());
 
 -- Seed: the Lenten course. Lessons are placeholders waiting for
 -- the author; published stays false until the body is written.
